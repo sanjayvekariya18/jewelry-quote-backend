@@ -1,0 +1,29 @@
+1). File upload validations
+
+    {
+        files: "required|array",
+        "files.*": "mimes:png,jpg,jpeg,svg,mp4,mov,ogg,qt,mkv|max_file_size:52428800|min_file_size:52428800",
+    }
+
+2). nullable validation
+    description :- This validation will check whether value is numeric or not only if page attribute have a value if it null then 
+        it will not check other validation.
+
+    {
+        page: "nullable|numeric",
+        rowsPerPage: "nullable|numeric",
+    }
+
+3). exists validation
+    description :- The attribute value should exists in database if it's then it will throw an error.
+
+    {
+        orderId: "required|exists:id,orders",
+    }
+
+4). unique validation
+    description :- The attribute value should be unique and not exists in database if it's  then it will throw an error.
+
+    {
+        orderId: "required|unique:id,orders",
+    }
