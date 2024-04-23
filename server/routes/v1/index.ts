@@ -2,11 +2,11 @@ import { Router } from "express";
 import customerRoute from "./customer";
 import privateRoutes from "./private";
 import { use } from "../../errorHandler";
-import { TokenVerifyMiddleware } from "../../middlewares";
+import { PublicTokenMiddleware, TokenVerifyMiddleware } from "../../middlewares";
 
 const router = Router();
 
 router.use("/private", use(TokenVerifyMiddleware), privateRoutes);
-router.use("/", customerRoute);
+router.use("/", use(PublicTokenMiddleware), customerRoute);
 
 export default router;

@@ -1,0 +1,8 @@
+[
+	{ "permissionName": "users", "permissionGroup": "administrative" },
+	{ "permissionName": "user_permissions", "permissionGroup": "administrative" },
+	{ "permissionName": "category", "permissionGroup": "jewellery" },
+	{ "permissionName": "sub_category", "permissionGroup": "jewellery" },
+	{ "permissionName": "product", "permissionGroup": "jewellery" },
+	{ "permissionName": "customer", "permissionGroup": "miscellaneous" }
+]

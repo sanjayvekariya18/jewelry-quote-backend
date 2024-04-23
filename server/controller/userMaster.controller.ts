@@ -47,13 +47,7 @@ export default class UserMasterController {
 					throw new DuplicateRecord("Mobile already Exists");
 				}
 			}
-			// const file: any = req.files;
-			// if (file) {
-			// 	let profile: any = await saveFile(file.profile, "profiles");
-			// 	userData.image = profile.upload_path;
-			// }
 			const data = await this.service.create(userData);
-			console.log("data", data);
 			res.api.create(data);
 		},
 	};
@@ -126,7 +120,6 @@ export default class UserMasterController {
 							});
 						})
 						.catch((error) => {
-							console.log("error", error);
 							return res.api.validationErrors(error);
 						});
 				})

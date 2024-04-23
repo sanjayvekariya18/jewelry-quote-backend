@@ -1,5 +1,5 @@
 import { logger } from "../config";
-import { Category, SubCategory, UserMaster } from "../models";
+import { Category, CustomerDetails, PermissionMaster, SubCategory, UserMaster, UserPermissions } from "../models";
 
 const createTables = async () => {
 	const successFullTable: Array<string> = [];
@@ -11,6 +11,22 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`UserMaster Table Error : ${error}`);
+		});
+
+	await PermissionMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`PermissionMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`PermissionMaster Table Error : ${error}`);
+		});
+
+	await UserPermissions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`UserPermissions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`UserPermissions Table Error : ${error}`);
 		});
 
 	await Category.sync({ alter: { drop: false } })
@@ -27,6 +43,14 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`SubCategory Table Error : ${error}`);
+		});
+
+	await CustomerDetails.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`CustomerDetails Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`CustomerDetails Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

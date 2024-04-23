@@ -44,7 +44,6 @@ export default class CategoryService {
 	};
 
 	public edit = async (categoryId: string, categoryData: CategoryDTO) => {
-		console.log("categoryData", categoryData);
 		return await Category.update(categoryData, { where: { id: categoryId } }).then(() => {
 			return "Category updated successfully";
 		});
