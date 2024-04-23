@@ -42,12 +42,12 @@ export default class CategoryController {
 			const file: any = req.files;
 			if (file) {
 				if (file.img_url) {
-					let profile: any = await saveFile(file.img_url, "category");
-					categoryData.img_url = profile.upload_path;
+					let uploadedImg: any = await saveFile(file.img_url, "category");
+					categoryData.img_url = uploadedImg.upload_path;
 				}
 				if (file.logoUrl) {
-					let profile: any = await saveFile(file.logoUrl, "category");
-					categoryData.logo_url = profile.upload_path;
+					let uploadedImg: any = await saveFile(file.logoUrl, "category");
+					categoryData.logo_url = uploadedImg.upload_path;
 				}
 			}
 			const data = await this.categoryService.create(categoryData);
@@ -79,13 +79,13 @@ export default class CategoryController {
 				const oldImgData = await this.categoryService.findOne({ id: categoryId });
 				if (file.img_url) {
 					oldImgData?.img_url && (await removeFile(oldImgData.img_url));
-					let profile: any = await saveFile(file.img_url, "category");
-					categoryData.img_url = profile.upload_path;
+					let uploadedImg: any = await saveFile(file.img_url, "category");
+					categoryData.img_url = uploadedImg.upload_path;
 				}
 				if (file.logoUrl) {
 					oldImgData?.logo_url && (await removeFile(oldImgData.logo_url));
-					let profile: any = await saveFile(file.logoUrl, "category");
-					categoryData.logo_url = profile.upload_path;
+					let uploadedImg: any = await saveFile(file.logoUrl, "category");
+					categoryData.logo_url = uploadedImg.upload_path;
 				}
 			}
 			const data = await this.categoryService.edit(categoryId, categoryData);

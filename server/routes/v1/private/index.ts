@@ -2,29 +2,27 @@ import { Router } from "express";
 import categoryRoutes from "./category.route";
 import subCategoryRoutes from "./subCategory.route";
 import userMasterRoutes from "./userMaster.route";
+import userPermissionRoutes from "./userPermissions.route";
+import permissionMasterRoutes from "./permissionMaster.route";
+import customerDetailsRoutes from "./customerDetails.route";
+import listRoutes from "./../list.route";
 import { AuthorizationController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
+import { UserPermissionsCheck } from "../../../middlewares";
+import { PERMISSIONS } from "../../../enum";
 
 const router = Router();
 const authorizationController = new AuthorizationController();
 const basicValidatorHandler = new BasicValidatorHandler();
 
 router.post("/login", basicValidatorHandler.handler(authorizationController.login.validation), use(authorizationController.login.controller));
-router.use(
-	"/category",
-	// UserPermissionsCheck(PERMISSIONS.BLOG_CATEGORIES),
-	categoryRoutes
-);
-router.use(
-	"/sub-category",
-	// UserPermissionsCheck(PERMISSIONS.BLOG_CATEGORIES),
-	subCategoryRoutes
-);
-router.use(
-	"/user-master",
-	// UserPermissionsCheck(PERMISSIONS.BLOG_CATEGORIES),
-	userMasterRoutes
-);
+router.use("/category", UserPermissionsCheck(PERMISSIONS.CATEGORY), categoryRoutes);
+router.use("/sub-category", UserPermissionsCheck(PERMISSIONS.SUB_CATEGORY), subCategoryRoutes);
+router.use("/user-master", UserPermissionsCheck(PERMISSIONS.USERS), userMasterRoutes);
+router.use("/user-permission", UserPermissionsCheck(PERMISSIONS.USER_PERMISSIONS), userPermissionRoutes);
+router.use("/permissions", UserPermissionsCheck(PERMISSIONS.USER_PERMISSIONS), permissionMasterRoutes);
+router.use("/customer-details", UserPermissionsCheck(PERMISSIONS.CUSTOMER), customerDetailsRoutes);
+router.use("/list", listRoutes);
 
 export default router;

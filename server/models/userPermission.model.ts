@@ -59,20 +59,20 @@ UserPermissions.init(
 			onDelete: "CASCADE",
 		},
 		view: {
-			defaultValue: true,
 			type: DataTypes.BOOLEAN,
+			defaultValue: true,
 		},
 		create: {
-			defaultValue: true,
 			type: DataTypes.BOOLEAN,
+			defaultValue: true,
 		},
 		edit: {
-			defaultValue: true,
 			type: DataTypes.BOOLEAN,
+			defaultValue: true,
 		},
 		delete: {
-			defaultValue: true,
 			type: DataTypes.BOOLEAN,
+			defaultValue: true,
 		},
 		last_updated_by: {
 			allowNull: false,

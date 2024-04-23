@@ -2,6 +2,8 @@ import { Transaction } from "sequelize";
 import { executeTransaction, sequelizeConnection } from "../../config/database";
 import logger from "../../config/logger";
 import adminUserSeed from "./adminUser.seed";
+import permissionMasterSeed from "./permissionMaster.seed";
+
 import initSchemaRelationship from "../../InitialDBSetup/initSchemaRelationship";
 
 class DataSeed {
@@ -19,6 +21,7 @@ class DataSeed {
 			initSchemaRelationship();
 			try {
 				const adminUser = await adminUserSeed(transaction);
+				await permissionMasterSeed(transaction, adminUser.id);
 			} catch (error) {
 				transaction.rollback();
 				logger.error(`Error occurred in seeder : ${error}`);

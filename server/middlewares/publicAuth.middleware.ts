@@ -1,50 +1,52 @@
 import { Request, NextFunction, Response } from "express";
 import { TokenExpiredUserHandler, UnauthorizedUserHandler } from "../errorHandler";
 import moment from "moment";
-import { isEmpty, _json } from "../utils/helper";
-import { LoggedInUserTokenPayload } from "../services/authorization.service";
-import { TokenService, AuthorizationService } from "../services";
+import { _json } from "../utils/helper";
+import { LoggedInCustomerTokenPayload } from "../services/authorization.service";
+import { TokenService, CustomerDetailsService } from "../services";
 
 const tokenService = new TokenService();
-const authorizationService = new AuthorizationService();
+const customerService = new CustomerDetailsService();
 
-const TokenVerifyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-	if (req.url == "/login") {
+const PublicTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
+	if (req.url == "/login" || req.url == "/registration") {
 		return next();
 	}
 	let authorization = req.header("Authorization");
+
 	if (authorization) {
 		authorization = authorization.replace("Bearer ", "");
 		if (authorization && authorization != "null" && authorization != null) {
-			return await tokenService
+			return tokenService
 				.decode(authorization)
-				.then(async (payload: LoggedInUserTokenPayload) => {
-					if (!payload.user) {
-						return next(new UnauthorizedUserHandler("Invalid Token"));
+				.then(async (payload: LoggedInCustomerTokenPayload) => {
+					if (!payload?.customer?.id) {
+						throw new UnauthorizedUserHandler("Invalid Token");
 					}
 					const isExpire = !(payload.expires >= moment().unix());
 					if (isExpire) {
 						return next(new TokenExpiredUserHandler());
 					}
 
-					const _user = await authorizationService.findUserById(payload.user.id);
-					if (_user == null) {
+					const _customer = await customerService.findOne({ id: payload.customer.id });
+					if (_customer == null) {
 						return next(new UnauthorizedUserHandler());
 					}
-					if (_user.is_active == false) {
+
+					if (_customer.is_active == false) {
 						throw new UnauthorizedUserHandler("User deactivated. Contact admin");
 					}
-					req.authUser = _user;
+					req.customer = _customer;
 
 					if (Array.isArray(req.body)) {
 						req.body = req.body.map((data) => {
 							return {
 								...data,
-								loggedInUserId: payload.user.id,
+								loggedInUserId: payload.customer.id,
 							};
 						});
 					} else {
-						req.body["loggedInUserId"] = payload.user.id;
+						req.body["loggedInUserId"] = payload.customer.id;
 					}
 					return next();
 				})
@@ -53,7 +55,7 @@ const TokenVerifyMiddleware = async (req: Request, res: Response, next: NextFunc
 			throw new UnauthorizedUserHandler();
 		}
 	} else {
-		throw new UnauthorizedUserHandler();
+		return next(new UnauthorizedUserHandler());
 	}
 };
-export default TokenVerifyMiddleware;
+export default PublicTokenMiddleware;

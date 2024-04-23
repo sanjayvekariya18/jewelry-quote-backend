@@ -9,8 +9,8 @@ const UserPermissionsCheck = (permission: PERMISSIONS) => {
 			return next();
 		}
 
-		const permissionData: PermissionDetails | undefined = req.permissions.find((data) => data.name == permission);
-
+		const permissionData: PermissionDetails | undefined = req.authUser.permissions.find((data) => data.name == permission);
+		console.log("permissionData", permissionData);
 		if (permissionData) {
 			if (permissionData.name == permission && permissionData[REQ_METHOD[req.method] as keyof PermissionDetails]) {
 				return next();

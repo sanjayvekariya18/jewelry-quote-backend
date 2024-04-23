@@ -1,3 +1,8 @@
 export enum PERMISSIONS {
-	ALL = "ALL",
+	USERS = "users",
+	USER_PERMISSIONS = "user_permissions",
+	CATEGORY = "category",
+	SUB_CATEGORY = "sub_category",
+	PRODUCT = "product",
+	CUSTOMER = "customer",
 }

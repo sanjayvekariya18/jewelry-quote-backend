@@ -1,7 +1,7 @@
 import config from "../config/config";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import { LoggedInUserDetails, LoggedInUserTokenPayload } from "./authorization.service";
+import { LoggedInCustomerDetails, LoggedInCustomerTokenPayload, LoggedInUserDetails, LoggedInUserTokenPayload } from "./authorization.service";
 
 export default class TokenService {
 	/**
@@ -54,6 +54,26 @@ export default class TokenService {
 	};
 
 	/**
+	 * Generate admin token
+	 * @param {CustomerMasterOutput} customer
+	 * @returns {Promise<any>}
+	 */
+	public generateCustomerAccessToken = (customer: LoggedInCustomerDetails): Promise<any> => {
+		return new Promise((resolve, reject) => {
+			const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, "minutes");
+			const payload: LoggedInCustomerTokenPayload = {
+				customer: customer,
+				expires: accessTokenExpires.unix(),
+			};
+			const accessToken = this.encode(payload, config.jwt.secret);
+			resolve({
+				token: accessToken,
+				expires: accessTokenExpires.toDate(),
+			});
+		});
+	};
+
+	/**
 	 * Generate auth tokens
 	 * @param {User} user
 	 * @returns {Promise<any>}
@@ -96,7 +116,7 @@ export default class TokenService {
 			const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, "minutes");
 			const payload: LoggedInUserTokenPayload = {
 				user: user,
-				expires: accessTokenExpires.unix()
+				expires: accessTokenExpires.unix(),
 			};
 			const accessToken = this.encode(payload, config.jwt.secret);
 			resolve({

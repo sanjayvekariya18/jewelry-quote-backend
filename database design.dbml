@@ -1,0 +1,112 @@
+Project JewelleryCatelog {
+  database_type: "mysql"
+}
+
+Table permission_master {
+  id uuid [primary key]
+  permission_name text [not null, unique]
+  permission_group text [not null]
+}
+
+Table users {
+  id uuid [primary key]
+  name text [not null]
+  email text [not null]
+  mobile_number text [not null]
+  password text [not null]
+  is_active bool [default: true]
+}
+
+Table user_permissions {
+  id uuid [primary key]
+  user_id text [not null, ref: > users.id]
+  permission_id text [not null, ref: > permission_master.id]
+  view bool [not null]
+  create bool [not null]
+  edit bool [not null]
+  delete bool [not null]
+}
+
+Table customers {
+  id uuid [primary key]
+  customer_name text [not null]
+  customer_email text [not null]
+  mobile_number text [default: null]
+  password text [not null]
+  whatsapp_number text [null]
+  customer_address text [null]
+  website text [null]
+  business_registration text [ null]
+  customer_fax text [null]
+  customer_business_card text [null]
+  any_association_membership text [null]
+  customer_social_media text [null]
+  business_reference text [null]//company name/person name/person contact no
+}
+
+Table categories {
+  id uuid [primary key]
+  name text [not null]
+  description text [default: ""]
+  logo_url text [default: null]
+  image_url text [default: null]
+  is_deleted bool [default: false]
+}
+
+Table sub_categories {
+  id uuid [primary key]
+  category_id uuid [not null, ref: > categories.id]
+  name text [not null]
+  description text [default: ""]
+  logo_url text [default: null]
+  image_url text [default: null]
+  is_deleted bool [default: false]
+}
+
+Table products {
+  id uuid [primary key]
+  sub_category_id uuid [not null, ref: > sub_categories.id]
+  name text
+  description text [default: ""]
+  
+}
+
+Table wishlist {
+  id uuid [primary key]
+  customer_id uuid [not null, ref: > customers.id]
+  product_id uuid [not null, ref: > products.id]
+}
+
+Table catelog {
+  id uuid [primary key]
+  name text
+  description text [default: ""]
+  image text
+  pdf text
+}
+
+Table catelog_products {
+  id uuid [primary key]
+  catelog_id uuid [not null, ref: > catelog.id]
+  product_id uuid [not null, ref: > products.id]
+}
+
+Enum quotation_status {
+  pending 
+  completed
+}
+
+Table quotation {
+  id uuid [primary key]
+  customer_id uuid [not null, ref: > customers.id]
+  quotation_date datetime
+  status quotation_status [not null, default: "pending"]
+}
+
+Table quotation_products {
+  id uuid [primary key]
+  quotation_id uuid [not null, ref: > quotation.id]
+  product_id uuid [not null, ref: > products.id]
+  price integer [default: null]
+}
+

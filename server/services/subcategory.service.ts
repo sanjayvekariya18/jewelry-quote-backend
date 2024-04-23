@@ -11,7 +11,7 @@ export default class SubcategoryService {
 			where: {
 				...(searchParams.searchTxt && {
 					name: {
-						[Op.iLike]: "%" + searchParams.searchTxt + "%",
+						[Op.like]: "%" + searchParams.searchTxt + "%",
 					},
 				}),
 				...(searchParams.categoryId && {
@@ -39,14 +39,6 @@ export default class SubcategoryService {
 	public getList = async (searchParams: any) => {
 		return await SubCategory.findAll({
 			where: {
-				...(searchParams.searchTxt && {
-					name: {
-						[Op.iLike]: "%" + searchParams.searchTxt + "%",
-					},
-				}),
-				...(searchParams.category_id && {
-					category_id: searchParams.category_id,
-				}),
 				is_deleted: false,
 			},
 			attributes: ["id", "name"],
