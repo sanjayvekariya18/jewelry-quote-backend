@@ -3,6 +3,8 @@ import { CustomerDetailsController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
 import customerDetailsRoutes from "./customerDetails.route";
+import wishlistRoutes from "./wishList.route";
+import productsRoutes from "./products.route";
 import listRoutes from "./../list.route";
 
 const router = Router();
@@ -16,6 +18,8 @@ router.post(
 );
 router.post("/login", basicValidatorHandler.handler(customerDetailsController.login.validation), use(customerDetailsController.login.controller));
 router.use("/customer-details", customerDetailsRoutes);
+router.use("/wishlist", wishlistRoutes);
+router.use("/products", productsRoutes);
 router.use("/list", listRoutes);
 
 export default router;

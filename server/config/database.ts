@@ -13,9 +13,6 @@ export const sequelizeConnection = new Sequelize(dbName, dbUser, dbPassword, {
 	dialect: dbDriver,
 	port: dbPort,
 	logging: false,
-	// dialectOptions: {
-	// useUTC: false, // for reading from database
-	// },
 	timezone: "+05:30", // for writing to database
 });
 

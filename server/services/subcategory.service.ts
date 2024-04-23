@@ -36,16 +36,6 @@ export default class SubcategoryService {
 		});
 	};
 
-	public getList = async (searchParams: any) => {
-		return await SubCategory.findAll({
-			where: {
-				is_deleted: false,
-			},
-			attributes: ["id", "name"],
-			order: [["name", "ASC"]],
-		});
-	};
-
 	public subCategoriesData = async (searchParams?: any) => {
 		return await SubCategory.findAll({
 			where: {
