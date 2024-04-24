@@ -1,4 +1,4 @@
-import { Category, PermissionMaster, SubCategory, UserMaster, UserPermissions } from "../models";
+import { Category, CustomerDetails, PermissionMaster, Products, SubCategory, UserMaster, UserPermissions, WishList } from "../models";
 
 const initSchemaRelationship = () => {
 	// User
@@ -17,9 +17,18 @@ const initSchemaRelationship = () => {
 	// Sub Category
 	SubCategory.hasOne(Category, { sourceKey: "category_id", foreignKey: "id" });
 	// SubCategory.hasOne(UserMaster, { sourceKey: "last_updated_by", foreignKey: "id" });
+	SubCategory.hasMany(Products, { sourceKey: "id", foreignKey: "sub_category_id" });
 
 	// PermissionMaster
 	PermissionMaster.hasMany(UserPermissions, { sourceKey: "id", foreignKey: "permission_master_id" });
+
+	// Products
+	Products.hasOne(SubCategory, { sourceKey: "sub_category_id", foreignKey: "id" });
+	Products.hasMany(WishList, { sourceKey: "id", foreignKey: "product_id" });
+
+	// Wishlist
+	WishList.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
+	WishList.hasOne(CustomerDetails, { sourceKey: "customer_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;

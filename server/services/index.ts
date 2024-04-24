@@ -8,3 +8,4 @@ export { default as PermissionMasterService } from "./permissionMaster.service";
 export { default as CustomerDetailsService } from "./customerDetails.service";
 export { default as ListService } from "./list.service";
 export { default as WishListServices } from "./wishList.service";
+export { default as ProductService } from "./product.service";

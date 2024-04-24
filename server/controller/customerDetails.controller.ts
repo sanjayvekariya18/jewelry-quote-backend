@@ -79,6 +79,9 @@ export default class CustomerDetailsController {
 			})
 				.then(async (customerData) => {
 					if (customerData && customerData != null) {
+						if (customerData.is_active == false) {
+							throw new UnauthorizedUserHandler("You are deactivated. Contact admin");
+						}
 						await comparePassword(req.body.password.trim(), customerData.password)
 							.then(async () => {
 								const tokenPayload = {
@@ -122,7 +125,11 @@ export default class CustomerDetailsController {
 
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.service.findOne({ id: req.customer.id });
+			const customerId: string = req.params["id"] as string;
+			const data = await this.service.findOne({ id: customerId });
+			if (data == null) {
+				throw new NotExistHandler("Customer Not Found");
+			}
 			return res.api.create(data);
 		},
 	};

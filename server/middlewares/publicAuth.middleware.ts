@@ -34,7 +34,7 @@ const PublicTokenMiddleware = (req: Request, res: Response, next: NextFunction) 
 					}
 
 					if (_customer.is_active == false) {
-						throw new UnauthorizedUserHandler("User deactivated. Contact admin");
+						throw new UnauthorizedUserHandler("You are deactivated. Contact admin");
 					}
 					req.customer = _customer;
 

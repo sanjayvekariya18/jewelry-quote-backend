@@ -7,7 +7,7 @@ const router = Router();
 const controller = new CategoryController();
 const basicValidatorHandler = new BasicValidatorHandler();
 
-router.get("/", use(controller.getAll.controller));
+router.get("/", basicValidatorHandler.handler(controller.getAll.validation), use(controller.getAll.controller));
 router.get("/:id", use(controller.getCategoryDetails.controller));
 router.post("/", basicValidatorHandler.handler(controller.create.validation), use(controller.create.controller));
 router.put("/:id", basicValidatorHandler.handler(controller.edit.validation), use(controller.edit.controller));

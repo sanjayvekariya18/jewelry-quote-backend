@@ -34,12 +34,12 @@ export default class WishListServices {
 		return await WishList.bulkCreate(wishlistData.wishlist, { returning: true });
 	};
 
-	public toggle = async (loggedInUserId: string, diamondId: string) => {
-		const productData = await WishList.findOne({ where: { customer_id: loggedInUserId, product_id: diamondId } });
+	public toggle = async (loggedInUserId: string, productId: string) => {
+		const productData = await WishList.findOne({ where: { customer_id: loggedInUserId, product_id: productId } });
 		if (productData && productData != null) {
 			return this.delete(productData.id);
 		} else {
-			return await WishList.create({ customer_id: loggedInUserId, product_id: diamondId });
+			return await WishList.create({ customer_id: loggedInUserId, product_id: productId });
 		}
 	};
 

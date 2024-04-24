@@ -7,3 +7,4 @@ export { default as PermissionMasterController } from "./permissionMaster.contro
 export { default as CustomerDetailsController } from "./customerDetails.controller";
 export { default as ListController } from "./list.controller";
 export { default as WishListController } from "./wishList.controller";
+export { default as ProductController } from "./product.controller";

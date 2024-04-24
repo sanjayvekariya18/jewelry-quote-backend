@@ -1,5 +1,5 @@
 import { logger } from "../config";
-import { Category, CustomerDetails, PermissionMaster, SubCategory, UserMaster, UserPermissions } from "../models";
+import { Category, CustomerDetails, PermissionMaster, Products, SubCategory, UserMaster, UserPermissions, WishList } from "../models";
 
 const createTables = async () => {
 	const successFullTable: Array<string> = [];
@@ -45,12 +45,28 @@ const createTables = async () => {
 			errorTable.push(`SubCategory Table Error : ${error}`);
 		});
 
+	await Products.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Products Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Products Table Error : ${error}`);
+		});
+
 	await CustomerDetails.sync({ alter: { drop: false } })
 		.then(() => {
 			successFullTable.push(`CustomerDetails Table Created`);
 		})
 		.catch((error) => {
 			errorTable.push(`CustomerDetails Table Error : ${error}`);
+		});
+
+	await WishList.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`WishList Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`WishList Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

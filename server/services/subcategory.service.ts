@@ -14,20 +14,15 @@ export default class SubcategoryService {
 						[Op.like]: "%" + searchParams.searchTxt + "%",
 					},
 				}),
-				...(searchParams.categoryId && {
-					category_id: searchParams.categoryId,
+				...(searchParams.category_id && {
+					category_id: searchParams.category_id,
 				}),
 				is_deleted: false,
 			},
 
-			include: [
-				{
-					model: Category,
-					attributes: [],
-				},
-			],
+			include: [{ model: Category, attributes: [] }],
 			order: [["name", "ASC"]],
-			attributes: ["id", "category_id", [this.Sequelize.col("Category.name"), "category_name"], "name", "details", "logo_url", "img_url"],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "category_name"]],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
 					offset: searchParams.page * searchParams.rowsPerPage,
@@ -36,21 +31,10 @@ export default class SubcategoryService {
 		});
 	};
 
-	public subCategoriesData = async (searchParams?: any) => {
-		return await SubCategory.findAll({
-			where: {
-				...searchParams,
-				is_deleted: false,
-			},
-			attributes: ["id", "name"],
-			order: [["name", "ASC"]],
-		});
-	};
-
 	public findOne = async (searchObject: any) => {
 		return await SubCategory.findOne({
 			where: searchObject,
-			attributes: ["id", "category_id", "name", "details", "logo_url", "img_url"],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "category_name"]],
 		});
 	};
 
@@ -62,7 +46,7 @@ export default class SubcategoryService {
 			},
 			raw: true,
 			include: [{ model: Category, attributes: [] }],
-			attributes: ["id", "name", "category_id", [this.Sequelize.col("Category.name"), "categoryName"], "details", "logo_url", "img_url"],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "categoryName"]],
 		});
 	};
 

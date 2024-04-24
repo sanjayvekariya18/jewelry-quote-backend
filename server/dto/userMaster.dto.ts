@@ -6,7 +6,7 @@ export class SearchUserDTO {
 
 	constructor(data: any) {
 		data.searchTxt ? (this.searchTxt = data.searchTxt.trim()) : delete this.searchTxt;
-		data.is_active != undefined ? (this.is_active = data.is_active) : delete this.is_active;
+		data.is_active != "" && data.is_active != undefined ? (this.is_active = data.is_active == "true") : delete this.is_active;
 		data.page != undefined && data.page != "" ? (this.page = Number(data.page)) : delete this.page;
 		data.rowsPerPage != undefined && data.rowsPerPage != "" ? (this.rowsPerPage = Number(data.rowsPerPage)) : delete this.rowsPerPage;
 	}

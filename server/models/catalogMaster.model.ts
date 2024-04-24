@@ -1,32 +1,33 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
-export interface ProductsAttributes {
+export interface CatalogMasterAttribute {
 	id: string;
-	stock_id: string;
-	sub_category_id: string;
 	name: string;
-	description: string;
+	description: String;
+	img_url: string;
+	pdf_url: string;
 	is_active: boolean;
 	is_deleted: boolean;
 	last_updated_by: string;
 }
 
-export interface ProductsInput extends Optional<ProductsAttributes, "id" | "description" | "is_active" | "is_deleted" | "last_updated_by"> {}
-export interface ProductsOutput extends Required<ProductsAttributes> {}
+export interface CatalogMasterInput
+	extends Optional<CatalogMasterAttribute, "id" | "description" | "img_url" | "pdf_url" | "is_active" | "is_deleted" | "last_updated_by"> {}
+export interface CatalogMasterOutput extends Required<CatalogMasterAttribute> {}
 
-class Products extends Model<ProductsAttributes, ProductsInput> implements ProductsAttributes {
+class CatalogMaster extends Model<CatalogMasterAttribute, CatalogMasterInput> implements CatalogMasterAttribute {
 	public id!: string;
-	public stock_id!: string;
-	public sub_category_id!: string;
 	public name!: string;
-	public description!: string;
+	public description!: String;
+	public img_url!: string;
+	public pdf_url!: string;
 	public is_active!: boolean;
 	public is_deleted!: boolean;
 	public last_updated_by!: string;
 }
 
-Products.init(
+CatalogMaster.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -34,38 +35,29 @@ Products.init(
 			allowNull: false,
 			primaryKey: true,
 		},
-		stock_id: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		sub_category_id: {
-			type: DataTypes.UUID,
-			allowNull: false,
-			references: {
-				model: {
-					tableName: "sub_category",
-				},
-				key: "id",
-			},
-			onUpdate: "RESTRICT",
-			onDelete: "CASCADE",
-		},
 		name: {
-			type: DataTypes.STRING,
 			allowNull: false,
+			type: DataTypes.STRING,
 		},
 		description: {
-			type: DataTypes.STRING,
-			allowNull: false,
 			defaultValue: "",
+			type: DataTypes.STRING,
+		},
+		img_url: {
+			defaultValue: null,
+			type: DataTypes.STRING,
+		},
+		pdf_url: {
+			defaultValue: null,
+			type: DataTypes.STRING,
 		},
 		is_active: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: true,
 		},
 		is_deleted: {
-			type: DataTypes.BOOLEAN,
 			defaultValue: false,
+			type: DataTypes.BOOLEAN,
 		},
 		last_updated_by: {
 			allowNull: false,
@@ -85,8 +77,8 @@ Products.init(
 		paranoid: false,
 		freezeTableName: true,
 		timestamps: true,
-		tableName: `products`,
+		tableName: `catalog_master`,
 	}
 );
 
-export default Products;
+export default CatalogMaster;

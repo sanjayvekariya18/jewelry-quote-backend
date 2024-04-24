@@ -31,7 +31,7 @@ WishList.init(
 				model: {
 					tableName: "customer_details",
 				},
-				key: "customer_id",
+				key: "id",
 			},
 			onUpdate: "RESTRICT",
 			onDelete: "CASCADE",
@@ -43,7 +43,7 @@ WishList.init(
 				model: {
 					tableName: "products",
 				},
-				key: "product_id",
+				key: "id",
 			},
 			onUpdate: "RESTRICT",
 			onDelete: "CASCADE",

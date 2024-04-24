@@ -17,6 +17,9 @@ export default class ProductService {
 				...(searchParams.sub_category_id && {
 					sub_category_id: searchParams.sub_category_id,
 				}),
+				...(searchParams.is_active != undefined && {
+					is_active: searchParams.is_active,
+				}),
 				is_deleted: false,
 			},
 
@@ -55,8 +58,8 @@ export default class ProductService {
 		});
 	};
 
-	public delete = async (product_id: string) => {
-		return await Products.update({ is_deleted: true }, { where: { id: product_id } }).then(() => {
+	public delete = async (product_id: string, loggedInUserId: string) => {
+		return await Products.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: product_id } }).then(() => {
 			return "Product Deleted Successfully";
 		});
 	};
