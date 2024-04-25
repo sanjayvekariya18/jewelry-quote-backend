@@ -46,8 +46,8 @@ export default class CategoryController {
 					let uploadedImg: any = await saveFile(file.img_url, "category");
 					categoryData.img_url = uploadedImg.upload_path;
 				}
-				if (file.logoUrl) {
-					let uploadedImg: any = await saveFile(file.logoUrl, "category");
+				if (file.logo_url) {
+					let uploadedImg: any = await saveFile(file.logo_url, "category");
 					categoryData.logo_url = uploadedImg.upload_path;
 				}
 			}
@@ -83,9 +83,9 @@ export default class CategoryController {
 					let uploadedImg: any = await saveFile(file.img_url, "category");
 					categoryData.img_url = uploadedImg.upload_path;
 				}
-				if (file.logoUrl) {
+				if (file.logo_url) {
 					oldImgData?.logo_url && (await removeFile(oldImgData.logo_url));
-					let uploadedImg: any = await saveFile(file.logoUrl, "category");
+					let uploadedImg: any = await saveFile(file.logo_url, "category");
 					categoryData.logo_url = uploadedImg.upload_path;
 				}
 			}

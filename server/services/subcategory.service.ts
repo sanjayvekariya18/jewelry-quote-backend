@@ -1,7 +1,7 @@
-import { Op, Transaction } from "sequelize";
+import { Op } from "sequelize";
 import { CreateSubCategoryDTO, EditSubCategoryDTO, SearchSubCategoryDTO } from "../dto";
 import { Category, SubCategory } from "../models";
-import { executeTransaction, sequelizeConnection } from "../config/database";
+import { sequelizeConnection } from "../config/database";
 
 export default class SubcategoryService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -34,6 +34,7 @@ export default class SubcategoryService {
 	public findOne = async (searchObject: any) => {
 		return await SubCategory.findOne({
 			where: searchObject,
+			include: [{ model: Category, attributes: [] }],
 			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "category_name"]],
 		});
 	};
@@ -63,8 +64,6 @@ export default class SubcategoryService {
 	};
 
 	public delete = async (subcategoriesId: string, loggedInUserId: string) => {
-		return await SubCategory.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: subcategoriesId }, returning: true }).then(
-			(data) => data[1][0]
-		);
+		return await SubCategory.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: subcategoriesId } });
 	};
 }

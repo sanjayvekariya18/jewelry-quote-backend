@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
-export interface CatalogMasterAttribute {
+export interface CatalogProductsAttribute {
 	id: string;
 	catalog_id: string;
 	product_id: string;
@@ -9,10 +9,10 @@ export interface CatalogMasterAttribute {
 	last_updated_by: string;
 }
 
-export interface CatalogMasterInput extends Optional<CatalogMasterAttribute, "id" | "is_deleted" | "last_updated_by"> {}
-export interface CatalogMasterOutput extends Required<CatalogMasterAttribute> {}
+export interface CatalogProductsInput extends Optional<CatalogProductsAttribute, "id" | "is_deleted" | "last_updated_by"> {}
+export interface CatalogProductsOutput extends Required<CatalogProductsAttribute> {}
 
-class CatalogMaster extends Model<CatalogMasterAttribute, CatalogMasterInput> implements CatalogMasterAttribute {
+class CatalogProducts extends Model<CatalogProductsAttribute, CatalogProductsInput> implements CatalogProductsAttribute {
 	public id!: string;
 	public catalog_id!: string;
 	public product_id!: string;
@@ -20,7 +20,7 @@ class CatalogMaster extends Model<CatalogMasterAttribute, CatalogMasterInput> im
 	public last_updated_by!: string;
 }
 
-CatalogMaster.init(
+CatalogProducts.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -74,8 +74,8 @@ CatalogMaster.init(
 		paranoid: false,
 		freezeTableName: true,
 		timestamps: true,
-		tableName: `catalog_master`,
+		tableName: `catalog_products`,
 	}
 );
 
-export default CatalogMaster;
+export default CatalogProducts;

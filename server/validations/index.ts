@@ -5,3 +5,4 @@ export { default as UserPermissionValidations } from "./userPermission.validatio
 export { default as PermissionMasterValidation } from "./permissionMaster.validation";
 export { default as CustomerDetailsValidation } from "./customerDetails.validation";
 export { default as ProductValidation } from "./products.validation";
+export { default as CatalogValidations } from "./catalog.validation";

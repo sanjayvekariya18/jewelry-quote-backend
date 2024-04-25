@@ -6,6 +6,8 @@ export { default as PermissionMaster } from "./permissionMaster.model";
 export { default as CustomerDetails } from "./customerDetails.model";
 export { default as Products } from "./products.model";
 export { default as WishList } from "./wishlist.model";
+export { default as CatalogMaster } from "./catalogMaster.model";
+export { default as CatalogProducts } from "./catalogProducts.model";
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
 import { SubcategoryAttribute, SubcategoryInput, SubcategoryOutput } from "./subCategory.model";
@@ -14,6 +16,8 @@ import { PermissionMasterAttributes, PermissionMasterInput, PermissionMasterOutp
 import { CustomerDetailsAttributes, CustomerDetailsInput, CustomerDetailsOutput, SocialMedia } from "./customerDetails.model";
 import { ProductsAttributes, ProductsInput, ProductsOutput } from "./products.model";
 import { WishListAttribute, WishListInput, WishListOutput } from "./wishlist.model";
+import { CatalogMasterAttribute, CatalogMasterInput, CatalogMasterOutput } from "./catalogMaster.model";
+import { CatalogProductsAttribute, CatalogProductsInput, CatalogProductsOutput } from "./catalogProducts.model";
 
 export {
 	UserMasterAttributes,
@@ -41,4 +45,10 @@ export {
 	WishListAttribute,
 	WishListInput,
 	WishListOutput,
+	CatalogMasterAttribute,
+	CatalogMasterInput,
+	CatalogMasterOutput,
+	CatalogProductsAttribute,
+	CatalogProductsInput,
+	CatalogProductsOutput,
 };

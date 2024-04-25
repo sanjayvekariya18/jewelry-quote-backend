@@ -1,5 +1,16 @@
 import { logger } from "../config";
-import { Category, CustomerDetails, PermissionMaster, Products, SubCategory, UserMaster, UserPermissions, WishList } from "../models";
+import {
+	CatalogMaster,
+	CatalogProducts,
+	Category,
+	CustomerDetails,
+	PermissionMaster,
+	Products,
+	SubCategory,
+	UserMaster,
+	UserPermissions,
+	WishList,
+} from "../models";
 
 const createTables = async () => {
 	const successFullTable: Array<string> = [];
@@ -67,6 +78,22 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`WishList Table Error : ${error}`);
+		});
+
+	await CatalogMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`CatalogMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`CatalogMaster Table Error : ${error}`);
+		});
+
+	await CatalogProducts.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`CatalogProducts Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`CatalogProducts Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

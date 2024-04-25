@@ -1,4 +1,15 @@
-import { Category, CustomerDetails, PermissionMaster, Products, SubCategory, UserMaster, UserPermissions, WishList } from "../models";
+import {
+	CatalogMaster,
+	CatalogProducts,
+	Category,
+	CustomerDetails,
+	PermissionMaster,
+	Products,
+	SubCategory,
+	UserMaster,
+	UserPermissions,
+	WishList,
+} from "../models";
 
 const initSchemaRelationship = () => {
 	// User
@@ -29,6 +40,13 @@ const initSchemaRelationship = () => {
 	// Wishlist
 	WishList.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
 	WishList.hasOne(CustomerDetails, { sourceKey: "customer_id", foreignKey: "id" });
+
+	// CatalogMaster
+	CatalogMaster.hasMany(CatalogProducts, { sourceKey: "id", foreignKey: "catalog_id" });
+
+	// CatalogProducts
+	CatalogProducts.hasOne(CatalogMaster, { sourceKey: "catalog_id", foreignKey: "id" });
+	CatalogProducts.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;

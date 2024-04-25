@@ -9,3 +9,4 @@ export { default as CustomerDetailsService } from "./customerDetails.service";
 export { default as ListService } from "./list.service";
 export { default as WishListServices } from "./wishList.service";
 export { default as ProductService } from "./product.service";
+export { default as CatalogService } from "./catalog.service";

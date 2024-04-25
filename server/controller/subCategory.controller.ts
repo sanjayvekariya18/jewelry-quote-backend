@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { SubcategoryService } from "../services";
+import { CategoryService, SubcategoryService } from "../services";
 import { SubCategoriesValidation } from "../validations";
 import { SearchSubCategoryDTO, CreateSubCategoryDTO, EditSubCategoryDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
@@ -9,6 +9,7 @@ import { Category, SubCategory } from "../models";
 
 export default class SubCategoryController {
 	private service = new SubcategoryService();
+	private categoryService = new CategoryService();
 	private validations = new SubCategoriesValidation();
 
 	public getAll = {
@@ -53,6 +54,10 @@ export default class SubCategoryController {
 			if (subcategoryExist && subcategoryExist != null) {
 				throw new DuplicateRecord("Subcategory already exists");
 			}
+			const checkCategory = await this.categoryService.findOne({ id: subcategoryData.category_id });
+			if (checkCategory == null) {
+				throw new DuplicateRecord("Category not found");
+			}
 			const file: any = req.files;
 			if (file) {
 				if (file.img_url) {
@@ -87,20 +92,20 @@ export default class SubCategoryController {
 			if (subcategoryExist && subcategoryExist != null) {
 				throw new DuplicateRecord("Subcategory already exists");
 			}
+			const checkCategory = await this.categoryService.findOne({ id: subcategoryData.category_id });
+			if (checkCategory == null) {
+				throw new DuplicateRecord("Category not found");
+			}
 			const file: any = req.files;
 			if (file) {
 				const oldImgData = await this.service.findOne({ id: subcategoryId });
 				if (file.img_url) {
-					// Remove old image
 					oldImgData?.img_url && (await removeFile(oldImgData.img_url));
-					// Upload new image
 					let profile: any = await saveFile(file.img_url, "subcategory");
 					subcategoryData.img_url = profile.upload_path;
 				}
 				if (file.logo_url) {
-					// Remove old image
 					oldImgData?.logo_url && (await removeFile(oldImgData.logo_url));
-					// Upload new image
 					let profile: any = await saveFile(file.logo_url, "subcategory");
 					subcategoryData.logo_url = profile.upload_path;
 				}
@@ -119,12 +124,12 @@ export default class SubCategoryController {
 			}
 			await this.service
 				.delete(subcategoryId, req.authUser.id)
-				.then(async (data) => {
-					if (data.img_url) {
-						await removeFile(data.img_url);
+				.then(async () => {
+					if (subCategoryExist.img_url) {
+						await removeFile(subCategoryExist.img_url);
 					}
-					if (data.logo_url) {
-						await removeFile(data.logo_url);
+					if (subCategoryExist.logo_url) {
+						await removeFile(subCategoryExist.logo_url);
 					}
 					res.api.create({
 						message: `Subcategory deleted`,

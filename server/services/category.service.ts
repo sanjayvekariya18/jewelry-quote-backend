@@ -1,5 +1,4 @@
-import { Transaction } from "sequelize";
-import { executeTransaction, sequelizeConnection } from "../config/database";
+import { sequelizeConnection } from "../config/database";
 import { Category } from "../models";
 import { CategoryDTO, SearchCategoryDTO } from "../dto";
 import { Op } from "sequelize";
