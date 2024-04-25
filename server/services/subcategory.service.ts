@@ -1,7 +1,7 @@
-import { Op, Transaction } from "sequelize";
+import { Op } from "sequelize";
 import { CreateSubCategoryDTO, EditSubCategoryDTO, SearchSubCategoryDTO } from "../dto";
 import { Category, SubCategory } from "../models";
-import { executeTransaction, sequelizeConnection } from "../config/database";
+import { sequelizeConnection } from "../config/database";
 
 export default class SubcategoryService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -14,20 +14,15 @@ export default class SubcategoryService {
 						[Op.like]: "%" + searchParams.searchTxt + "%",
 					},
 				}),
-				...(searchParams.categoryId && {
-					category_id: searchParams.categoryId,
+				...(searchParams.category_id && {
+					category_id: searchParams.category_id,
 				}),
 				is_deleted: false,
 			},
 
-			include: [
-				{
-					model: Category,
-					attributes: [],
-				},
-			],
+			include: [{ model: Category, attributes: [] }],
 			order: [["name", "ASC"]],
-			attributes: ["id", "category_id", [this.Sequelize.col("Category.name"), "category_name"], "name", "details", "logo_url", "img_url"],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "category_name"]],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
 					offset: searchParams.page * searchParams.rowsPerPage,
@@ -36,31 +31,11 @@ export default class SubcategoryService {
 		});
 	};
 
-	public getList = async (searchParams: any) => {
-		return await SubCategory.findAll({
-			where: {
-				is_deleted: false,
-			},
-			attributes: ["id", "name"],
-			order: [["name", "ASC"]],
-		});
-	};
-
-	public subCategoriesData = async (searchParams?: any) => {
-		return await SubCategory.findAll({
-			where: {
-				...searchParams,
-				is_deleted: false,
-			},
-			attributes: ["id", "name"],
-			order: [["name", "ASC"]],
-		});
-	};
-
 	public findOne = async (searchObject: any) => {
 		return await SubCategory.findOne({
 			where: searchObject,
-			attributes: ["id", "category_id", "name", "details", "logo_url", "img_url"],
+			include: [{ model: Category, attributes: [] }],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "category_name"]],
 		});
 	};
 
@@ -72,7 +47,7 @@ export default class SubcategoryService {
 			},
 			raw: true,
 			include: [{ model: Category, attributes: [] }],
-			attributes: ["id", "name", "category_id", [this.Sequelize.col("Category.name"), "categoryName"], "details", "logo_url", "img_url"],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "categoryName"]],
 		});
 	};
 
@@ -89,8 +64,6 @@ export default class SubcategoryService {
 	};
 
 	public delete = async (subcategoriesId: string, loggedInUserId: string) => {
-		return await SubCategory.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: subcategoriesId }, returning: true }).then(
-			(data) => data[1][0]
-		);
+		return await SubCategory.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: subcategoriesId } });
 	};
 }

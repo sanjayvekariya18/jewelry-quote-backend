@@ -15,6 +15,9 @@ export default class UserService {
 				}),
 				id: { [Op.not]: loggedInUserId },
 				is_deleted: false,
+				...(searchParams.is_active != undefined && {
+					is_active: searchParams.is_active,
+				}),
 			},
 			attributes: ["id", "name", "email", "mobile_number", "is_active"],
 			order: [["name", "ASC"]],
@@ -28,7 +31,7 @@ export default class UserService {
 
 	public findOne = async (searchObject: any, includePassword: boolean = false) => {
 		return await UserMaster.findOne({
-			where: searchObject,
+			where: { ...searchObject, is_deleted: false },
 			attributes: ["id", "name", "email", "mobile_number", ...(includePassword == true ? ["password"] : []), "is_active"],
 			raw: true,
 		});

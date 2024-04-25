@@ -6,3 +6,6 @@ export { default as UserPermissionController } from "./userPermission.controller
 export { default as PermissionMasterController } from "./permissionMaster.controller";
 export { default as CustomerDetailsController } from "./customerDetails.controller";
 export { default as ListController } from "./list.controller";
+export { default as WishListController } from "./wishList.controller";
+export { default as ProductController } from "./product.controller";
+export { default as CatalogController } from "./catalog.controller";

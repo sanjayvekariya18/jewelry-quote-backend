@@ -1,14 +1,19 @@
-import { Transaction } from "sequelize";
-import { executeTransaction, sequelizeConnection } from "../config/database";
+import { sequelizeConnection } from "../config/database";
 import { Category } from "../models";
 import { CategoryDTO, SearchCategoryDTO } from "../dto";
+import { Op } from "sequelize";
 
 export default class CategoryService {
 	private Sequelize = sequelizeConnection.Sequelize;
 
 	public getAll = async (searchParams: SearchCategoryDTO) => {
 		return await Category.findAndCountAll({
-			where: { is_deleted: false },
+			where: {
+				...(searchParams.searchTxt && {
+					[Op.or]: [{ name: { [Op.like]: `%${searchParams.searchTxt}%` } }],
+				}),
+				is_deleted: false,
+			},
 			order: [["name", "ASC"]],
 			attributes: ["id", "name", "details", "img_url", "logo_url"],
 			...(searchParams.page != undefined &&

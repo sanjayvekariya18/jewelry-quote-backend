@@ -70,7 +70,7 @@ export default class UserMasterController {
 			}
 
 			if (userData.mobile_number) {
-				const mobileExists = await this.service.findOne({ mobile_number: userData.mobile_number, is_deleted: false });
+				const mobileExists = await this.service.findOne({ id: { [Op.not]: userId }, mobile_number: userData.mobile_number, is_deleted: false });
 				if (mobileExists && mobileExists != null) {
 					throw new DuplicateRecord("Mobile already Exists");
 				}

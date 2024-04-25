@@ -36,7 +36,7 @@ export interface LoggedInCustomerTokenPayload {
 export default class AuthorizationService {
 	private userMasterServices = new UserMasterService();
 	public findUserById = async (userId: string) => {
-		const userData = await this.userMasterServices.findOne({ id: userId, is_active: true });
+		const userData = await this.userMasterServices.findOne({ id: userId });
 
 		const permissionsData = await UserPermissions.findAll({
 			where: { user_id: userId },

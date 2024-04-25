@@ -8,12 +8,13 @@ import { removeFile, saveFile } from "../utils/helper";
 import { Category } from "../models";
 
 export default class CategoryController {
-	private categoryService = new CategoryService();
-	private categoryValidations = new CategoryValidations();
+	private service = new CategoryService();
+	private validations = new CategoryValidations();
 
 	public getAll = {
+		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.categoryService.getAll(new SearchCategoryDTO(req.query));
+			const data = await this.service.getAll(new SearchCategoryDTO(req.query));
 			res.api.create(data);
 		},
 	};
@@ -21,20 +22,20 @@ export default class CategoryController {
 	public getCategoryDetails = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const categoryId: string = req.params["id"] as string;
-			const categoryExist = await Category.findByPk(categoryId);
+			const categoryExist = await Category.findByPk(categoryId, { attributes: ["id", "name", "details", "img_url", "logo_url"] });
 			if (!categoryExist) {
 				throw new NotExistHandler("Category Not Found");
 			}
-			const data = await this.categoryService.getCategoryDetails(categoryId);
+			const data = await this.service.getCategoryDetails(categoryId);
 			res.api.create(data);
 		},
 	};
 
 	public create = {
-		validation: this.categoryValidations.category,
+		validation: this.validations.category,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const categoryData = new CategoryDTO(req.body);
-			const categoryExist = await this.categoryService.findOne({ name: categoryData.name, is_deleted: false });
+			const categoryExist = await this.service.findOne({ name: categoryData.name, is_deleted: false });
 
 			if (categoryExist && categoryExist != null) {
 				throw new DuplicateRecord("Category already exists");
@@ -45,18 +46,18 @@ export default class CategoryController {
 					let uploadedImg: any = await saveFile(file.img_url, "category");
 					categoryData.img_url = uploadedImg.upload_path;
 				}
-				if (file.logoUrl) {
-					let uploadedImg: any = await saveFile(file.logoUrl, "category");
+				if (file.logo_url) {
+					let uploadedImg: any = await saveFile(file.logo_url, "category");
 					categoryData.logo_url = uploadedImg.upload_path;
 				}
 			}
-			const data = await this.categoryService.create(categoryData);
+			const data = await this.service.create(categoryData);
 			res.api.create(data);
 		},
 	};
 
 	public edit = {
-		validation: this.categoryValidations.category,
+		validation: this.validations.category,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const categoryId: string = req.params["id"] as string;
 			const categoryExist = await Category.findByPk(categoryId);
@@ -64,7 +65,7 @@ export default class CategoryController {
 				throw new NotExistHandler("Category Not Found");
 			}
 			const categoryData = new CategoryDTO(req.body);
-			const categoryDuplicateExist = await this.categoryService.findOne({
+			const categoryDuplicateExist = await this.service.findOne({
 				id: { [Op.not]: categoryId },
 				name: categoryData.name,
 				is_deleted: false,
@@ -76,19 +77,19 @@ export default class CategoryController {
 
 			const file: any = req.files;
 			if (file) {
-				const oldImgData = await this.categoryService.findOne({ id: categoryId });
+				const oldImgData = await this.service.findOne({ id: categoryId });
 				if (file.img_url) {
 					oldImgData?.img_url && (await removeFile(oldImgData.img_url));
 					let uploadedImg: any = await saveFile(file.img_url, "category");
 					categoryData.img_url = uploadedImg.upload_path;
 				}
-				if (file.logoUrl) {
+				if (file.logo_url) {
 					oldImgData?.logo_url && (await removeFile(oldImgData.logo_url));
-					let uploadedImg: any = await saveFile(file.logoUrl, "category");
+					let uploadedImg: any = await saveFile(file.logo_url, "category");
 					categoryData.logo_url = uploadedImg.upload_path;
 				}
 			}
-			const data = await this.categoryService.edit(categoryId, categoryData);
+			const data = await this.service.edit(categoryId, categoryData);
 			res.api.create(data);
 		},
 	};
@@ -96,11 +97,11 @@ export default class CategoryController {
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const category_id: string = req.params["id"] as string;
-			const categoryExist = await this.categoryService.findOne({ id: category_id });
+			const categoryExist = await this.service.findOne({ id: category_id });
 			if (!categoryExist) {
 				throw new NotExistHandler("Category Not Found");
 			}
-			await this.categoryService
+			await this.service
 				.delete(category_id, req.authUser.id)
 				.then(async () => {
 					if (categoryExist.img_url) await removeFile(categoryExist.img_url);

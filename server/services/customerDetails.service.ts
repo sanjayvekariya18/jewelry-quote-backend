@@ -49,6 +49,7 @@ export default class CustomerDetailsService {
 				"association_membership",
 				"customer_social_media",
 				"business_reference",
+				"is_active",
 			],
 			order: [["customer_name", "ASC"]],
 			...(searchParams.page != undefined &&

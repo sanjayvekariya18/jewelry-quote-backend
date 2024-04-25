@@ -7,6 +7,6 @@ import { PublicTokenMiddleware, TokenVerifyMiddleware } from "../../middlewares"
 const router = Router();
 
 router.use("/private", use(TokenVerifyMiddleware), privateRoutes);
-router.use("/", use(PublicTokenMiddleware), customerRoute);
+router.use("/customer", use(PublicTokenMiddleware), customerRoute);
 
 export default router;

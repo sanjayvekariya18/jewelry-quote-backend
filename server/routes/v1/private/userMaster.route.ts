@@ -7,7 +7,7 @@ const router = Router();
 const controller = new UserMasterController();
 const basicValidatorHandler = new BasicValidatorHandler();
 
-router.get("/", use(controller.getAll.controller));
+router.get("/", basicValidatorHandler.handler(controller.getAll.validation), use(controller.getAll.controller));
 router.get("/:id", use(controller.findOne.controller));
 router.post("/", basicValidatorHandler.handler(controller.create.validation), use(controller.create.controller));
 router.put("/change-password", basicValidatorHandler.handler(controller.changePassword.validation), use(controller.changePassword.controller));

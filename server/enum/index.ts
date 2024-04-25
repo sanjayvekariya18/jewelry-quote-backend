@@ -5,4 +5,5 @@ export enum PERMISSIONS {
 	SUB_CATEGORY = "sub_category",
 	PRODUCT = "product",
 	CUSTOMER = "customer",
+	CATALOG_MASTER = "catalog_master",
 }

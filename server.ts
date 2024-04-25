@@ -16,6 +16,7 @@ import http from "http";
 import https from "https";
 import fs from "fs";
 import { NODE_MODE } from "./server/constants";
+import moment from "moment";
 
 const app: Application = express();
 const port = config.port;
@@ -104,7 +105,17 @@ app.use("*", (req: Request, res: Response, next: NextFunction) => {
 
 // v1 api routes
 app.use(express.static("./public"));
-app.use("/api/v1", routes);
+app.use(
+	"/api/v1",
+	(req: Request, res: Response, next: NextFunction) => {
+		if (config.env == "development")
+			logger.info(
+				`${req.protocol}://${req.get("host")}${req.originalUrl} --- METHOD -> ${req.method} --- Time -> ${moment().format("YYYY-MM-DD HH:mm:ss")}`
+			);
+		next();
+	},
+	routes
+);
 
 // Error Handling & Not Found Page
 app.use(RootErrorHandler);
