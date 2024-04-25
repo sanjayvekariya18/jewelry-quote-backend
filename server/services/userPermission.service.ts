@@ -42,13 +42,13 @@ export default class UserPermissionsService {
 		const dbData: Array<any> = await sequelizeConnection.query(
 			`
 			SELECT 
-                PERMISSIONMASTER.ID,
+                PERMISSIONMASTER.id,
                 permissionName,
                 permissionGroup
             FROM permission_master AS PERMISSIONMASTER
-            LEFT JOIN user_permissions AS USERPERMISSIONS ON USERPERMISSIONS.permission_master_id = PERMISSIONMASTER.ID
+            LEFT JOIN user_permissions AS USERPERMISSIONS ON USERPERMISSIONS.permission_master_id = PERMISSIONMASTER.id
             AND USERPERMISSIONS.user_id = '${user_id}'
-            WHERE USERPERMISSIONS.ID IS NULL
+            WHERE USERPERMISSIONS.id IS NULL
             ORDER BY PERMISSIONMASTER.permissionGroup ASC, PERMISSIONMASTER.permissionName ASC
 		`,
 			{ type: QueryTypes.SELECT }

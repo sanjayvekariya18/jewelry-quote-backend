@@ -7,6 +7,8 @@ import { CreateCustomerDetailsDTO, CustomerChangePasswordDTO, EditCustomerDetail
 import { CreateWishlistDTO, BulkCreateWishlistDTO } from "./wishlist.dto";
 import { CreateProductDTO, EditProductDTO, SearchProductDTO } from "./product.dto";
 import { CreateCatalogDTO, SearchCatalogDTO } from "./catalog.dto";
+import { AttributesDTO, SearchAttributesDTO } from "./attributes.dto";
+import { OptionsDTO, SearchOptionsDTO } from "./options.dto";
 
 export {
 	ToggleUserPermissionDTO,
@@ -33,4 +35,8 @@ export {
 	SearchProductDTO,
 	CreateCatalogDTO,
 	SearchCatalogDTO,
+	AttributesDTO,
+	SearchAttributesDTO,
+	OptionsDTO,
+	SearchOptionsDTO,
 };

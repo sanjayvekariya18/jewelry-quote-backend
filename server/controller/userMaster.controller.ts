@@ -4,7 +4,6 @@ import { UserMasterValidation } from "../validations";
 import { ChangePasswordDTO, CreateUserDTO, EditUserDTO, SearchUserDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { Op } from "sequelize";
-import { removeFile, saveFile } from "../utils/helper";
 import { comparePassword } from "../utils/bcrypt.helper";
 import { UserMaster } from "../models";
 

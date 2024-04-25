@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ProductService } from "../services";
+import { ProductService, SubcategoryService } from "../services";
 import { ProductValidation } from "../validations";
 import { SearchProductDTO, CreateProductDTO, EditProductDTO } from "../dto";
 import { NotExistHandler } from "../errorHandler";
@@ -7,6 +7,7 @@ import { Products } from "../models";
 
 export default class ProductController {
 	private service = new ProductService();
+	private subcategoryService = new SubcategoryService();
 	private validations = new ProductValidation();
 
 	public getAll = {
@@ -32,11 +33,12 @@ export default class ProductController {
 		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const productData = new CreateProductDTO(req.body);
-			// const subcategoryExist = await this.service.findOne({ name: subcategoryData.name, is_deleted: false });
 
-			// if (subcategoryExist && subcategoryExist != null) {
-			// 	throw new DuplicateRecord("Subcategory already exists");
-			// }
+			const subcategoryExist = await this.subcategoryService.findOne({ id: productData.sub_category_id, is_deleted: false });
+			if (subcategoryExist && subcategoryExist != null) {
+				throw new NotExistHandler("Subcategory not found");
+			}
+
 			const data = await this.service.create(productData);
 			res.api.create(data);
 		},
@@ -51,15 +53,12 @@ export default class ProductController {
 				throw new NotExistHandler("Product Not Found");
 			}
 			const productData = new EditProductDTO(req.body);
-			// const subcategoryExist = await this.service.findOne({
-			// 	id: { [Op.not]: subcategoryId },
-			// 	name: subcategoryData.name,
-			// 	is_deleted: false,
-			// });
 
-			// if (subcategoryExist && subcategoryExist != null) {
-			// 	throw new DuplicateRecord("Subcategory already exists");
-			// }
+			const subcategoryExist = await this.subcategoryService.findOne({ id: productData.sub_category_id, is_deleted: false });
+			if (subcategoryExist && subcategoryExist != null) {
+				throw new NotExistHandler("Subcategory not found");
+			}
+
 			const data = await this.service.edit(productId, productData);
 			res.api.create(data);
 		},
@@ -74,7 +73,7 @@ export default class ProductController {
 			}
 			await this.service
 				.delete(productId, req.authUser.id)
-				.then(async (data) => {
+				.then(async () => {
 					res.api.create({
 						message: `Product deleted`,
 					});

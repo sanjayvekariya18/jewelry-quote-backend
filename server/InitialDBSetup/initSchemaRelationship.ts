@@ -1,9 +1,12 @@
 import {
+	Attributes,
 	CatalogMaster,
 	CatalogProducts,
 	Category,
 	CustomerDetails,
+	Options,
 	PermissionMaster,
+	ProductAttributeOptions,
 	Products,
 	SubCategory,
 	UserMaster,
@@ -36,6 +39,7 @@ const initSchemaRelationship = () => {
 	// Products
 	Products.hasOne(SubCategory, { sourceKey: "sub_category_id", foreignKey: "id" });
 	Products.hasMany(WishList, { sourceKey: "id", foreignKey: "product_id" });
+	Products.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "product_id" });
 
 	// Wishlist
 	WishList.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
@@ -47,6 +51,17 @@ const initSchemaRelationship = () => {
 	// CatalogProducts
 	CatalogProducts.hasOne(CatalogMaster, { sourceKey: "catalog_id", foreignKey: "id" });
 	CatalogProducts.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
+
+	// Attributes
+	Attributes.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "attribute_id" });
+
+	// Options
+	Options.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "option_id" });
+
+	// ProductAttributeOptions
+	ProductAttributeOptions.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
+	ProductAttributeOptions.hasOne(Attributes, { sourceKey: "attribute_id", foreignKey: "id" });
+	// ProductAttributeOptions.hasOne(Options, { sourceKey: "option_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;

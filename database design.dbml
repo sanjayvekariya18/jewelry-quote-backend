@@ -39,7 +39,7 @@ Table customers {
   business_registration text [ null]
   customer_fax text [null]
   customer_business_card text [null]
-  any_association_membership text [null]
+  association_membership text [null]
   customer_social_media text [null]
   business_reference text [null]//company name/person name/person contact no
 }
@@ -61,6 +61,13 @@ Table sub_categories {
   logo_url text [default: null]
   image_url text [default: null]
   is_deleted bool [default: false]
+}
+
+Table sub_category_attributes {
+  id uuid [primary key]
+  sub_category_id uuid [not null, ref: > sub_categories.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+  
 }
 
 Table products {
@@ -108,5 +115,35 @@ Table quotation_products {
   quotation_id uuid [not null, ref: > quotation.id]
   product_id uuid [not null, ref: > products.id]
   price integer [default: null]
+  qty integer [not null]
 }
 
+Table quotation_product_attribute_option {
+  id uuid [primary key]
+  quotation_product_id uuid [not null, ref: > quotation_products.id]
+  attribute text
+  option text
+}
+
+Table product_attributes_option {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+  default_option text [not null]
+}
+
+Table attributes {
+  id uuid [primary key]
+  name text
+}
+
+Table options {
+  id uuid [primary key]
+  name text
+}
+
+Table attribute_option {
+  id uuid [primary key]
+ attribute_id uuid [not null, ref: > attributes.id]
+  option_id uuid [not null, ref: > options.id]
+}

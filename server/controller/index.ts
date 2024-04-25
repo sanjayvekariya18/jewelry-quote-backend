@@ -9,3 +9,5 @@ export { default as ListController } from "./list.controller";
 export { default as WishListController } from "./wishList.controller";
 export { default as ProductController } from "./product.controller";
 export { default as CatalogController } from "./catalog.controller";
+export { default as AttributesController } from "./attributes.controller";
+export { default as OptionsController } from "./options.controller";

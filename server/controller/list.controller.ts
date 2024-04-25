@@ -28,4 +28,18 @@ export default class ListController {
 			return res.api.create(data);
 		},
 	};
+
+	public attributes = {
+		controller: async (req: Request, res: Response): Promise<void> => {
+			const data = await this.service.attributes();
+			return res.api.create(data);
+		},
+	};
+
+	public options = {
+		controller: async (req: Request, res: Response): Promise<void> => {
+			const data = await this.service.options();
+			return res.api.create(data);
+		},
+	};
 }

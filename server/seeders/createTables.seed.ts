@@ -1,10 +1,13 @@
 import { logger } from "../config";
 import {
+	Attributes,
 	CatalogMaster,
 	CatalogProducts,
 	Category,
 	CustomerDetails,
+	Options,
 	PermissionMaster,
+	ProductAttributeOptions,
 	Products,
 	SubCategory,
 	UserMaster,
@@ -94,6 +97,30 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`CatalogProducts Table Error : ${error}`);
+		});
+
+	await Attributes.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Attributes Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Attributes Table Error : ${error}`);
+		});
+
+	await Options.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Options Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Options Table Error : ${error}`);
+		});
+
+	await ProductAttributeOptions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ProductAttributeOptions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ProductAttributeOptions Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;
