@@ -11,6 +11,8 @@ export { default as CatalogProducts } from "./catalogProducts.model";
 export { default as Attributes } from "./attributes.model";
 export { default as Options } from "./options.model";
 export { default as ProductAttributeOptions } from "./productAttributeOptions.model";
+export { default as AttributesOptions } from "./attributesOptions.model";
+export { default as SubCategoryAttributes } from "./subCategoryAttributes.model";
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
 import { SubcategoryAttribute, SubcategoryInput, SubcategoryOutput } from "./subCategory.model";
@@ -24,6 +26,8 @@ import { CatalogProductsAttribute, CatalogProductsInput, CatalogProductsOutput }
 import { AttributesAttributes, AttributesInput, AttributesOutput } from "./attributes.model";
 import { OptionsAttributes, OptionsInput, OptionsOutput } from "./options.model";
 import { ProductAttributeOptionsAttribute, ProductAttributeOptionsInput, ProductAttributeOptionsOutput } from "./productAttributeOptions.model";
+import { AttributesOptionsAttribute, AttributesOptionsInput, AttributesOptionsOutput } from "./attributesOptions.model";
+import { SubCategoryAttributesAttribute, SubCategoryAttributesInput, SubCategoryAttributesOutput } from "./subCategoryAttributes.model";
 
 export {
 	UserMasterAttributes,
@@ -66,4 +70,10 @@ export {
 	ProductAttributeOptionsAttribute,
 	ProductAttributeOptionsInput,
 	ProductAttributeOptionsOutput,
+	AttributesOptionsAttribute,
+	AttributesOptionsInput,
+	AttributesOptionsOutput,
+	SubCategoryAttributesAttribute,
+	SubCategoryAttributesInput,
+	SubCategoryAttributesOutput,
 };

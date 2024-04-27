@@ -1,12 +1,12 @@
 export class SearchOptionsDTO {
 	searchTxt?: string;
-	page: number;
-	rowsPerPage: number;
+	page?: number;
+	rowsPerPage?: number;
 
 	constructor(data: any) {
 		data.searchTxt != undefined && data.searchTxt != "" ? (this.searchTxt = data.searchTxt.trim()) : delete this.searchTxt;
-		this.page = data.page != undefined ? Number(data.page) : 0;
-		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
+		data.page != undefined && data.page != "" ? (this.page = Number(data.page)) : delete this.page;
+		data.rowsPerPage != undefined && data.rowsPerPage != "" ? (this.rowsPerPage = Number(data.rowsPerPage)) : delete this.rowsPerPage;
 	}
 }
 

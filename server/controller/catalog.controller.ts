@@ -15,7 +15,7 @@ export default class CatalogController {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.service.getAll(new SearchCatalogDTO(req.query));
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -27,7 +27,7 @@ export default class CatalogController {
 				throw new NotExistHandler("Catalog Master Not Found");
 			}
 			const data = await this.service.findOne(catalogId);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -52,7 +52,7 @@ export default class CatalogController {
 				}
 			}
 			const data = await this.service.create(catalogData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -90,7 +90,7 @@ export default class CatalogController {
 				}
 			}
 			const data = await this.service.edit(catalog_id, catalogData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 

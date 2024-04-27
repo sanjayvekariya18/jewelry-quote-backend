@@ -1,4 +1,4 @@
-import { PermissionMaster, UserMaster, UserPermissions } from "../../models";
+import { PermissionMaster, UserPermissions } from "../../models";
 import { PermissionMasterAttributes, UserPermissionsInput } from "../../models";
 import { Transaction } from "sequelize";
 import { logger } from "../../config";

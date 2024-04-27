@@ -10,7 +10,7 @@ export interface ProductAttributeOptionsAttribute {
 	last_updated_by: string;
 }
 
-export interface ProductAttributeOptionsInput extends Optional<ProductAttributeOptionsAttribute, "id" | "is_deleted" | "last_updated_by"> {}
+export interface ProductAttributeOptionsInput extends Optional<ProductAttributeOptionsAttribute, "id" | "is_deleted"> {}
 export interface ProductAttributeOptionsOutput extends Required<ProductAttributeOptionsAttribute> {}
 
 class ProductAttributeOptions
@@ -91,13 +91,13 @@ ProductAttributeOptions.init(
 		paranoid: false,
 		freezeTableName: true,
 		timestamps: true,
-		indexes: [
-			{
-				unique: false, // Set to true if you want the index to be unique
-				fields: ["attribute_id", "option_id"],
-				name: "idx_productAttributes_attributeId_optionId",
-			},
-		],
+		// indexes: [
+		// 	{
+		// 		unique: false, // Set to true if you want the index to be unique
+		// 		fields: ["attribute_id", "option_id"],
+		// 		name: "idx_productAttributes_attributeId_optionId",
+		// 	},
+		// ],
 		tableName: `product_attribute_options`,
 	}
 );

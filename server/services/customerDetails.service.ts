@@ -104,7 +104,7 @@ export default class CustomerDetailsService {
 		return await CustomerDetails.update({ is_deleted: true }, { where: { id } });
 	};
 
-	public toggleUserActive = async (id: string) => {
+	public toggleCustomerActive = async (id: string) => {
 		return await CustomerDetails.update(
 			{
 				is_active: this.Sequelize.literal(`Not \`is_active\``),

@@ -30,7 +30,7 @@ export default class WishListController {
 				throw new NotExistHandler("Product Not Found");
 			}
 			await this.services.toggle(req.customer.id, product_id).then(() => {
-				res.api.create({
+				return res.api.create({
 					message: `WishList Updated`,
 				});
 			});
@@ -41,7 +41,7 @@ export default class WishListController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const product_id: string = req.params["id"] as string;
 			await this.services.delete(product_id).then(() => {
-				res.api.create({
+				return res.api.create({
 					message: `WishList Removed`,
 				});
 			});

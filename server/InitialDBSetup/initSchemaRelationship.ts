@@ -1,5 +1,6 @@
 import {
 	Attributes,
+	AttributesOptions,
 	CatalogMaster,
 	CatalogProducts,
 	Category,
@@ -9,6 +10,7 @@ import {
 	ProductAttributeOptions,
 	Products,
 	SubCategory,
+	SubCategoryAttributes,
 	UserMaster,
 	UserPermissions,
 	WishList,
@@ -32,6 +34,7 @@ const initSchemaRelationship = () => {
 	SubCategory.hasOne(Category, { sourceKey: "category_id", foreignKey: "id" });
 	// SubCategory.hasOne(UserMaster, { sourceKey: "last_updated_by", foreignKey: "id" });
 	SubCategory.hasMany(Products, { sourceKey: "id", foreignKey: "sub_category_id" });
+	SubCategory.hasMany(SubCategoryAttributes, { sourceKey: "id", foreignKey: "sub_category_id" });
 
 	// PermissionMaster
 	PermissionMaster.hasMany(UserPermissions, { sourceKey: "id", foreignKey: "permission_master_id" });
@@ -54,14 +57,24 @@ const initSchemaRelationship = () => {
 
 	// Attributes
 	Attributes.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "attribute_id" });
+	Attributes.hasMany(SubCategoryAttributes, { sourceKey: "id", foreignKey: "attribute_id" });
+	Attributes.hasMany(AttributesOptions, { sourceKey: "id", foreignKey: "attribute_id" });
 
 	// Options
-	Options.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "option_id" });
+	// Options.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "option_id" });
+	Options.hasMany(AttributesOptions, { sourceKey: "id", foreignKey: "option_id" });
+
+	AttributesOptions.hasOne(Attributes, { sourceKey: "attribute_id", foreignKey: "id" });
+	AttributesOptions.hasOne(Options, { sourceKey: "option_id", foreignKey: "id" });
 
 	// ProductAttributeOptions
 	ProductAttributeOptions.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
 	ProductAttributeOptions.hasOne(Attributes, { sourceKey: "attribute_id", foreignKey: "id" });
 	// ProductAttributeOptions.hasOne(Options, { sourceKey: "option_id", foreignKey: "id" });
+
+	// SubCateogoryAttributes
+	SubCategoryAttributes.hasOne(SubCategory, { sourceKey: "sub_category_id", foreignKey: "id" });
+	SubCategoryAttributes.hasOne(Attributes, { sourceKey: "attribute_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;

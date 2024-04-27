@@ -5,6 +5,7 @@ import { use } from "../../../errorHandler";
 import customerDetailsRoutes from "./customerDetails.route";
 import wishlistRoutes from "./wishList.route";
 import productsRoutes from "./products.route";
+import catalogRoutes from "./catalog.route";
 import listRoutes from "./../list.route";
 
 const router = Router();
@@ -20,6 +21,7 @@ router.post("/login", basicValidatorHandler.handler(customerDetailsController.lo
 router.use("/customer-details", customerDetailsRoutes);
 router.use("/wishlist", wishlistRoutes);
 router.use("/products", productsRoutes);
+router.use("/catalog", catalogRoutes);
 router.use("/list", listRoutes);
 
 export default router;

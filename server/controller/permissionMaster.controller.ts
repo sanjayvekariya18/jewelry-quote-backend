@@ -11,7 +11,7 @@ export default class PermissionMasterController {
 	public getAll = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.permissionMasterService.getAll(new SearchPermissionDTO(req.query));
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -24,7 +24,7 @@ export default class PermissionMasterController {
 				throw new DuplicateRecord("Permission Already exists");
 			}
 			const data = await this.permissionMasterService.create(permissionData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 }

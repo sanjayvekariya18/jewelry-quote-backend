@@ -1,6 +1,7 @@
 import { logger } from "../config";
 import {
 	Attributes,
+	AttributesOptions,
 	CatalogMaster,
 	CatalogProducts,
 	Category,
@@ -10,6 +11,7 @@ import {
 	ProductAttributeOptions,
 	Products,
 	SubCategory,
+	SubCategoryAttributes,
 	UserMaster,
 	UserPermissions,
 	WishList,
@@ -113,6 +115,22 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`Options Table Error : ${error}`);
+		});
+
+	await AttributesOptions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`AttributesOptions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`AttributesOptions Table Error : ${error}`);
+		});
+
+	await SubCategoryAttributes.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`SubCategoryAttributes Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`SubCategoryAttributes Table Error : ${error}`);
 		});
 
 	await ProductAttributeOptions.sync({ alter: { drop: false } })

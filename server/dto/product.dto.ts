@@ -1,3 +1,7 @@
+function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+	return value !== null && value !== undefined && value != "";
+}
+
 export class SearchProductDTO {
 	searchTxt?: string;
 	sub_category_id?: string;
@@ -14,34 +18,41 @@ export class SearchProductDTO {
 	}
 }
 
-export class CreateProductDTO {
+export class ProductAttributesOptionsDTO {
+	attribute_id: string;
+	product_id?: string;
+	default_option: string;
+	last_updated_by: string;
+
+	constructor(data: any) {
+		this.attribute_id = data.attribute_id;
+		this.default_option = data.default_option;
+		this.last_updated_by = data.last_updated_by;
+	}
+}
+
+export class ProductDTO {
 	stock_id: string;
 	sub_category_id: string;
 	name: string;
 	description?: string;
+	attributeOptions: Array<ProductAttributesOptionsDTO>;
 	last_updated_by: string;
 
 	constructor(data: any) {
-		this.stock_id = data.stock_id;
+		this.stock_id = data.stock_id.trim();
 		this.sub_category_id = data.sub_category_id;
-		this.name = data.name;
-		data.description != undefined ? (this.description = data.description) : delete this.description;
-		this.last_updated_by = data.loggedInUserId;
-	}
-}
+		this.name = data.name.trim();
+		data.description != undefined ? (this.description = data.description.trim()) : delete this.description;
+		this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
+			(row: any) =>
+				new ProductAttributesOptionsDTO({
+					attribute_id: row.attribute_id,
+					default_option: row.default_option.trim(),
+					last_updated_by: data.loggedInUserId,
+				})
+		);
 
-export class EditProductDTO {
-	stock_id?: string;
-	sub_category_id?: string;
-	name?: string;
-	description?: string;
-	last_updated_by: string;
-
-	constructor(data: any) {
-		data.stock_id != undefined ? (this.stock_id = data.stock_id) : delete this.stock_id;
-		data.sub_category_id != undefined ? (this.sub_category_id = data.sub_category_id) : delete this.sub_category_id;
-		data.name != undefined ? (this.name = data.name) : delete this.name;
-		data.description != undefined ? (this.description = data.description) : delete this.description;
 		this.last_updated_by = data.loggedInUserId;
 	}
 }

@@ -8,6 +8,7 @@
 		"dev": "nodemon server.ts",
 		"seed:table": "ts-node server/seeders/index.ts",
 		"seed:data": "ts-node server/seeders/defaultData/index.ts",
+		"test:service": "ts-node server/services/test.service.ts",
 		"build": "tsc"
 	},
 	"author": "",

@@ -8,6 +8,8 @@ import customerDetailsRoutes from "./customerDetails.route";
 import productsRoutes from "./products.route";
 import catalogRoutes from "./catalog.route";
 import listRoutes from "./../list.route";
+import attributeRoutes from "./attributes.route";
+import optionRoutes from "./options.route";
 import { AuthorizationController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
@@ -27,6 +29,8 @@ router.use("/permissions", UserPermissionsCheck(PERMISSIONS.USER_PERMISSIONS), p
 router.use("/customer-details", UserPermissionsCheck(PERMISSIONS.CUSTOMER), customerDetailsRoutes);
 router.use("/products", UserPermissionsCheck(PERMISSIONS.PRODUCT), productsRoutes);
 router.use("/catalog-master", UserPermissionsCheck(PERMISSIONS.CATALOG_MASTER), catalogRoutes);
+router.use("/attributes", UserPermissionsCheck(PERMISSIONS.CATALOG_MASTER), attributeRoutes);
+router.use("/options", UserPermissionsCheck(PERMISSIONS.CATALOG_MASTER), optionRoutes);
 router.use("/list", listRoutes);
 
 export default router;

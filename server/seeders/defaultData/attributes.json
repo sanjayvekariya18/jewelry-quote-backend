@@ -1,0 +1,23 @@
+[
+	{ "name": "Metal" },
+	{ "name": "Metal Color" },
+	{ "name": "Metal Purity" },
+	{ "name": "Prong Type" },
+	{ "name": "Style" },
+	{ "name": "Diamond Origin" },
+	{ "name": "Diamond Shape" },
+	{ "name": "Design" },
+	{ "name": "Center Gemstone" },
+	{ "name": "Gemstone" },
+	{ "name": "Zodiac Sign" },
+	{ "name": "Link Size" },
+	{ "name": "Charm" },
+	{ "name": "Width (mm)" },
+
+	{ "name": "Setting Carat Weight" },
+	{ "name": "Size" },
+	{ "name": "Length (in)" },
+	{ "name": "Length" },
+	{ "name": "Width" },
+	{ "name": "Chain Width" }
+]

@@ -8,5 +8,7 @@ export default class AttributesValidations {
 	public attributes = {
 		name: "required|string",
 		details: "string",
+		options: "required|array|min:1",
+		"options.*": "required|uuid",
 	};
 }

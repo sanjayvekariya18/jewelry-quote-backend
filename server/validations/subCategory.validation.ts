@@ -10,11 +10,15 @@ export default class SubCategoriesValidation {
 		category_id: "required|uuid",
 		name: "required|string",
 		details: "string",
+		attributes: "required|array|min:1",
+		"attributes.*": "required|uuid",
 	};
 
 	public edit = {
 		category_id: "required|uuid",
 		name: "required|string",
 		details: "string",
+		attributes: "required|array|min:1",
+		"attributes.*": "required|uuid",
 	};
 }

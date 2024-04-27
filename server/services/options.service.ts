@@ -11,15 +11,18 @@ export default class OptionsService {
 			where: {
 				...(searchParams.searchTxt && {
 					name: {
-						[Op.iLike]: `%${searchParams.searchTxt}%`,
+						[Op.like]: `%${searchParams.searchTxt}%`,
 					},
 				}),
 				is_deleted: false,
 			},
 			attributes: ["id", "name", "details"],
 			order: [["name", "ASC"]],
-			offset: searchParams.rowsPerPage * searchParams.page,
-			limit: searchParams.rowsPerPage,
+			...(searchParams.page != undefined &&
+				searchParams.rowsPerPage != undefined && {
+					offset: searchParams.page * searchParams.rowsPerPage,
+					limit: searchParams.rowsPerPage,
+				}),
 		});
 	};
 

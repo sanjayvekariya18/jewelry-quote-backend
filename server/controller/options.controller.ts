@@ -14,7 +14,7 @@ export default class OptionsController {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.service.getAll(new SearchOptionsDTO(req.query));
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -25,7 +25,7 @@ export default class OptionsController {
 			if (!userExist) {
 				throw new NotExistHandler("User Not Found");
 			}
-			res.api.create(userExist);
+			return res.api.create(userExist);
 		},
 	};
 
@@ -33,13 +33,13 @@ export default class OptionsController {
 		validation: this.validations.options,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const optionsData = new OptionsDTO(req.body);
-			const optionExist = await this.service.findOne({ name: { [Op.iLike]: optionsData.name }, is_deleted: false });
+			const optionExist = await this.service.findOne({ name: { [Op.like]: optionsData.name }, is_deleted: false });
 
 			if (optionExist && optionExist != null) {
 				throw new DuplicateRecord("Options name already exists");
 			}
 			const data = await this.service.create(optionsData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -54,7 +54,7 @@ export default class OptionsController {
 			const optionsData = new OptionsDTO(req.body);
 
 			const data = await this.service.edit(optionsId, optionsData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -68,12 +68,12 @@ export default class OptionsController {
 			await this.service
 				.delete(optionsId, req.authUser.id)
 				.then(async () => {
-					res.api.create({
+					return res.api.create({
 						message: `Options deleted`,
 					});
 				})
 				.catch((error) => {
-					res.api.serverError(error);
+					return res.api.serverError(error);
 				});
 		},
 	};

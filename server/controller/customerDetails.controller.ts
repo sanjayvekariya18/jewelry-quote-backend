@@ -194,12 +194,12 @@ export default class CustomerDetailsController {
 			await this.service
 				.delete(customerId)
 				.then(async (data) => {
-					res.api.create({
+					return res.api.create({
 						message: `Customer deleted`,
 					});
 				})
 				.catch((error) => {
-					res.api.serverError(error);
+					return res.api.serverError(error);
 				});
 		},
 	};
@@ -208,16 +208,16 @@ export default class CustomerDetailsController {
 		validation: this.validations.changePassword,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const changePasswordData = new ChangePasswordDTO(req.body);
-			const userId: string = req.authUser.id as string;
-			const userData = await this.service.findOne({ id: userId }, true);
+			const customer_id: string = req.customer.id as string;
+			const customerData = await this.service.findOne({ id: customer_id }, true);
 
-			if (userData == null) {
+			if (customerData == null) {
 				throw new NotExistHandler("User Not Found", false);
 			}
-			await comparePassword(changePasswordData.oldPassword, userData.password)
+			await comparePassword(changePasswordData.oldPassword, customerData.password)
 				.then(async () => {
 					await this.service
-						.changePassword(userId, changePasswordData)
+						.changePassword(customer_id, changePasswordData)
 						.then(() => {
 							return res.api.create({
 								message: "Password Changed",
@@ -233,7 +233,7 @@ export default class CustomerDetailsController {
 		},
 	};
 
-	public toggleUserActive = {
+	public toggleCustomerActive = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const customerId: string = req.params["id"] as string;
 			const customerExist = await CustomerDetails.findByPk(customerId);
@@ -241,7 +241,7 @@ export default class CustomerDetailsController {
 				throw new NotExistHandler("Customer Not Found");
 			}
 			await this.service
-				.toggleUserActive(customerId)
+				.toggleCustomerActive(customerId)
 				.then((flag) => {
 					res.api.create({
 						message: `Customer is ${flag?.is_active ? "Actived" : "Deactivated"}`,

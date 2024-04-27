@@ -14,7 +14,7 @@ export default class AttributesController {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.service.getAll(new SearchAttributesDTO(req.query));
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -26,7 +26,7 @@ export default class AttributesController {
 				throw new NotExistHandler("Attribute Not Found");
 			}
 			const data = await this.service.findOne({ id: attributeId });
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -41,7 +41,7 @@ export default class AttributesController {
 			}
 
 			const data = await this.service.create(attributesData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -56,7 +56,7 @@ export default class AttributesController {
 			const attributesData = new AttributesDTO(req.body);
 			const attributesExist = await this.service.findOne({
 				id: { [Op.not]: attributesId },
-				name: { [Op.iLike]: attributesData.name },
+				name: { [Op.like]: attributesData.name },
 				is_deleted: false,
 			});
 
@@ -64,34 +64,28 @@ export default class AttributesController {
 				throw new DuplicateRecord("Attributes name already exists");
 			}
 			const data = await this.service.edit(attributesId, attributesData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
-	// public delete = {
-	// 	controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-	// 		const attributesId: string = req.params["id"] as string;
-	// 		const attributeExist = await Attributes.findByPk(attributesId);
-	// 		if (!attributeExist) {
-	// 			throw new NotExistHandler("Attribute Not Found");
-	// 		}
+	public delete = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const attributesId: string = req.params["id"] as string;
+			const attributeExist = await Attributes.findByPk(attributesId);
+			if (!attributeExist) {
+				throw new NotExistHandler("Attribute Not Found");
+			}
 
-	// 		await this.attributesService
-	// 			.delete(attributesId, req.authUser.id)
-	// 			.then(async (data) => {
-	// 				if (data.imgUrl) {
-	// 					data.imgUrl && (await removeFile(data.imgUrl));
-	// 				}
-	// 				if (data.logoUrl) {
-	// 					data.logoUrl && (await removeFile(data.logoUrl));
-	// 				}
-	// 				res.api.create({
-	// 					message: `Attributes deleted`,
-	// 				});
-	// 			})
-	// 			.catch((error) => {
-	// 				res.api.serverError(error);
-	// 			});
-	// 	},
-	// };
+			await this.service
+				.delete(attributesId, req.authUser.id)
+				.then(() => {
+					return res.api.create({
+						message: `Attributes deleted`,
+					});
+				})
+				.catch((error) => {
+					return res.api.serverError(error);
+				});
+		},
+	};
 }
