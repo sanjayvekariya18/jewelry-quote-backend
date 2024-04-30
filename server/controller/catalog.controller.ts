@@ -22,12 +22,11 @@ export default class CatalogController {
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const catalogId: string = req.params["id"] as string;
-			const catalogExist = await CatalogMaster.findByPk(catalogId, { attributes: ["id", "name", "description", "img_url", "pdf_url"] });
+			const catalogExist = await this.service.findOne({ id: catalogId });
 			if (!catalogExist) {
 				throw new NotExistHandler("Catalog Master Not Found");
 			}
-			const data = await this.service.findOne(catalogId);
-			return res.api.create(data);
+			return res.api.create(catalogExist);
 		},
 	};
 
@@ -91,6 +90,27 @@ export default class CatalogController {
 			}
 			const data = await this.service.edit(catalog_id, catalogData);
 			return res.api.create(data);
+		},
+	};
+
+	public toggleCatalogActive = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const catalog_id: string = req.params["id"] as string;
+			const catalogExist = await this.service.findOne({ id: catalog_id, is_deleted: false });
+
+			if (!catalogExist) {
+				throw new NotExistHandler("Catalog Not Found");
+			}
+			await this.service
+				.toggleCatalogActive(catalog_id, req.authUser.id)
+				.then((flag) => {
+					res.api.create({
+						message: `Catalog is ${flag?.is_active ? "Actived" : "Deactivated"}`,
+					});
+				})
+				.catch((error) => {
+					res.api.serverError(error);
+				});
 		},
 	};
 

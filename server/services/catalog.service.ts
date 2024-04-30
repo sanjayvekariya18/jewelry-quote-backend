@@ -69,6 +69,18 @@ export default class CatalogService {
 		});
 	};
 
+	public toggleCatalogActive = async (catalogId: string, loggedInUserId: string) => {
+		return await CatalogMaster.update(
+			{
+				is_active: this.Sequelize.literal(`Not \`is_active\``),
+				last_updated_by: loggedInUserId,
+			},
+			{ where: { id: catalogId } }
+		).then(async () => {
+			return await this.findOne({ id: catalogId });
+		});
+	};
+
 	public delete = async (catalog_id: string, loggedInUserId: string) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await CatalogMaster.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: catalog_id }, transaction }).then(

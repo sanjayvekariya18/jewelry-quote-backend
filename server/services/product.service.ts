@@ -1,15 +1,6 @@
 import { Op, Transaction } from "sequelize";
-import {
-	Attributes,
-	AttributesOptions,
-	Options,
-	ProductAttributeOptions,
-	ProductAttributeOptionsInput,
-	Products,
-	SubCategory,
-	SubCategoryAttributes,
-} from "../models";
-import { ProductDTO, ProductAttributesOptionsDTO, SearchProductDTO } from "../dto";
+import { Attributes, AttributesOptions, Options, ProductAttributeOptions, Products, SubCategory } from "../models";
+import { ProductDTO, SearchProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 
 export default class ProductService {
@@ -31,14 +22,25 @@ export default class ProductService {
 				}),
 				is_deleted: false,
 			},
-
+			distinct: true,
 			include: [
 				{
 					model: SubCategory,
-					attributes: [],
+					attributes: ["id", "name"],
 				},
 				{
 					model: ProductAttributeOptions,
+					include: [
+						{
+							model: Attributes,
+							attributes: ["id", "name", "details"],
+							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+						},
+						{
+							model: Options,
+							attributes: ["id", "name"],
+						},
+					],
 				},
 			],
 			order: [["name", "ASC"]],
@@ -46,7 +48,7 @@ export default class ProductService {
 				"id",
 				"stock_id",
 				"sub_category_id",
-				[this.Sequelize.col("SubCategory.name"), "sub_category_name"],
+				// [this.Sequelize.col("SubCategory.name"), "sub_category_name"],
 				"name",
 				"description",
 				"is_active",
@@ -60,19 +62,19 @@ export default class ProductService {
 	};
 
 	public findOne = async (searchObject: any) => {
-		return await Products.findOne({
+		const data: any = await Products.findOne({
 			where: searchObject,
 			attributes: [
 				"id",
 				"stock_id",
 				"sub_category_id",
-				[this.Sequelize.col("SubCategory.name"), "sub_category_name"],
+				// [this.Sequelize.col("SubCategory.name"), "sub_category_name"],
 				"name",
 				"description",
 				"is_active",
 			],
 			include: [
-				{ model: SubCategory, attributes: [] },
+				{ model: SubCategory, attributes: ["id", "name"] },
 				{
 					model: ProductAttributeOptions,
 					include: [
@@ -81,11 +83,27 @@ export default class ProductService {
 							attributes: ["id", "name", "details"],
 							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
 						},
+						{
+							model: Options,
+							attributes: ["id", "name"],
+						},
 					],
-					attributes: ["id", "product_id", "attribute_id", "default_option"],
+					attributes: ["id", "product_id", "attribute_id", "option_id"],
 				},
 			],
-		});
+		}).then((data) => data?.get({ plain: true }));
+
+		let resp: Array<any> = [];
+		for (const data1 of data.ProductAttributeOptions) {
+			resp.push({
+				attribute_id: data1.Attribute.id,
+				attribute_name: data1.Attribute.name,
+				option_id: data1.Option.id,
+				option_name: data1.Option.name,
+				options: data1.Attribute.AttributesOptions,
+			});
+		}
+		return { ...data, ProductAttributeOptions: resp };
 	};
 
 	public create = async (productData: ProductDTO) => {
@@ -102,13 +120,14 @@ export default class ProductService {
 
 	public edit = async (product_id: string, productData: ProductDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
+			await ProductAttributeOptions.destroy({ where: { product_id }, transaction });
 			return await Products.update(productData, { where: { id: product_id }, transaction }).then(async () => {
-				// let productAttributeOption1 = productData.map((data) => {
-				// 	return { ...data, product_id: product_id.id };
-				// });
-				// await ProductAttributeOptions.bulkCreate(productAttributeOption1, { ignoreDuplicates: true, transaction });
+				let productAttributeOption1 = productData.attributeOptions.map((data) => {
+					return { ...data, product_id };
+				});
+				await ProductAttributeOptions.bulkCreate(productAttributeOption1, { ignoreDuplicates: true, transaction });
 
-				return "Product Created Successfully";
+				return "Product Edited Successfully";
 			});
 		});
 	};

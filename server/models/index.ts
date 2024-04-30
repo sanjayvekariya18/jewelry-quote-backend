@@ -13,6 +13,11 @@ export { default as Options } from "./options.model";
 export { default as ProductAttributeOptions } from "./productAttributeOptions.model";
 export { default as AttributesOptions } from "./attributesOptions.model";
 export { default as SubCategoryAttributes } from "./subCategoryAttributes.model";
+export { default as AddToQuote } from "./addToQuote.model";
+export { default as ATQAttributeOptions } from "./atq_attribute_options.model";
+export { default as QuotationMaster } from "./quotation.model";
+export { default as QuotationProduct } from "./quotationProduct.model";
+export { default as QuotationAttributeOptions } from "./quotation_attribute_option.model";
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
 import { SubcategoryAttribute, SubcategoryInput, SubcategoryOutput } from "./subCategory.model";
@@ -28,6 +33,15 @@ import { OptionsAttributes, OptionsInput, OptionsOutput } from "./options.model"
 import { ProductAttributeOptionsAttribute, ProductAttributeOptionsInput, ProductAttributeOptionsOutput } from "./productAttributeOptions.model";
 import { AttributesOptionsAttribute, AttributesOptionsInput, AttributesOptionsOutput } from "./attributesOptions.model";
 import { SubCategoryAttributesAttribute, SubCategoryAttributesInput, SubCategoryAttributesOutput } from "./subCategoryAttributes.model";
+import { AddToQuoteAttribute, AddToQuoteInput, AddToQuoteOutput } from "./addToQuote.model";
+import { ATQAttributeOptionsAttribute, ATQAttributeOptionsInput, ATQAttributeOptionsOutput } from "./atq_attribute_options.model";
+import { QuotationMasterAttribute, QuotationMasterInput, QuotationMasterOutput } from "./quotation.model";
+import { QuotationProductAttribute, QuotationProductInput, QuotationProductOutput } from "./quotationProduct.model";
+import {
+	QuotationAttributeOptionsAttribute,
+	QuotationAttributeOptionsInput,
+	QuotationAttributeOptionsOutput,
+} from "./quotation_attribute_option.model";
 
 export {
 	UserMasterAttributes,
@@ -76,4 +90,19 @@ export {
 	SubCategoryAttributesAttribute,
 	SubCategoryAttributesInput,
 	SubCategoryAttributesOutput,
+	AddToQuoteAttribute,
+	AddToQuoteInput,
+	AddToQuoteOutput,
+	ATQAttributeOptionsAttribute,
+	ATQAttributeOptionsInput,
+	ATQAttributeOptionsOutput,
+	QuotationMasterAttribute,
+	QuotationMasterInput,
+	QuotationMasterOutput,
+	QuotationProductAttribute,
+	QuotationProductInput,
+	QuotationProductOutput,
+	QuotationAttributeOptionsAttribute,
+	QuotationAttributeOptionsInput,
+	QuotationAttributeOptionsOutput,
 };

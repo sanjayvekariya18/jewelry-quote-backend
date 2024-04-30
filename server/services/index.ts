@@ -12,3 +12,5 @@ export { default as ProductService } from "./product.service";
 export { default as CatalogService } from "./catalog.service";
 export { default as AttributesService } from "./attributes.service";
 export { default as OptionsService } from "./options.service";
+export { default as AddToQuoteService } from "./addToQuote.service";
+export { default as QuotationService } from "./quotation.service";

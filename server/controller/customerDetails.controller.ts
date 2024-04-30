@@ -125,8 +125,8 @@ export default class CustomerDetailsController {
 
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const customerId: string = req.params["id"] as string;
-			const data = await this.service.findOne({ id: customerId });
+			const customer_id: string = req.params["id"] as string;
+			const data = await this.service.findOne({ id: customer_id });
 			if (data == null) {
 				throw new NotExistHandler("Customer Not Found");
 			}
@@ -145,13 +145,13 @@ export default class CustomerDetailsController {
 	public edit = {
 		validation: this.validations.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const customerId: string = req.customer.id;
+			const customer_id: string = req.customer.id;
 			const customerData = new EditCustomerDetailsDTO(req.body);
 
 			const errorMessage = [];
 			if (customerData.customer_email) {
 				const checkEmail = await this.service.findOne({
-					id: { [Op.not]: customerId },
+					id: { [Op.not]: customer_id },
 					customer_email: customerData.customer_email,
 				});
 				if (checkEmail) {
@@ -160,7 +160,7 @@ export default class CustomerDetailsController {
 			}
 			if (customerData.mobile_number) {
 				const checkMobilenumber = await this.service.findOne({
-					id: { [Op.not]: customerId },
+					id: { [Op.not]: customer_id },
 					mobile_number: customerData.mobile_number,
 				});
 				if (checkMobilenumber) {
@@ -172,27 +172,27 @@ export default class CustomerDetailsController {
 			}
 			const file: any = req.files;
 			if (file) {
-				const oldImgData = await this.service.findOne({ id: customerId });
+				const oldImgData = await this.service.findOne({ id: customer_id });
 				if (file.customer_business_card) {
 					oldImgData?.customer_business_card && (await removeFile(oldImgData.customer_business_card));
 					let uploadedImg: any = await saveFile(file.customer_business_card, "customer_business_card");
 					customerData.customer_business_card = uploadedImg.upload_path;
 				}
 			}
-			const data = await this.service.edit(customerId, customerData);
+			const data = await this.service.edit(customer_id, customerData);
 			return res.api.create(data);
 		},
 	};
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const customerId: string = req.params["id"] as string;
-			const customerExist = await CustomerDetails.findByPk(customerId);
+			const customer_id: string = req.params["id"] as string;
+			const customerExist = await CustomerDetails.findByPk(customer_id);
 			if (!customerExist) {
 				throw new NotExistHandler("Customer Not Found");
 			}
 			await this.service
-				.delete(customerId)
+				.delete(customer_id)
 				.then(async (data) => {
 					return res.api.create({
 						message: `Customer deleted`,
@@ -235,13 +235,13 @@ export default class CustomerDetailsController {
 
 	public toggleCustomerActive = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const customerId: string = req.params["id"] as string;
-			const customerExist = await CustomerDetails.findByPk(customerId);
+			const customer_id: string = req.params["id"] as string;
+			const customerExist = await CustomerDetails.findByPk(customer_id);
 			if (!customerExist) {
 				throw new NotExistHandler("Customer Not Found");
 			}
 			await this.service
-				.toggleCustomerActive(customerId)
+				.toggleCustomerActive(customer_id)
 				.then((flag) => {
 					res.api.create({
 						message: `Customer is ${flag?.is_active ? "Actived" : "Deactivated"}`,

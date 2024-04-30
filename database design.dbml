@@ -8,18 +8,18 @@ Table permission_master {
   permission_group text [not null]
 }
 
-Table users {
+Table user_master {
   id uuid [primary key]
   name text [not null]
   email text [not null]
-  mobile_number text [not null]
+  mobile_number text [null]
   password text [not null]
   is_active bool [default: true]
 }
 
 Table user_permissions {
   id uuid [primary key]
-  user_id text [not null, ref: > users.id]
+  user_id text [not null, ref: > user_master.id]
   permission_id text [not null, ref: > permission_master.id]
   view bool [not null]
   create bool [not null]
@@ -42,40 +42,39 @@ Table customers {
   association_membership text [null]
   customer_social_media text [null]
   business_reference text [null]//company name/person name/person contact no
+  is_active bool [default: true]
 }
 
-Table categories {
+Table category {
   id uuid [primary key]
   name text [not null]
-  description text [default: ""]
+  details text [default: ""]
+  img_url text [default: null]
   logo_url text [default: null]
-  image_url text [default: null]
-  is_deleted bool [default: false]
 }
 
-Table sub_categories {
+Table sub_category {
   id uuid [primary key]
-  category_id uuid [not null, ref: > categories.id]
+  category_id uuid [not null, ref: > category.id]
   name text [not null]
-  description text [default: ""]
+  details text [default: ""]
+  img_url text [default: null]
   logo_url text [default: null]
-  image_url text [default: null]
-  is_deleted bool [default: false]
 }
 
 Table sub_category_attributes {
   id uuid [primary key]
-  sub_category_id uuid [not null, ref: > sub_categories.id]
+  sub_category_id uuid [not null, ref: > sub_category.id]
   attribute_id uuid [not null, ref: > attributes.id]
-  
 }
 
 Table products {
   id uuid [primary key]
-  sub_category_id uuid [not null, ref: > sub_categories.id]
+  stock_id text
+  sub_category_id uuid [not null, ref: > sub_category.id]
   name text
   description text [default: ""]
-  
+  is_active bool [default: true]
 }
 
 Table wishlist {
@@ -88,8 +87,9 @@ Table catelog {
   id uuid [primary key]
   name text
   description text [default: ""]
-  image text
-  pdf text
+  img_url text
+  pdf_url text
+  is_active bool [default: true]
 }
 
 Table catelog_products {
@@ -103,47 +103,64 @@ Enum quotation_status {
   completed
 }
 
-Table quotation {
+Table quotation_master {
   id uuid [primary key]
   customer_id uuid [not null, ref: > customers.id]
   quotation_date datetime
   status quotation_status [not null, default: "pending"]
+  notes text [default: ""]
 }
 
 Table quotation_products {
   id uuid [primary key]
-  quotation_id uuid [not null, ref: > quotation.id]
+  quotation_id uuid [not null, ref: > quotation_master.id]
   product_id uuid [not null, ref: > products.id]
-  price integer [default: null]
+  // price integer [default: null]
   qty integer [not null]
 }
 
 Table quotation_product_attribute_option {
   id uuid [primary key]
   quotation_product_id uuid [not null, ref: > quotation_products.id]
-  attribute text
-  option text
+  attribute_name text
+  option_name text
 }
 
 Table product_attributes_option {
   id uuid [primary key]
   product_id uuid [not null, ref: > products.id]
   attribute_id uuid [not null, ref: > attributes.id]
-  default_option text [not null]
+  option_id uuid [not null, ref: > options.id]
 }
 
 Table attributes {
   id uuid [primary key]
   name text
+  details text [default: ""]
 }
 
 Table options {
   id uuid [primary key]
   name text
+  details text [default: ""]
 }
 
 Table attribute_option {
   id uuid [primary key]
- attribute_id uuid [not null, ref: > attributes.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+  option_id uuid [not null, ref: > options.id]
+}
+
+Table add_to_quote {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  customer_id uuid [not null, ref: > customers.id]
+  qty integer [not null]
+}
+
+Table add_to_quote_product_attributes {
+  id uuid [primary key]
+  add_to_quote_id uuid [not null, ref: > add_to_quote.id]
+  attribute_id uuid [not null, ref: > attributes.id]
   option_id uuid [not null, ref: > options.id]
 }

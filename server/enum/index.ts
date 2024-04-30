@@ -6,4 +6,12 @@ export enum PERMISSIONS {
 	PRODUCT = "product",
 	CUSTOMER = "customer",
 	CATALOG_MASTER = "catalog_master",
+	ATTRIBUTES = "attributes",
+	OPTIONS = "options",
+	QUOTATION = "quotation",
+}
+
+export enum QUOTATION_STATUS {
+	PENDING = "pending",
+	COMPLETED = "completed",
 }

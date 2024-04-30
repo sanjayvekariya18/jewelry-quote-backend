@@ -5,7 +5,7 @@ export interface ProductAttributeOptionsAttribute {
 	id: string;
 	product_id: string;
 	attribute_id: string;
-	default_option: string;
+	option_id: string;
 	is_deleted: boolean;
 	last_updated_by: string;
 }
@@ -20,7 +20,7 @@ class ProductAttributeOptions
 	public id!: string;
 	public product_id!: string;
 	public attribute_id!: string;
-	public default_option!: string;
+	public option_id!: string;
 	public is_deleted!: boolean;
 	public last_updated_by!: string;
 }
@@ -57,17 +57,17 @@ ProductAttributeOptions.init(
 			onUpdate: "RESTRICT",
 			onDelete: "CASCADE",
 		},
-		default_option: {
+		option_id: {
 			allowNull: false,
-			type: DataTypes.STRING,
-			// references: {
-			// 	model: {
-			// 		tableName: "options",
-			// 	},
-			// 	key: "id",
-			// },
-			// onUpdate: "RESTRICT",
-			// onDelete: "CASCADE",
+			type: DataTypes.UUID,
+			references: {
+				model: {
+					tableName: "options",
+				},
+				key: "id",
+			},
+			onUpdate: "RESTRICT",
+			onDelete: "CASCADE",
 		},
 		is_deleted: {
 			defaultValue: false,

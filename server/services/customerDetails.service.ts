@@ -94,8 +94,8 @@ export default class CustomerDetailsService {
 		return await CustomerDetails.create(customerData);
 	};
 
-	public edit = async (customerId: string, customerData: EditCustomerDetailsDTO) => {
-		return await CustomerDetails.update(customerData, { where: { id: customerId } }).then(async () => {
+	public edit = async (customer_id: string, customerData: EditCustomerDetailsDTO) => {
+		return await CustomerDetails.update(customerData, { where: { id: customer_id } }).then(async () => {
 			return "Data Edited successfully";
 		});
 	};
@@ -115,8 +115,8 @@ export default class CustomerDetailsService {
 		});
 	};
 
-	public changePassword = async (customerId: string, passwordData: CustomerChangePasswordDTO) => {
+	public changePassword = async (customer_id: string, passwordData: CustomerChangePasswordDTO) => {
 		const hashedPassword: any = await hashPassword(passwordData.newPassword);
-		return await CustomerDetails.update({ password: hashedPassword }, { where: { id: customerId } });
+		return await CustomerDetails.update({ password: hashedPassword }, { where: { id: customer_id } });
 	};
 }

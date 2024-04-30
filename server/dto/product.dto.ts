@@ -21,12 +21,12 @@ export class SearchProductDTO {
 export class ProductAttributesOptionsDTO {
 	attribute_id: string;
 	product_id?: string;
-	default_option: string;
+	option_id: string;
 	last_updated_by: string;
 
 	constructor(data: any) {
 		this.attribute_id = data.attribute_id;
-		this.default_option = data.default_option;
+		this.option_id = data.option_id;
 		this.last_updated_by = data.last_updated_by;
 	}
 }
@@ -48,7 +48,7 @@ export class ProductDTO {
 			(row: any) =>
 				new ProductAttributesOptionsDTO({
 					attribute_id: row.attribute_id,
-					default_option: row.default_option.trim(),
+					option_id: row.option_id,
 					last_updated_by: data.loggedInUserId,
 				})
 		);

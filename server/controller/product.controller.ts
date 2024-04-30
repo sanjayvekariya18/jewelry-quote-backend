@@ -52,7 +52,7 @@ export default class ProductController {
 	};
 
 	public edit = {
-		validation: this.validations.edit,
+		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const productId: string = req.params["id"] as string;
 			const productExist = await Products.findByPk(productId);
@@ -62,7 +62,7 @@ export default class ProductController {
 			const productData = new ProductDTO(req.body);
 
 			const subcategoryExist = await this.subcategoryService.simpleFindOne({ id: productData.sub_category_id, is_deleted: false });
-			if (subcategoryExist && subcategoryExist != null) {
+			if (subcategoryExist && subcategoryExist == null) {
 				throw new NotExistHandler("Subcategory not found");
 			}
 
@@ -90,7 +90,7 @@ export default class ProductController {
 				.toggleProductActive(product_id, req.authUser.id)
 				.then((flag) => {
 					return res.api.create({
-						message: `User is ${flag?.is_active ? "Actived" : "Deactivated"}`,
+						message: `Product is ${flag?.is_active ? "Actived" : "Deactivated"}`,
 					});
 				})
 				.catch((error) => {

@@ -20,9 +20,17 @@ export default class SubcategoryService {
 				is_deleted: false,
 			},
 
-			include: [{ model: Category, attributes: [] }],
+			include: [{ model: Category, attributes: ["id", "name"] }],
 			order: [["name", "ASC"]],
-			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "category_name"]],
+			attributes: [
+				"id",
+				"name",
+				"details",
+				"logo_url",
+				"img_url",
+				"category_id",
+				//  [this.Sequelize.col("Category.name"), "category_name"]
+			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
 					offset: searchParams.page * searchParams.rowsPerPage,
@@ -35,7 +43,7 @@ export default class SubcategoryService {
 		return await SubCategory.findOne({
 			where: searchObject,
 			include: [
-				{ model: Category, attributes: [] },
+				{ model: Category, attributes: ["id", "name"] },
 				{ model: SubCategoryAttributes, include: [{ model: Attributes, attributes: ["id", "name", "details"] }] },
 			],
 			attributes: [
@@ -64,28 +72,47 @@ export default class SubcategoryService {
 				is_deleted: false,
 			},
 			raw: true,
-			include: [{ model: Category, attributes: [] }],
-			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id", [this.Sequelize.col("Category.name"), "categoryName"]],
+			include: [{ model: Category, attributes: ["id", "name"] }],
+			attributes: [
+				"id",
+				"name",
+				"details",
+				"logo_url",
+				"img_url",
+				"category_id",
+				//  [this.Sequelize.col("Category.name"), "categoryName"]
+			],
 		});
 	};
 
 	public getSubCategoryAttributes = async (sub_category_id: string) => {
-		return SubCategory.findAll({
+		const data: any = await SubCategory.findOne({
 			where: { id: sub_category_id },
 			attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"],
 			include: [
 				{
 					model: SubCategoryAttributes,
+					attributes: ["id"],
 					include: [
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name"] }] }],
 						},
 					],
 				},
 			],
 		});
+
+		let resp: Array<any> = [];
+		for (const data1 of data.SubCategoryAttributes) {
+			resp.push({
+				id: data1.Attribute.id,
+				attribute_name: data1.Attribute.name,
+				options: data1.Attribute.AttributesOptions,
+			});
+		}
+		return resp;
 	};
 
 	public create = async (subcategoriesData: CreateSubCategoryDTO) => {

@@ -5,5 +5,8 @@
 	{ "permissionName": "sub_category", "permissionGroup": "jewellery" },
 	{ "permissionName": "product", "permissionGroup": "jewellery" },
 	{ "permissionName": "customer", "permissionGroup": "miscellaneous" },
-	{ "permissionName": "catalog_master", "permissionGroup": "catalog" }
+	{ "permissionName": "catalog_master", "permissionGroup": "catalog" },
+	{ "permissionName": "quotation", "permissionGroup": "quotation" },
+	{ "permissionName": "attributes", "permissionGroup": "attributes" },
+	{ "permissionName": "options", "permissionGroup": "options" }
 ]

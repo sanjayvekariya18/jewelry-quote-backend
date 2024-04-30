@@ -9,6 +9,8 @@ import { ProductDTO, ProductAttributesOptionsDTO, SearchProductDTO } from "./pro
 import { CreateCatalogDTO, SearchCatalogDTO } from "./catalog.dto";
 import { AttributesDTO, SearchAttributesDTO } from "./attributes.dto";
 import { OptionsDTO, SearchOptionsDTO } from "./options.dto";
+import { CreateAddToQuoteDTO } from "./addToQuote.dto";
+import { SearchQuotationDTO, QuotationDTO, QuotationProductsDTO } from "./quotation.dto";
 export {
 	ToggleUserPermissionDTO,
 	UserPermissionsDTO,
@@ -38,4 +40,8 @@ export {
 	OptionsDTO,
 	SearchOptionsDTO,
 	ProductAttributesOptionsDTO,
+	CreateAddToQuoteDTO,
+	SearchQuotationDTO,
+	QuotationDTO,
+	QuotationProductsDTO,
 };

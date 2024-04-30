@@ -8,3 +8,5 @@ export { default as ProductValidation } from "./products.validation";
 export { default as CatalogValidations } from "./catalog.validation";
 export { default as AttributesValidations } from "./attributes.validations";
 export { default as OptionsValidations } from "./options.validations";
+export { default as AddToQuoteValidations } from "./addToQuote.validations";
+export { default as QuotationValidations } from "./quotation.validation";
