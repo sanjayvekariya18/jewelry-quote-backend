@@ -94,16 +94,25 @@ export default class ProductService {
 		}).then((data) => data?.get({ plain: true }));
 
 		let resp: Array<any> = [];
-		for (const data1 of data.ProductAttributeOptions) {
-			resp.push({
-				attribute_id: data1.Attribute.id,
-				attribute_name: data1.Attribute.name,
-				option_id: data1.Option.id,
-				option_name: data1.Option.name,
-				options: data1.Attribute.AttributesOptions,
-			});
+		if (data?.ProductAttributeOptions) {
+			for (const data1 of data.ProductAttributeOptions) {
+				resp.push({
+					attribute_id: data1.Attribute.id,
+					attribute_name: data1.Attribute.name,
+					option_id: data1.Option.id,
+					option_name: data1.Option.name,
+					options: data1.Attribute.AttributesOptions,
+				});
+			}
 		}
 		return { ...data, ProductAttributeOptions: resp };
+	};
+
+	public simpleFindOne = async (searchObject: any) => {
+		return await Products.findOne({
+			where: searchObject,
+			attributes: ["id", "stock_id", "sub_category_id", "name", "description", "is_active"],
+		});
 	};
 
 	public create = async (productData: ProductDTO) => {

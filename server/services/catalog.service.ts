@@ -1,7 +1,7 @@
 import { Transaction } from "sequelize";
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { CatalogMaster, CatalogProducts, Category } from "../models";
-import { CategoryDTO, CreateCatalogDTO, SearchCatalogDTO, SearchCategoryDTO } from "../dto";
+import { CatalogMaster, CatalogProducts } from "../models";
+import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { Op } from "sequelize";
 
 export default class CatalogService {

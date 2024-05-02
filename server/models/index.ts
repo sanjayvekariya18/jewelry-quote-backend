@@ -18,6 +18,7 @@ export { default as ATQAttributeOptions } from "./atq_attribute_options.model";
 export { default as QuotationMaster } from "./quotation.model";
 export { default as QuotationProduct } from "./quotationProduct.model";
 export { default as QuotationAttributeOptions } from "./quotation_attribute_option.model";
+export { default as StyleMaster } from "./styleMaster.model";
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
 import { SubcategoryAttribute, SubcategoryInput, SubcategoryOutput } from "./subCategory.model";
@@ -42,6 +43,7 @@ import {
 	QuotationAttributeOptionsInput,
 	QuotationAttributeOptionsOutput,
 } from "./quotation_attribute_option.model";
+import { StyleMasterAttributes, StyleMasterInput, StyleMasterOutput } from "./styleMaster.model";
 
 export {
 	UserMasterAttributes,
@@ -105,4 +107,7 @@ export {
 	QuotationAttributeOptionsAttribute,
 	QuotationAttributeOptionsInput,
 	QuotationAttributeOptionsOutput,
+	StyleMasterAttributes,
+	StyleMasterInput,
+	StyleMasterOutput,
 };

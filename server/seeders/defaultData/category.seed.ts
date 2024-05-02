@@ -1,16 +1,14 @@
-import fs from "fs";
 import { Transaction } from "sequelize";
 import logger from "../../config/logger";
-import Category, { CategoryAttribute } from "../../models/category.model";
+import { Category, CategoryInput } from "../../models";
 import jsonData from "./category.json";
 
 const categorySeed = async (transaction: Transaction, adminUserId: string | undefined) => {
-	// const jsonData: Array<any> = JSON.parse(fs.readFileSync(`${__dirname}/category.json`, "utf-8"));
-	let tableData: Array<CategoryAttribute> = jsonData.map((data) => {
+	let tableData: Array<CategoryInput> = jsonData.map((data) => {
 		return {
 			name: data.name,
 			last_updated_by: adminUserId,
-		} as CategoryAttribute;
+		} as CategoryInput;
 	});
 
 	const categoryData = (await Category.findAll({ where: { is_deleted: false }, raw: true, transaction })).map((data) => data.name);

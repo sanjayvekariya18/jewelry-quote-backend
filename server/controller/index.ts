@@ -13,3 +13,4 @@ export { default as AttributesController } from "./attributes.controller";
 export { default as OptionsController } from "./options.controller";
 export { default as AddToQuoteController } from "./addToQuote.controller";
 export { default as QuotationController } from "./quotation.controller";
+export { default as StyleMasterController } from "./styleMaster.controller";

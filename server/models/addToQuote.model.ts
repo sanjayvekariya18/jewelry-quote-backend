@@ -6,6 +6,7 @@ export interface AddToQuoteAttribute {
 	product_id: string;
 	customer_id: string;
 	qty: number;
+	styleMaster: Array<string>;
 }
 
 export interface AddToQuoteInput extends Optional<AddToQuoteAttribute, "id"> {}
@@ -16,6 +17,7 @@ class AddToQuote extends Model<AddToQuoteAttribute, AddToQuoteInput> implements 
 	public product_id!: string;
 	public customer_id!: string;
 	public qty!: number;
+	public styleMaster!: Array<string>;
 }
 
 AddToQuote.init(
@@ -52,6 +54,10 @@ AddToQuote.init(
 		},
 		qty: {
 			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: false,
+		},
+		styleMaster: {
+			type: DataTypes.JSON,
 			allowNull: false,
 		},
 	},

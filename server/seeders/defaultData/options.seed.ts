@@ -1,6 +1,6 @@
 import { Transaction } from "sequelize";
 import logger from "../../config/logger";
-import { Options, OptionsAttributes, OptionsInput } from "../../models";
+import { Options, OptionsInput } from "../../models";
 import jsonData from "./options.json";
 
 const optionSeed = async (transaction: Transaction, adminUserId: string | undefined) => {

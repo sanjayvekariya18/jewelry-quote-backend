@@ -6,6 +6,7 @@ export interface QuotationProductAttribute {
 	quotation_id: string;
 	product_id: string;
 	qty: number;
+	styleMaster: Array<string>;
 }
 
 export interface QuotationProductInput extends Optional<QuotationProductAttribute, "id"> {}
@@ -16,6 +17,7 @@ class QuotationProduct extends Model<QuotationProductAttribute, QuotationProduct
 	public quotation_id!: string;
 	public product_id!: string;
 	public qty!: number;
+	public styleMaster!: Array<string>;
 }
 
 QuotationProduct.init(
@@ -52,6 +54,10 @@ QuotationProduct.init(
 		},
 		qty: {
 			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: false,
+		},
+		styleMaster: {
+			type: DataTypes.JSON,
 			allowNull: false,
 		},
 	},

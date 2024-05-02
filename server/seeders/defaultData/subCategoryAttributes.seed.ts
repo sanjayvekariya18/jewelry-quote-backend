@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Transaction } from "sequelize";
-import { Attributes, Category, SubCategory, SubCategoryAttributes, SubCategoryAttributesInput } from "../../models";
+import { Attributes, SubCategory, SubCategoryAttributes, SubCategoryAttributesInput } from "../../models";
 import { logger } from "../../config";
 
 const subCategoryAttributesSeed = async (transaction: Transaction, adminUserId: string) => {

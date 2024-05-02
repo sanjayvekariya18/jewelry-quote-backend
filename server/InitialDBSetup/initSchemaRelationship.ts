@@ -14,6 +14,7 @@ import {
 	QuotationAttributeOptions,
 	QuotationMaster,
 	QuotationProduct,
+	StyleMaster,
 	SubCategory,
 	SubCategoryAttributes,
 	UserMaster,
@@ -40,6 +41,7 @@ const initSchemaRelationship = () => {
 	// SubCategory.hasOne(UserMaster, { sourceKey: "last_updated_by", foreignKey: "id" });
 	SubCategory.hasMany(Products, { sourceKey: "id", foreignKey: "sub_category_id" });
 	SubCategory.hasMany(SubCategoryAttributes, { sourceKey: "id", foreignKey: "sub_category_id" });
+	SubCategory.hasMany(StyleMaster, { sourceKey: "id", foreignKey: "sub_category_id" });
 
 	// PermissionMaster
 	PermissionMaster.hasMany(UserPermissions, { sourceKey: "id", foreignKey: "permission_master_id" });
@@ -111,6 +113,10 @@ const initSchemaRelationship = () => {
 
 	// QuotationAttributeOptions
 	QuotationAttributeOptions.hasOne(QuotationProduct, { sourceKey: "quotation_product_id", foreignKey: "id" });
+
+	// StyleMaster
+	StyleMaster.hasOne(StyleMaster, { sourceKey: "parent_id", foreignKey: "id", as: "parent_style" });
+	StyleMaster.hasOne(SubCategory, { sourceKey: "sub_category_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;

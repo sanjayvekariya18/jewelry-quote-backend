@@ -43,6 +43,7 @@ export default class QuotationController {
 					attributeOptions: quote.ATQAttributeOptions.map((attOpt: any) => {
 						return { attribute_name: attOpt.Attribute.name, option_name: attOpt.Option.name };
 					}),
+					styleMaster: quote.styleMaster,
 				});
 			}
 

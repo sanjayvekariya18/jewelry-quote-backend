@@ -1,5 +1,5 @@
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { QuotationAttributeOptions, QuotationAttributeOptionsInput, QuotationMaster, QuotationProduct, QuotationProductInput } from "../models";
+import { QuotationAttributeOptions, QuotationAttributeOptionsInput, QuotationMaster, QuotationProduct } from "../models";
 import { QuotationDTO, QuotationProductsDTO, SearchQuotationDTO } from "../dto";
 import { Op, Transaction } from "sequelize";
 import { QUOTATION_STATUS } from "../enum";
@@ -51,10 +51,11 @@ export default class QuotationService {
 						qty: quoPro.qty,
 						quotation_id: quotation.id,
 						attributeOptions: quoPro.attributeOptions,
+						styleMaster: quoPro.styleMaster,
 					} as QuotationProductsDTO;
 				});
 				for await (const quoProduct of quotationProducts) {
-					return await QuotationProduct.create(quoProduct, { transaction }).then(async (products) => {
+					await QuotationProduct.create(quoProduct, { transaction }).then(async (products) => {
 						const attributeOptions: Array<QuotationAttributeOptionsInput> = quoProduct.attributeOptions.map((quoPro) => {
 							return {
 								quotation_product_id: products.id,

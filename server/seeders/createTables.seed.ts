@@ -15,6 +15,7 @@ import {
 	QuotationAttributeOptions,
 	QuotationMaster,
 	QuotationProduct,
+	StyleMaster,
 	SubCategory,
 	SubCategoryAttributes,
 	UserMaster,
@@ -184,6 +185,14 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`QuotationAttributeOptions Table Error : ${error}`);
+		});
+
+	await StyleMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`StyleMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`StyleMaster Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

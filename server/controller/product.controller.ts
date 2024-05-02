@@ -21,11 +21,12 @@ export default class ProductController {
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const product_id: string = req.params["id"] as string;
-			const productExist = await this.service.findOne({ id: product_id, is_deleted: false });
+			const productExist = await this.service.simpleFindOne({ id: product_id, is_deleted: false });
 			if (!productExist) {
 				throw new NotExistHandler("Product Not Found");
 			}
-			return res.api.create(productExist);
+			const data = await this.service.findOne({ id: product_id, is_deleted: false });
+			return res.api.create(data);
 		},
 	};
 
@@ -55,7 +56,7 @@ export default class ProductController {
 		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const productId: string = req.params["id"] as string;
-			const productExist = await Products.findByPk(productId);
+			const productExist = await this.service.simpleFindOne({ id: productId, is_deleted: false });
 			if (!productExist) {
 				throw new NotExistHandler("Product Not Found");
 			}
@@ -82,8 +83,9 @@ export default class ProductController {
 	public toggleProductActive = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const product_id: string = req.params["id"] as string;
-			const userExist = await Products.findByPk(product_id);
-			if (!userExist) {
+			const productExist = await this.service.simpleFindOne({ id: product_id, is_deleted: false });
+
+			if (!productExist) {
 				throw new NotExistHandler("Product Not Found");
 			}
 			await this.service
@@ -102,7 +104,8 @@ export default class ProductController {
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const productId: string = req.params["id"] as string;
-			const productExist = await Products.findByPk(productId);
+			const productExist = await this.service.simpleFindOne({ id: productId, is_deleted: false });
+
 			if (!productExist) {
 				throw new NotExistHandler("Product Not Found");
 			}

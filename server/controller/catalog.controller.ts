@@ -4,7 +4,6 @@ import { CatalogValidations } from "../validations";
 import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { removeFile, saveFile } from "../utils/helper";
-import { CatalogMaster } from "../models";
 import { Op } from "sequelize";
 
 export default class CatalogController {

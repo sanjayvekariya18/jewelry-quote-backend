@@ -1,4 +1,3 @@
-import fs from "fs";
 import { Transaction } from "sequelize";
 import { Attributes, Options } from "../../models";
 import { AttributesOptions, AttributesOptionsAttribute } from "../../models";
@@ -6,7 +5,6 @@ import { logger } from "../../config";
 import jsonData from "./attributeOptions.json";
 
 const attributeOptionsSeed = async (transaction: Transaction, adminUserId: string | undefined) => {
-	// const jsonData: Array<any> = JSON.parse(fs.readFileSync(`${__dirname}/attributeOptions.json`, "utf-8"));
 	const attributesData = await Attributes.findAll({ where: { is_deleted: false }, raw: true, transaction });
 	const optionsData = await Options.findAll({ where: { is_deleted: false }, raw: true, transaction });
 

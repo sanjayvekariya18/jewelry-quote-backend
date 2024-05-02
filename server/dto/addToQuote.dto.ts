@@ -18,6 +18,7 @@ export class CreateAddToQuoteDTO {
 	product_id: string;
 	qty: number;
 	attributeOptions: Array<ATQAttributesOptionsDTO>;
+	styleMaster: Array<string>;
 
 	constructor(data: any) {
 		this.customer_id = data.loggedInUserId;
@@ -30,5 +31,22 @@ export class CreateAddToQuoteDTO {
 					option_id: row.option_id,
 				})
 		);
+		this.styleMaster = data.styleMaster.filter(notEmpty);
+	}
+}
+
+export class EditAddToQuoteDTO {
+	qty: number;
+	// attributeOptions: Array<ATQAttributesOptionsDTO>;
+
+	constructor(data: any) {
+		this.qty = Number(data.qty);
+		// this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
+		// 	(row: any) =>
+		// 		new ATQAttributesOptionsDTO({
+		// 			attribute_id: row.attribute_id,
+		// 			option_id: row.option_id,
+		// 		})
+		// );
 	}
 }

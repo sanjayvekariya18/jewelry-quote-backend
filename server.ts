@@ -10,7 +10,7 @@ import routes from "./server/routes/v1";
 import session from "express-session";
 import { config, logger } from "./server/config";
 import { RootErrorHandler } from "./server/errorHandler";
-import { TokenVerifyMiddleware, setApiResponse } from "./server/middlewares";
+import { setApiResponse } from "./server/middlewares";
 import { testDBConnections } from "./server/InitialDBSetup";
 import http from "http";
 import https from "https";

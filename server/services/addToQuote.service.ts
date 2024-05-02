@@ -1,6 +1,6 @@
 import { Transaction } from "sequelize";
 import { executeTransaction } from "../config/database";
-import { CreateAddToQuoteDTO } from "../dto";
+import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import {
 	ATQAttributeOptions,
 	ATQAttributeOptionsInput,
@@ -22,7 +22,7 @@ export default class AddToQuoteService {
 			include: [
 				{
 					model: Products,
-					attributes: ["id", "stock_id"],
+					attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
 					include: [
 						{
 							model: SubCategory,
@@ -44,7 +44,7 @@ export default class AddToQuoteService {
 					],
 				},
 			],
-			attributes: ["id", "product_id", "customer_id", "qty"],
+			attributes: ["id", "product_id", "customer_id", "qty", "styleMaster"],
 			order: [["createdAt", "DESC"]],
 			// raw: true,
 		});
@@ -80,18 +80,18 @@ export default class AddToQuoteService {
 		});
 	};
 
-	public edit = async (quoteId: string, quoteData: CreateAddToQuoteDTO) => {
+	public edit = async (quoteId: string, quoteData: EditAddToQuoteDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			await ATQAttributeOptions.destroy({ where: { add_to_quote_id: quoteId }, transaction });
+			// await ATQAttributeOptions.destroy({ where: { add_to_quote_id: quoteId }, transaction });
 			return await AddToQuote.update(quoteData, { where: { id: quoteId }, transaction }).then(async () => {
-				const assignAttributesOptions: Array<ATQAttributeOptionsInput> = quoteData.attributeOptions.map((option_id) => {
-					return {
-						add_to_quote_id: quoteId,
-						attribute_id: option_id.attribute_id,
-						option_id: option_id.option_id,
-					} as ATQAttributeOptionsInput;
-				});
-				await ATQAttributeOptions.bulkCreate(assignAttributesOptions, { transaction });
+				// const assignAttributesOptions: Array<ATQAttributeOptionsInput> = quoteData.attributeOptions.map((option_id) => {
+				// 	return {
+				// 		add_to_quote_id: quoteId,
+				// 		attribute_id: option_id.attribute_id,
+				// 		option_id: option_id.option_id,
+				// 	} as ATQAttributeOptionsInput;
+				// });
+				// await ATQAttributeOptions.bulkCreate(assignAttributesOptions, { transaction });
 				return "Product Added";
 			});
 		});

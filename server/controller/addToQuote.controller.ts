@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { AddToQuoteService, CustomerDetailsService } from "../services";
 import { AddToQuoteValidations } from "../validations";
-import { CreateAddToQuoteDTO } from "../dto";
+import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import { FormErrorsHandler, UnauthorizedUserHandler } from "../errorHandler";
-import { AddToQuote, Products } from "../models";
-import { helper } from "../utils";
+import { ProductAttributeOptions, Products, StyleMaster } from "../models";
 
 export default class AddToQuoteController {
 	private service = new AddToQuoteService();
@@ -31,28 +30,39 @@ export default class AddToQuoteController {
 		validation: this.validation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const ATQData = new CreateAddToQuoteDTO(req.body);
-			const errors: any = {};
 
-			const productVariantExist = await Products.findOne({
+			const productExist = await Products.findOne({
 				where: { id: ATQData.product_id, is_deleted: false },
 			});
-			if (!productVariantExist || productVariantExist == null) {
-				errors["product_id"] = ["Product not found"];
+			if (!productExist || productExist == null) {
+				return res.api.validationErrors({ message: "Product not found" });
 			}
 
-			const recordExist = await this.service.findOne({
-				customer_id: req.customer.id,
-				product_id: ATQData.product_id,
-			});
+			let ids = await ProductAttributeOptions.findAll({
+				where: { product_id: productExist.id },
+				attributes: ["attribute_id"],
+				raw: true,
+			}).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
 
+			let checkAttributes = ATQData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
+			if (ids.length != checkAttributes.length) {
+				return res.api.validationErrors({ message: "Please enter all attributes and options. Attributes should be included in same subCategory" });
+			}
+
+			const checkStyle = await StyleMaster.findAll({ where: { sub_category_id: productExist.sub_category_id }, raw: true }).then((data) =>
+				data.map((row) => row.name)
+			);
+
+			const isExists = ATQData.styleMaster.every((data) => checkStyle.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or many style master not available" });
+			}
+
+			const recordExist = await this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });
 			if (recordExist || recordExist != null) {
 				return res.api.duplicateRecord({
 					message: `Item already exist to quote`,
 				});
-			}
-
-			if (Object.keys(errors).length > 0) {
-				throw new FormErrorsHandler(errors);
 			}
 
 			const data = await this.service.create(ATQData);
@@ -75,8 +85,7 @@ export default class AddToQuoteController {
 			}
 
 			const ATQId = req.params["id"];
-			const ATQData = new CreateAddToQuoteDTO(req.body);
-			ATQData.customer_id = req.customer.id;
+			const ATQData = new EditAddToQuoteDTO(req.body);
 
 			const isValidReq = await this.service.findOne({
 				id: ATQId,
@@ -84,6 +93,17 @@ export default class AddToQuoteController {
 			});
 
 			if (isValidReq && isValidReq != null) {
+				// let ids = await ProductAttributeOptions.findAll({
+				// 	where: { product_id: isValidReq.id },
+				// 	attributes: ["attribute_id"],
+				// 	raw: true,
+				// }).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
+
+				// let checkAttributes = ATQData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
+				// if (ids.length != checkAttributes.length) {
+				// 	return res.api.validationErrors({ message: "Please enter all attributes and options. Attributes should be included in same subCategory" });
+				// }
+
 				const data = await this.service.edit(ATQId, ATQData);
 				return res.api.create(data);
 			} else {

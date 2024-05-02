@@ -40,6 +40,7 @@ export class QuotationProductsDTO {
 	quotation_id: string;
 	qty: number;
 	attributeOptions: Array<{ attribute_name: string; option_name: string }>;
+	styleMaster: Array<string>;
 
 	constructor(data: any) {
 		this.product_id = data.product_id;
@@ -52,6 +53,7 @@ export class QuotationProductsDTO {
 					option_name: row.option_name,
 				})
 		);
+		this.styleMaster = data.styleMaster.filter(notEmpty);
 	}
 }
 
@@ -71,6 +73,7 @@ export class QuotationDTO {
 					product_id: row.product_id,
 					qty: row.qty,
 					attributeOptions: row.attributeOptions,
+					styleMaster: row.styleMaster,
 				})
 		);
 	}

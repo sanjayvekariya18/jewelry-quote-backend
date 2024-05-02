@@ -1,4 +1,3 @@
-import { QueryTypes } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 import { Attributes, Category, CustomerDetails, Options, SubCategory, UserMaster } from "../models";
 

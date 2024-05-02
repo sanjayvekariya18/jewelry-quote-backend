@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { OptionsDTO, SearchOptionsDTO } from "../dto";
-import { Attributes, Options } from "../models";
+import { Options } from "../models";
 import { sequelizeConnection } from "../config/database";
 
 export default class OptionsService {
