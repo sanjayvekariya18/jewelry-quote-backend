@@ -3,6 +3,8 @@ import { SearchCustomerDetailsDTO, EditCustomerDetailsDTO, CreateCustomerDetails
 import { CustomerDetails } from "../models";
 import { hashPassword } from "../utils/bcrypt.helper";
 import { sequelizeConnection } from "../config/database";
+import { API } from ".";
+import { config } from "../config";
 
 export default class CustomerDetailsService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -39,6 +41,7 @@ export default class CustomerDetailsService {
 				"customer_name",
 				"customer_email",
 				"country_code",
+				"login_id",
 				"mobile_number",
 				"whatsapp_number",
 				"customer_address",
@@ -71,6 +74,7 @@ export default class CustomerDetailsService {
 				"customer_name",
 				"customer_email",
 				"country_code",
+				"login_id",
 				"mobile_number",
 				"whatsapp_number",
 				"customer_address",
@@ -89,9 +93,19 @@ export default class CustomerDetailsService {
 	};
 
 	public create = async (customerData: CreateCustomerDetailsDTO) => {
-		customerData.password = await hashPassword(customerData.password);
-
 		return await CustomerDetails.create(customerData);
+	};
+
+	public reCaptchaAuth = async (token: string) => {
+		const responseData: any = await API.post(
+			`https://www.google.com/recaptcha/api/siteverify?secret=${config.captcha.secret_key}&response=${token}`,
+			{}
+		).catch((error) => {
+			console.log("reCaptchaAuth", error);
+		});
+
+		console.log("recaptcha response", responseData);
+		return responseData.success || false;
 	};
 
 	public edit = async (customer_id: string, customerData: EditCustomerDetailsDTO) => {

@@ -21,6 +21,12 @@ const envVarsSchema = Joi.object()
 		DB_NAME: Joi.string().required().description("Account Database Name"),
 		DB_DIALECT: Joi.string().required().description("Database Dialect"),
 
+		SYS_EMAIL: Joi.string().required().description("company email for email send"),
+		SYS_EMAIL_PASSWORD: Joi.string().required().description("app password for email send"),
+
+		CAPTCHA_SITE_KEY: Joi.string().required().description("paypal CAPTCHA_SITE_KEY is required"),
+		CAPTCHA_SECRET_KEY: Joi.string().required().description("paypal CAPTCHA_SECRET_KEY is required"),
+
 		FILEPATH: Joi.string().default("$../../public"),
 		FRONTEND_URL: Joi.string().required(),
 		BACKEND_URL: Joi.string().required(),
@@ -53,11 +59,19 @@ export = {
 		dialect: envVars.DB_DIALECT,
 		port: envVars.DB_PORT,
 	},
+	sys_email_details: {
+		email: envVars.SYS_EMAIL,
+		password: envVars.SYS_EMAIL_PASSWORD,
+	},
 	file_path: envVars.FILEPATH,
 	frontend_url: envVars.FRONTEND_URL,
 	backend_url: envVars.BACKEND_URL,
 	ssl: {
 		key_path: envVars.SSL_KEY_PATH,
 		cert_path: envVars.SSL_CERT_PATH,
+	},
+	captcha: {
+		site_key: envVars.CAPTCHA_SITE_KEY,
+		secret_key: envVars.CAPTCHA_SECRET_KEY,
 	},
 };

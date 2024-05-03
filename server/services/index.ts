@@ -15,3 +15,5 @@ export { default as OptionsService } from "./options.service";
 export { default as AddToQuoteService } from "./addToQuote.service";
 export { default as QuotationService } from "./quotation.service";
 export { default as StyleMasterService } from "./styleMaster.service";
+export { default as EmailService } from "./email.service";
+export { default as API } from "./axios.service";

@@ -1,5 +1,5 @@
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { QuotationAttributeOptions, QuotationAttributeOptionsInput, QuotationMaster, QuotationProduct } from "../models";
+import { AddToQuote, QuotationAttributeOptions, QuotationAttributeOptionsInput, QuotationMaster, QuotationProduct } from "../models";
 import { QuotationDTO, QuotationProductsDTO, SearchQuotationDTO } from "../dto";
 import { Op, Transaction } from "sequelize";
 import { QUOTATION_STATUS } from "../enum";
@@ -43,7 +43,7 @@ export default class QuotationService {
 		});
 	};
 
-	public create = async (categoryData: QuotationDTO) => {
+	public placeQuotation = async (categoryData: QuotationDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await QuotationMaster.create(categoryData, { transaction }).then(async (quotation) => {
 				const quotationProducts: Array<QuotationProductsDTO> = categoryData.quotationProducts.map((quoPro) => {
@@ -68,16 +68,12 @@ export default class QuotationService {
 						await QuotationAttributeOptions.bulkCreate(attributeOptions, { transaction });
 					});
 				}
+
+				await AddToQuote.destroy({ where: { customer_id: categoryData.customer_id } });
 				return "Quotation created successfully";
 			});
 		});
 	};
-
-	// public edit = async (categoryId: string, categoryData: CategoryDTO) => {
-	// 	return await Category.update(categoryData, { where: { id: categoryId } }).then(() => {
-	// 		return "Category updated successfully";
-	// 	});
-	// };
 
 	public changeStatus = async (quotation_id: string, status: QUOTATION_STATUS) => {
 		return await QuotationMaster.update({ status }, { where: { id: quotation_id } });

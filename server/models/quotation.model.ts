@@ -46,7 +46,7 @@ QuotationMaster.init(
 			type: DataTypes.DATE,
 		},
 		status: {
-			type: DataTypes.ENUM(...Object.keys(QUOTATION_STATUS)),
+			type: DataTypes.ENUM(...Object.values(QUOTATION_STATUS)),
 			allowNull: false,
 			defaultValue: QUOTATION_STATUS.PENDING,
 		},

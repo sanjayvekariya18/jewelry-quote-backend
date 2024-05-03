@@ -53,7 +53,7 @@ export default class QuotationController {
 				quotationProducts: productData,
 			});
 
-			const data = await this.service.create(quotationObject);
+			const data = await this.service.placeQuotation(quotationObject);
 			return res.api.create(data);
 		},
 	};
