@@ -9,6 +9,7 @@ export enum PERMISSIONS {
 	ATTRIBUTES = "attributes",
 	OPTIONS = "options",
 	QUOTATION = "quotation",
+	STYLE_MASTER = "style_master",
 }
 
 export enum QUOTATION_STATUS {

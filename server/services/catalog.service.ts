@@ -53,7 +53,7 @@ export default class CatalogService {
 
 	public edit = async (catalog_id: string, categoryData: CreateCatalogDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			await CatalogProducts.destroy({ where: { catalog_id } });
+			await CatalogProducts.destroy({ where: { catalog_id }, transaction });
 			return await CatalogMaster.update(categoryData, { where: { id: catalog_id }, transaction }).then(async () => {
 				let catPro = categoryData.catalog_products.map((product_id) => {
 					return {

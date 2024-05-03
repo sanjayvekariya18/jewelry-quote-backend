@@ -18,6 +18,14 @@ export default class ProductController {
 		},
 	};
 
+	public getAllForCustomer = {
+		validation: this.validations.getAll,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.service.getAllForCustomer(new SearchProductDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const product_id: string = req.params["id"] as string;
@@ -47,6 +55,9 @@ export default class ProductController {
 			}).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
 
 			productData.attributeOptions = productData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
+			if (productData.attributeOptions.length == 0) {
+				return res.api.validationErrors({ message: "Attributes not found in sub category" });
+			}
 			const data = await this.service.create(productData);
 			return res.api.create(data);
 		},
@@ -74,7 +85,9 @@ export default class ProductController {
 			}).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
 
 			productData.attributeOptions = productData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
-
+			if (productData.attributeOptions.length == 0) {
+				return res.api.validationErrors({ message: "Attributes not found in sub category" });
+			}
 			const data = await this.service.edit(productId, productData);
 			return res.api.create(data);
 		},

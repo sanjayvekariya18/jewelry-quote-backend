@@ -61,6 +61,58 @@ export default class ProductService {
 		});
 	};
 
+	public getAllForCustomer = async (searchParams: SearchProductDTO) => {
+		return await Products.findAndCountAll({
+			where: {
+				...(searchParams.searchTxt && {
+					name: {
+						[Op.like]: "%" + searchParams.searchTxt + "%",
+					},
+				}),
+				...(searchParams.sub_category_id && {
+					sub_category_id: searchParams.sub_category_id,
+				}),
+				is_deleted: false,
+			},
+			distinct: true,
+			include: [
+				{
+					model: SubCategory,
+					attributes: ["id", "name"],
+				},
+				{
+					model: ProductAttributeOptions,
+					attributes: ["id", "product_id", "attribute_id", "option_id"],
+					include: [
+						{
+							model: Attributes,
+							attributes: ["id", "name", "details"],
+							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+						},
+						{
+							model: Options,
+							attributes: ["id", "name"],
+						},
+					],
+				},
+			],
+			order: [["name", "ASC"]],
+			attributes: [
+				"id",
+				"stock_id",
+				"sub_category_id",
+				// [this.Sequelize.col("SubCategory.name"), "sub_category_name"],
+				"name",
+				"description",
+			],
+			...(searchParams.page != undefined &&
+				searchParams.rowsPerPage != undefined && {
+					offset: searchParams.page * searchParams.rowsPerPage,
+					limit: searchParams.rowsPerPage,
+				}),
+		});
+	};
+
 	public findOne = async (searchObject: any) => {
 		const data: any = await Products.findOne({
 			where: searchObject,
@@ -117,7 +169,7 @@ export default class ProductService {
 
 	public create = async (productData: ProductDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			return await Products.create(productData).then(async (newProductData) => {
+			return await Products.create(productData, { transaction }).then(async (newProductData) => {
 				let productAttributeOption1 = productData.attributeOptions.map((data) => {
 					return { ...data, product_id: newProductData.id };
 				});
@@ -154,8 +206,13 @@ export default class ProductService {
 	};
 
 	public delete = async (product_id: string, loggedInUserId: string) => {
-		return await Products.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: product_id } }).then(() => {
-			return "Product Deleted Successfully";
+		return await executeTransaction(async (transaction: Transaction) => {
+			return await Products.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: product_id }, transaction }).then(
+				async () => {
+					await ProductAttributeOptions.update({ is_deleted: false, last_updated_by: loggedInUserId }, { where: { product_id }, transaction });
+					return "Product Deleted Successfully";
+				}
+			);
 		});
 	};
 }

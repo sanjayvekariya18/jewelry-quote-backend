@@ -19,15 +19,13 @@ export class CreateCatalogDTO {
 	details?: String;
 	img_url?: string;
 	pdf_url?: string;
-	catalog_products: Array<string> = [];
+	catalog_products: Array<string>;
 	last_updated_by: string;
 
 	constructor(data: any) {
 		this.name = data.name.trim();
 		data.details != undefined ? (this.details = data.details) : delete this.details;
-		data.catalog_products != undefined && Array.isArray(data.catalog_products)
-			? (this.catalog_products = data.catalog_products.filter(notEmpty))
-			: (this.catalog_products = []);
+		this.catalog_products = data.catalog_products.filter(notEmpty);
 		this.last_updated_by = data.loggedInUserId;
 	}
 }
@@ -37,15 +35,13 @@ export class EditCatalogDTO {
 	details?: String;
 	img_url?: string;
 	pdf_url?: string;
-	catalog_products: Array<string> = [];
+	catalog_products: Array<string>;
 	last_updated_by: string;
 
 	constructor(data: any) {
 		this.name = data.name.trim();
 		data.details != undefined ? (this.details = data.details) : delete this.details;
-		data.catalog_products != undefined && Array.isArray(data.catalog_products)
-			? (this.catalog_products = data.catalog_products.filter(notEmpty))
-			: (this.catalog_products = []);
+		this.catalog_products = data.catalog_products.filter(notEmpty);
 		this.last_updated_by = data.loggedInUserId;
 	}
 }

@@ -53,6 +53,11 @@ export default class OptionsController {
 			}
 			const optionsData = new OptionsDTO(req.body);
 
+			const optionNameExist = await this.service.findOne({ id: { [Op.not]: optionsId }, name: { [Op.like]: optionsData.name }, is_deleted: false });
+			if (optionNameExist != null) {
+				throw new DuplicateRecord("Options name already exists");
+			}
+
 			const data = await this.service.edit(optionsId, optionsData);
 			return res.api.create(data);
 		},

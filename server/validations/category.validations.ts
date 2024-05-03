@@ -8,5 +8,7 @@ export default class CategoryValidations {
 	public category = {
 		name: "required|string",
 		details: "string",
+		img_url: "mimes:png,jpg,jpeg",
+		logo_url: "mimes:png,jpg,jpeg",
 	};
 }

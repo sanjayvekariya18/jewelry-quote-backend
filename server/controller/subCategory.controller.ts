@@ -5,7 +5,7 @@ import { SearchSubCategoryDTO, CreateSubCategoryDTO, EditSubCategoryDTO } from "
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { Op } from "sequelize";
 import { removeFile, saveFile } from "../utils/helper";
-import { Category, SubCategory } from "../models";
+import { Attributes, Category, SubCategory } from "../models";
 
 export default class SubCategoryController {
 	private service = new SubcategoryService();
@@ -50,14 +50,23 @@ export default class SubCategoryController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const subcategoryData = new CreateSubCategoryDTO(req.body);
 			const subcategoryExist = await this.service.simpleFindOne({ name: subcategoryData.name, is_deleted: false });
-
 			if (subcategoryExist && subcategoryExist != null) {
 				throw new DuplicateRecord("Subcategory already exists");
 			}
+
 			const checkCategory = await this.categoryService.findOne({ id: subcategoryData.category_id });
 			if (checkCategory == null) {
 				throw new DuplicateRecord("Category not found");
 			}
+
+			const findAllAttributes = await Attributes.findAll({ where: { is_deleted: false }, raw: true, attributes: ["id"] }).then((att) =>
+				att.map((row) => row.id)
+			);
+			const isExists = subcategoryData.attributes.every((data) => findAllAttributes.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or more attribute is not available" });
+			}
+
 			const file: any = req.files;
 			if (file) {
 				if (file.img_url) {
@@ -96,14 +105,23 @@ export default class SubCategoryController {
 				name: subcategoryData.name,
 				is_deleted: false,
 			});
-
 			if (subcategoryExist && subcategoryExist != null) {
 				throw new DuplicateRecord("Subcategory already exists");
 			}
+
 			const checkCategory = await this.categoryService.findOne({ id: subcategoryData.category_id });
 			if (checkCategory == null) {
 				throw new DuplicateRecord("Category not found");
 			}
+
+			const findAllAttributes = await Attributes.findAll({ where: { is_deleted: false }, raw: true, attributes: ["id"] }).then((att) =>
+				att.map((row) => row.id)
+			);
+			const isExists = subcategoryData.attributes.every((data) => findAllAttributes.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or more attribute is not available" });
+			}
+
 			const file: any = req.files;
 			if (file) {
 				const oldImgData = await this.service.simpleFindOne({ id: subcategoryId });

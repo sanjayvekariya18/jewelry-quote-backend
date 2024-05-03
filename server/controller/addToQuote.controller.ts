@@ -55,7 +55,7 @@ export default class AddToQuoteController {
 
 			const isExists = ATQData.styleMaster.every((data) => checkStyle.includes(data));
 			if (isExists == false) {
-				return res.api.validationErrors({ message: "One or many style master not available" });
+				return res.api.validationErrors({ message: "One or more style master not available" });
 			}
 
 			const recordExist = await this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });

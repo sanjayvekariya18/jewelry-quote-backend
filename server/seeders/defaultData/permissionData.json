@@ -8,5 +8,6 @@
 	{ "permissionName": "catalog_master", "permissionGroup": "catalog" },
 	{ "permissionName": "quotation", "permissionGroup": "quotation" },
 	{ "permissionName": "attributes", "permissionGroup": "attributes" },
-	{ "permissionName": "options", "permissionGroup": "options" }
+	{ "permissionName": "options", "permissionGroup": "options" },
+	{ "permissionName": "style_master", "permissionGroup": "style_master" }
 ]

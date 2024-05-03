@@ -7,7 +7,7 @@ const router = Router();
 const basicValidatorHandler = new BasicValidatorHandler();
 const controller = new ProductController();
 
-router.get("/", basicValidatorHandler.handler(controller.getAll.validation), use(controller.getAll.controller));
+router.get("/", basicValidatorHandler.handler(controller.getAllForCustomer.validation), use(controller.getAllForCustomer.controller));
 router.get("/:id", use(controller.findOne.controller));
 
 export default router;

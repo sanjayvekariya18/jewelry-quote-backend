@@ -24,6 +24,7 @@ export default class QuotationService {
 					customer_id: searchParams.customer_id,
 				}),
 			},
+			distinct: true,
 			include: [{ model: QuotationProduct, include: [{ model: QuotationAttributeOptions }] }],
 			order: [["createdAt", "DESC"]],
 			attributes: ["id", "customer_id", "quotation_date", "status", "createdAt"],

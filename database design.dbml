@@ -117,6 +117,7 @@ Table quotation_products {
   product_id uuid [not null, ref: > products.id]
   // price integer [default: null]
   qty integer [not null]
+  styleMaster JSON
 }
 
 Table quotation_product_attribute_option {
@@ -156,6 +157,7 @@ Table add_to_quote {
   product_id uuid [not null, ref: > products.id]
   customer_id uuid [not null, ref: > customers.id]
   qty integer [not null]
+  styleMaster JSON
 }
 
 Table add_to_quote_product_attributes {
@@ -163,4 +165,11 @@ Table add_to_quote_product_attributes {
   add_to_quote_id uuid [not null, ref: > add_to_quote.id]
   attribute_id uuid [not null, ref: > attributes.id]
   option_id uuid [not null, ref: > options.id]
+}
+
+Table style_master {
+  id uuid [primary key]
+  sub_category_id uuid [not null, ref: > sub_category.id]
+  parent_id uuid [not null, ref: > style_master.id]
+  name text
 }

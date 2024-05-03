@@ -10,6 +10,8 @@ export default class SubCategoriesValidation {
 		category_id: "required|uuid",
 		name: "required|string",
 		details: "string",
+		img_url: "mimes:png,jpg,jpeg",
+		logo_url: "mimes:png,jpg,jpeg",
 		attributes: "required|array|min:1",
 		"attributes.*": "required|uuid",
 	};
@@ -18,6 +20,8 @@ export default class SubCategoriesValidation {
 		category_id: "required|uuid",
 		name: "required|string",
 		details: "string",
+		img_url: "mimes:png,jpg,jpeg",
+		logo_url: "mimes:png,jpg,jpeg",
 		attributes: "required|array|min:1",
 		"attributes.*": "required|uuid",
 	};

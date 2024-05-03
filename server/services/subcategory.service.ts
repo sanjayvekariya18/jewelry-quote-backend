@@ -135,7 +135,7 @@ export default class SubcategoryService {
 
 	public edit = async (sub_category_id: string, subcategoriesData: EditSubCategoryDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			return await SubCategory.update(subcategoriesData, { where: { id: sub_category_id } }).then(async () => {
+			return await SubCategory.update(subcategoriesData, { where: { id: sub_category_id }, transaction }).then(async () => {
 				if (subcategoriesData.attributes.length > 0) {
 					await SubCategoryAttributes.destroy({ where: { sub_category_id }, transaction }).then(async () => {
 						const categoryAttributes: Array<SubCategoryAttributesAttribute> = subcategoriesData.attributes.map((attribute_id) => {
@@ -156,6 +156,12 @@ export default class SubcategoryService {
 	};
 
 	public delete = async (subcategoriesId: string, loggedInUserId: string) => {
-		return await SubCategory.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: subcategoriesId } });
+		return await executeTransaction(async (transaction: Transaction) => {
+			return await SubCategory.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: subcategoriesId }, transaction }).then(
+				async () => {
+					await SubCategoryAttributes.destroy({ where: { sub_category_id: subcategoriesId }, transaction });
+				}
+			);
+		});
 	};
 }

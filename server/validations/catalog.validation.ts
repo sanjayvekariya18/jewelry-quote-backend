@@ -11,5 +11,6 @@ export default class CatalogValidations {
 		img_url: "mimes:png,jpg,jpeg",
 		pdf_url: "mimes:pdf",
 		catalog_products: "required|array|min:1",
+		"catalog_products.*": "required|uuid",
 	};
 }

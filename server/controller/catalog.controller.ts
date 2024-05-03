@@ -5,6 +5,7 @@ import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { removeFile, saveFile } from "../utils/helper";
 import { Op } from "sequelize";
+import { Products } from "../models";
 
 export default class CatalogController {
 	private service = new CatalogService();
@@ -34,10 +35,18 @@ export default class CatalogController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const catalogData = new CreateCatalogDTO(req.body);
 			const catalogExist = await this.service.findOne({ name: catalogData.name, is_deleted: false });
-
 			if (catalogExist && catalogExist != null) {
 				throw new DuplicateRecord("Catalog Master already exists");
 			}
+
+			const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
+				product.map((row) => row.id)
+			);
+			const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or more product is not available" });
+			}
+
 			const file: any = req.files;
 			if (file) {
 				if (file.img_url) {
@@ -71,6 +80,14 @@ export default class CatalogController {
 
 			if (catalogDuplicateExist && catalogDuplicateExist != null) {
 				throw new DuplicateRecord("Catalog master already exists");
+			}
+
+			const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
+				product.map((row) => row.id)
+			);
+			const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or more product is not available" });
 			}
 
 			const file: any = req.files;

@@ -6,7 +6,7 @@ const router = Router();
 const attributesController = new AttributesController();
 const basicValidatorHandler = new BasicValidatorHandler();
 
-router.get("/", use(attributesController.getAll.controller));
+router.get("/", basicValidatorHandler.handler(attributesController.getAll.validation), use(attributesController.getAll.controller));
 router.get("/:id", use(attributesController.findOne.controller));
 router.post("/", basicValidatorHandler.handler(attributesController.create.validation), use(attributesController.create.controller));
 router.put("/:id", basicValidatorHandler.handler(attributesController.edit.validation), use(attributesController.edit.controller));

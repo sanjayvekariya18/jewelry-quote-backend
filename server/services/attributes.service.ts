@@ -14,7 +14,7 @@ export default class AttributesService {
 				}),
 				is_deleted: false,
 			},
-			order: [["name", "ASC"]],
+			distinct: true,
 			attributes: ["id", "name", "details"],
 			include: [
 				{
@@ -23,6 +23,7 @@ export default class AttributesService {
 					include: [{ model: Options, attributes: ["id", "name", "details"] }],
 				},
 			],
+			order: [["name", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});
@@ -76,10 +77,12 @@ export default class AttributesService {
 	};
 
 	public delete = async (attribute_id: string, loggedInUserId: string) => {
-		await executeTransaction(async (transaction: Transaction) => {
-			return await Attributes.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: attribute_id } }).then(async () => {
-				await AttributesOptions.destroy({ where: { attribute_id: attribute_id }, transaction });
-			});
+		return await executeTransaction(async (transaction: Transaction) => {
+			return await Attributes.update({ is_deleted: true, last_updated_by: loggedInUserId }, { where: { id: attribute_id }, transaction }).then(
+				async () => {
+					await AttributesOptions.destroy({ where: { attribute_id: attribute_id }, transaction });
+				}
+			);
 		});
 	};
 }
