@@ -2,12 +2,6 @@ Project JewelleryCatelog {
   database_type: "mysql"
 }
 
-Table permission_master {
-  id uuid [primary key]
-  permission_name text [not null, unique]
-  permission_group text [not null]
-}
-
 Table user_master {
   id uuid [primary key]
   name text [not null]
@@ -15,6 +9,12 @@ Table user_master {
   mobile_number text [null]
   password text [not null]
   is_active bool [default: true]
+}
+
+Table permission_master {
+  id uuid [primary key]
+  permission_name text [not null, unique]
+  permission_group text [not null]
 }
 
 Table user_permissions {
@@ -25,24 +25,6 @@ Table user_permissions {
   create bool [not null]
   edit bool [not null]
   delete bool [not null]
-}
-
-Table customers {
-  id uuid [primary key]
-  customer_name text [not null]
-  customer_email text [not null]
-  mobile_number text [default: null]
-  password text [not null]
-  whatsapp_number text [null]
-  customer_address text [null]
-  website text [null]
-  business_registration text [ null]
-  customer_fax text [null]
-  customer_business_card text [null]
-  association_membership text [null]
-  customer_social_media text [null]
-  business_reference text [null]//company name/person name/person contact no
-  is_active bool [default: true]
 }
 
 Table category {
@@ -62,10 +44,29 @@ Table sub_category {
   logo_url text [default: null]
 }
 
-Table sub_category_attributes {
+Table style_master {
   id uuid [primary key]
   sub_category_id uuid [not null, ref: > sub_category.id]
-  attribute_id uuid [not null, ref: > attributes.id]
+  parent_id uuid [not null, ref: > style_master.id]
+  name text
+}
+
+Table customers {
+  id uuid [primary key]
+  customer_name text [not null]
+  customer_email text [not null]
+  mobile_number text [default: null]
+  password text [not null]
+  whatsapp_number text [null]
+  customer_address text [null]
+  website text [null]
+  business_registration text [ null]
+  customer_fax text [null]
+  customer_business_card text [null]
+  association_membership text [null]
+  customer_social_media text [null]
+  business_reference text [null]//company name/person name/person contact no
+  is_active bool [default: true]
 }
 
 Table products {
@@ -127,13 +128,6 @@ Table quotation_product_attribute_option {
   option_name text
 }
 
-Table product_attributes_option {
-  id uuid [primary key]
-  product_id uuid [not null, ref: > products.id]
-  attribute_id uuid [not null, ref: > attributes.id]
-  option_id uuid [not null, ref: > options.id]
-}
-
 Table attributes {
   id uuid [primary key]
   name text
@@ -152,6 +146,19 @@ Table attribute_option {
   option_id uuid [not null, ref: > options.id]
 }
 
+Table sub_category_attributes {
+  id uuid [primary key]
+  sub_category_id uuid [not null, ref: > sub_category.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+}
+
+Table product_attributes_option {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+  option_id uuid [not null, ref: > options.id]
+}
+
 Table add_to_quote {
   id uuid [primary key]
   product_id uuid [not null, ref: > products.id]
@@ -165,11 +172,4 @@ Table add_to_quote_product_attributes {
   add_to_quote_id uuid [not null, ref: > add_to_quote.id]
   attribute_id uuid [not null, ref: > attributes.id]
   option_id uuid [not null, ref: > options.id]
-}
-
-Table style_master {
-  id uuid [primary key]
-  sub_category_id uuid [not null, ref: > sub_category.id]
-  parent_id uuid [not null, ref: > style_master.id]
-  name text
 }

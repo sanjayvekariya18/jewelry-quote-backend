@@ -9,6 +9,7 @@ declare global {
 			customer: LoggedInCustomerDetails;
 			// profile: any;
 			socketIo: Server;
+			mergedBody: any;
 		}
 		interface Response {
 			api: ApiResponse;

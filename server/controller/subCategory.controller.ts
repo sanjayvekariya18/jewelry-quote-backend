@@ -48,7 +48,7 @@ export default class SubCategoryController {
 	public create = {
 		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const subcategoryData = new CreateSubCategoryDTO(req.body);
+			const subcategoryData = new CreateSubCategoryDTO(req.mergedBody);
 			const subcategoryExist = await this.service.simpleFindOne({ name: subcategoryData.name, is_deleted: false });
 			if (subcategoryExist && subcategoryExist != null) {
 				throw new DuplicateRecord("Subcategory already exists");
@@ -99,7 +99,7 @@ export default class SubCategoryController {
 			if (!subCategoryExist) {
 				throw new NotExistHandler("Sub Category Not Found");
 			}
-			const subcategoryData = new EditSubCategoryDTO(req.body);
+			const subcategoryData = new EditSubCategoryDTO(req.mergedBody);
 			const subcategoryExist = await this.service.simpleFindOne({
 				id: { [Op.not]: subcategoryId },
 				name: subcategoryData.name,

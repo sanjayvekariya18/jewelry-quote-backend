@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AddToQuoteService, QuotationService } from "../services";
 import { QuotationValidations } from "../validations";
-import { QuotationDTO, SearchCategoryDTO } from "../dto";
+import { QuotationDTO, SearchQuotationDTO } from "../dto";
 import { NotExistHandler } from "../errorHandler";
 import { QUOTATION_STATUS } from "../enum";
 
@@ -13,7 +13,18 @@ export default class QuotationController {
 	public getAll = {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.service.getAll(new SearchCategoryDTO(req.query));
+			const data = await this.service.getAll(new SearchQuotationDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public getAllForCustomer = {
+		validation: this.validations.getAll,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const customer_id: string = req.customer["id"] as string;
+			const searchQuery = new SearchQuotationDTO(req.query);
+			searchQuery.customer_id = customer_id;
+			const data = await this.service.getAll(searchQuery);
 			return res.api.create(data);
 		},
 	};

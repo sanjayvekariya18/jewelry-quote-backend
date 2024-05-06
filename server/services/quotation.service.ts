@@ -1,5 +1,14 @@
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { AddToQuote, QuotationAttributeOptions, QuotationAttributeOptionsInput, QuotationMaster, QuotationProduct } from "../models";
+import {
+	AddToQuote,
+	CustomerDetails,
+	Products,
+	QuotationAttributeOptions,
+	QuotationAttributeOptionsInput,
+	QuotationMaster,
+	QuotationProduct,
+	SubCategory,
+} from "../models";
 import { QuotationDTO, QuotationProductsDTO, SearchQuotationDTO } from "../dto";
 import { Op, Transaction } from "sequelize";
 import { QUOTATION_STATUS } from "../enum";
@@ -25,7 +34,41 @@ export default class QuotationService {
 				}),
 			},
 			distinct: true,
-			include: [{ model: QuotationProduct, include: [{ model: QuotationAttributeOptions }] }],
+			include: [
+				{
+					model: QuotationProduct,
+					attributes: ["id", "quotation_id", "product_id", "qty", "styleMaster"],
+					include: [
+						{
+							model: Products,
+							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+							include: [{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] }],
+						},
+						{ model: QuotationAttributeOptions, attributes: ["id", "quotation_product_id", "attribute_name", "option_name"] },
+					],
+				},
+				{
+					model: CustomerDetails,
+					attributes: [
+						"id",
+						"customer_name",
+						"customer_email",
+						"login_id",
+						"country_code",
+						"mobile_number",
+						"whatsapp_number",
+						"customer_address",
+						"website",
+						"business_registration",
+						"customer_fax",
+						"customer_business_card",
+						"association_membership",
+						"customer_social_media",
+						"business_reference",
+						"is_active",
+					],
+				},
+			],
 			order: [["createdAt", "DESC"]],
 			attributes: ["id", "customer_id", "quotation_date", "status", "createdAt"],
 			...(searchParams.page != undefined &&

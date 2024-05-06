@@ -1,8 +1,9 @@
 import { NextFunction, Response, Request } from "express";
 import BaseHandler from "./BaseHandler";
 import Validator from "validatorjs";
-import { FormErrorsHandler } from "../../errorHandler";
+import { BadResponseHandler, FormErrorsHandler } from "../../errorHandler";
 import { helper } from "../../utils";
+import _ from "lodash";
 
 export default class BasicValidatorHandler extends BaseHandler {
 	constructor() {
@@ -17,6 +18,12 @@ export default class BasicValidatorHandler extends BaseHandler {
 				...req.files,
 				...req.params,
 			};
+
+			let sameKeys = _.intersection(Object.keys(req.body), Object.keys(req.query || {}));
+
+			if (sameKeys.length > 0) {
+				return next(new BadResponseHandler(`${sameKeys.join(", ")} should not same in query and body`));
+			}
 
 			await this.basicInitialization(validationRulesAndMessages, input);
 
@@ -33,6 +40,8 @@ export default class BasicValidatorHandler extends BaseHandler {
 			} else if (!helper.isEmpty(this.otherCustomErrors)) {
 				return next(new FormErrorsHandler(this.otherCustomErrors));
 			}
+
+			req.mergedBody = this.requestData;
 
 			next();
 		};

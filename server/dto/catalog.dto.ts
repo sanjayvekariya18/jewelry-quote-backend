@@ -16,7 +16,7 @@ export class SearchCatalogDTO {
 
 export class CreateCatalogDTO {
 	name: string;
-	details?: String;
+	description?: String;
 	img_url?: string;
 	pdf_url?: string;
 	catalog_products: Array<string>;
@@ -24,7 +24,7 @@ export class CreateCatalogDTO {
 
 	constructor(data: any) {
 		this.name = data.name.trim();
-		data.details != undefined ? (this.details = data.details) : delete this.details;
+		data.description != undefined ? (this.description = data.description) : delete this.description;
 		this.catalog_products = data.catalog_products.filter(notEmpty);
 		this.last_updated_by = data.loggedInUserId;
 	}
@@ -32,7 +32,7 @@ export class CreateCatalogDTO {
 
 export class EditCatalogDTO {
 	name: string;
-	details?: String;
+	description?: String;
 	img_url?: string;
 	pdf_url?: string;
 	catalog_products: Array<string>;
@@ -40,7 +40,7 @@ export class EditCatalogDTO {
 
 	constructor(data: any) {
 		this.name = data.name.trim();
-		data.details != undefined ? (this.details = data.details) : delete this.details;
+		data.description != undefined ? (this.description = data.description) : delete this.description;
 		this.catalog_products = data.catalog_products.filter(notEmpty);
 		this.last_updated_by = data.loggedInUserId;
 	}

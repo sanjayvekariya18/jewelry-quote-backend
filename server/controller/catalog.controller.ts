@@ -33,7 +33,7 @@ export default class CatalogController {
 	public create = {
 		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const catalogData = new CreateCatalogDTO(req.body);
+			const catalogData = new CreateCatalogDTO(req.mergedBody);
 			const catalogExist = await this.service.findOne({ name: catalogData.name, is_deleted: false });
 			if (catalogExist && catalogExist != null) {
 				throw new DuplicateRecord("Catalog Master already exists");
@@ -71,7 +71,7 @@ export default class CatalogController {
 			if (!catalogExist) {
 				throw new NotExistHandler("Catalog master Not Found");
 			}
-			const catalogData = new CreateCatalogDTO(req.body);
+			const catalogData = new CreateCatalogDTO(req.mergedBody);
 			const catalogDuplicateExist = await this.service.findOne({
 				id: { [Op.not]: catalog_id },
 				name: catalogData.name,

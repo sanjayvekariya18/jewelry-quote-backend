@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { API, CustomerDetailsService, EmailService, TokenService } from "../services";
+import { CustomerDetailsService, EmailService, TokenService } from "../services";
 import { CustomerDetailsValidation } from "../validations";
 import { ChangePasswordDTO, CreateCustomerDetailsDTO, EditCustomerDetailsDTO, SearchCustomerDetailsDTO } from "../dto";
 import { BadResponseHandler, DuplicateRecord, NotExistHandler, UnauthorizedUserHandler } from "../errorHandler";
@@ -9,7 +9,6 @@ import { comparePassword, hashPassword } from "../utils/bcrypt.helper";
 import { Op } from "sequelize";
 import { generateRandomDigitNumber, removeFile, saveFile } from "../utils/helper";
 import randomstring from "randomstring";
-import { config } from "../config";
 
 export default class CustomerDetailsController {
 	private service = new CustomerDetailsService();
@@ -148,14 +147,14 @@ export default class CustomerDetailsController {
 			const hashedPassword = await hashPassword(password);
 
 			await CustomerDetails.update({ login_id, password: hashedPassword, is_active: true }, { where: { id: customer_id } });
-			// await this.emailService
-			// 	.sendLoginIdPassword({ login_id, password }, customerCheck.customer_email)
-			// 	.then(() => {
-			return res.api.create({ message: `Login id and password is sent to customer's mail id`, login_id, password });
-			// })
-			// .catch((error) => {
-			// 	throw new BadResponseHandler(error);
-			// });
+			await this.emailService
+				.sendLoginIdPassword({ login_id, password }, customerCheck.customer_email)
+				.then(() => {
+					return res.api.create({ message: `Login id and password is sent to customer's mail id` });
+				})
+				.catch((error) => {
+					throw new BadResponseHandler(error);
+				});
 		},
 	};
 

@@ -14,6 +14,12 @@ export default class SubCategoriesValidation {
 		logo_url: "mimes:png,jpg,jpeg",
 		attributes: "required|array|min:1",
 		"attributes.*": "required|uuid",
+		callback: (formData: any) => {
+			if (formData?.attributes && !Array.isArray(formData.attributes)) {
+				return { rules: {}, formRequest: { ...formData, attributes: [formData.attributes] } };
+			}
+			return { rules: {}, formRequest: { ...formData } };
+		},
 	};
 
 	public edit = {
@@ -24,5 +30,11 @@ export default class SubCategoriesValidation {
 		logo_url: "mimes:png,jpg,jpeg",
 		attributes: "required|array|min:1",
 		"attributes.*": "required|uuid",
+		callback: (formData: any) => {
+			if (formData?.attributes && !Array.isArray(formData.attributes)) {
+				return { rules: {}, formRequest: { ...formData, attributes: [formData.attributes] } };
+			}
+			return { rules: {}, formRequest: { ...formData } };
+		},
 	};
 }

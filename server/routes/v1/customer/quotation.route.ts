@@ -7,7 +7,7 @@ const router = Router();
 const controller = new QuotationController();
 const basicValidatorHandler = new BasicValidatorHandler();
 
-router.get("/", basicValidatorHandler.handler(controller.getAll.validation), use(controller.getAll.controller));
+router.get("/", basicValidatorHandler.handler(controller.getAllForCustomer.validation), use(controller.getAllForCustomer.controller));
 router.get("/:id", use(controller.findOne.controller));
 
 router.post("/", basicValidatorHandler.handler(controller.placeQuotation.validation), use(controller.placeQuotation.controller));

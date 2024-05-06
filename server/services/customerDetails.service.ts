@@ -104,7 +104,6 @@ export default class CustomerDetailsService {
 			console.log("reCaptchaAuth", error);
 		});
 
-		console.log("recaptcha response", responseData);
 		return responseData.success || false;
 	};
 
