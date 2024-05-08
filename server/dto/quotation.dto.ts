@@ -35,17 +35,31 @@ class AttributeOptions {
 	}
 }
 
+class OtherDetails {
+	quotation_product_id?: string;
+	detail_name: string;
+	detail_value: string;
+
+	constructor(data: any) {
+		this.detail_name = data.detail_name;
+		this.detail_value = data.detail_value;
+	}
+}
+
 export class QuotationProductsDTO {
 	product_id: string;
 	quotation_id: string;
 	qty: number;
+	notes: string;
 	attributeOptions: Array<{ attribute_name: string; option_name: string }>;
-	styleMaster: Array<string>;
+	otherDetails: Array<{ detail_name: string; detail_value: string }>;
+	// styleMaster: Array<string>;
 
 	constructor(data: any) {
 		this.product_id = data.product_id;
 		this.quotation_id = "";
 		this.qty = data.qty;
+		this.notes = data.notes;
 		this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
 			(row: any) =>
 				new AttributeOptions({
@@ -53,27 +67,36 @@ export class QuotationProductsDTO {
 					option_name: row.option_name,
 				})
 		);
-		this.styleMaster = data.styleMaster.filter(notEmpty);
+		this.otherDetails = data.otherDetails.filter(notEmpty).map(
+			(row: any) =>
+				new OtherDetails({
+					detail_name: row.detail_name,
+					detail_value: row.detail_value,
+				})
+		);
+		// this.styleMaster = data.styleMaster.filter(notEmpty);
 	}
 }
 
 export class QuotationDTO {
 	customer_id: string;
 	quotation_date: Date;
-	notes?: string;
+	// notes?: string;
 	quotationProducts: Array<QuotationProductsDTO>;
 
 	constructor(data: any) {
 		this.customer_id = data.customer_id;
 		this.quotation_date = new Date();
-		data.notes != undefined ? (this.notes = data.notes) : delete this.notes;
+		// data.notes != undefined ? (this.notes = data.notes) : delete this.notes;
 		this.quotationProducts = data.quotationProducts.filter(notEmpty).map(
 			(row: any) =>
 				new QuotationProductsDTO({
 					product_id: row.product_id,
 					qty: row.qty,
 					attributeOptions: row.attributeOptions,
-					styleMaster: row.styleMaster,
+					otherDetails: row.otherDetails,
+					notes: row.notes,
+					// styleMaster: row.styleMaster,
 				})
 		);
 	}

@@ -4,11 +4,14 @@ import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import {
 	ATQAttributeOptions,
 	ATQAttributeOptionsInput,
+	ATQOtherDetail,
+	ATQOtherDetailInput,
 	AddToQuote,
 	Attributes,
 	AttributesOptions,
 	Category,
 	Options,
+	OtherDetailMaster,
 	Products,
 	SubCategory,
 } from "../models";
@@ -43,8 +46,9 @@ export default class AddToQuoteService {
 						{ model: Options, attributes: ["id", "name", "details"] },
 					],
 				},
+				{ model: ATQOtherDetail, attributes: ["id", "add_to_quote_id", "detail_name", "detail_value"] },
 			],
-			attributes: ["id", "product_id", "customer_id", "qty", "styleMaster"],
+			attributes: ["id", "product_id", "customer_id", "qty", "notes"],
 			order: [["createdAt", "DESC"]],
 			// raw: true,
 		});
@@ -67,14 +71,22 @@ export default class AddToQuoteService {
 	public create = async (quoteData: CreateAddToQuoteDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await AddToQuote.create(quoteData, { transaction }).then(async (data) => {
-				const assignAttributesOptions: Array<ATQAttributeOptionsInput> = quoteData.attributeOptions.map((option_id) => {
+				const assignAttributesOptions: Array<ATQAttributeOptionsInput> = quoteData.attributeOptions.map((attOpt) => {
 					return {
 						add_to_quote_id: data.id,
-						attribute_id: option_id.attribute_id,
-						option_id: option_id.option_id,
+						attribute_id: attOpt.attribute_id,
+						option_id: attOpt.option_id,
 					} as ATQAttributeOptionsInput;
 				});
 				await ATQAttributeOptions.bulkCreate(assignAttributesOptions, { transaction });
+				const assignOtherDetails: Array<ATQOtherDetailInput> = quoteData.otherDetails.map((othDet) => {
+					return {
+						add_to_quote_id: data.id,
+						detail_name: othDet.detail_name,
+						detail_value: othDet.detail_value,
+					} as ATQOtherDetailInput;
+				});
+				await ATQOtherDetail.bulkCreate(assignOtherDetails, { transaction });
 				return "Product Added";
 			});
 		});
@@ -82,17 +94,8 @@ export default class AddToQuoteService {
 
 	public edit = async (quoteId: string, quoteData: EditAddToQuoteDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			// await ATQAttributeOptions.destroy({ where: { add_to_quote_id: quoteId }, transaction });
 			return await AddToQuote.update(quoteData, { where: { id: quoteId }, transaction }).then(async () => {
-				// const assignAttributesOptions: Array<ATQAttributeOptionsInput> = quoteData.attributeOptions.map((option_id) => {
-				// 	return {
-				// 		add_to_quote_id: quoteId,
-				// 		attribute_id: option_id.attribute_id,
-				// 		option_id: option_id.option_id,
-				// 	} as ATQAttributeOptionsInput;
-				// });
-				// await ATQAttributeOptions.bulkCreate(assignAttributesOptions, { transaction });
-				return "Product Added";
+				return "Product Edited";
 			});
 		});
 	};

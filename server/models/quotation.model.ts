@@ -7,10 +7,9 @@ export interface QuotationMasterAttribute {
 	customer_id: string;
 	quotation_date: Date;
 	status: QUOTATION_STATUS;
-	notes: string;
 }
 
-export interface QuotationMasterInput extends Optional<QuotationMasterAttribute, "id" | "status" | "notes"> {}
+export interface QuotationMasterInput extends Optional<QuotationMasterAttribute, "id" | "status"> {}
 export interface QuotationMasterOutput extends Required<QuotationMasterAttribute> {}
 
 class QuotationMaster extends Model<QuotationMasterAttribute, QuotationMasterInput> implements QuotationMasterAttribute {
@@ -18,7 +17,6 @@ class QuotationMaster extends Model<QuotationMasterAttribute, QuotationMasterInp
 	public customer_id!: string;
 	public quotation_date!: Date;
 	public status!: QUOTATION_STATUS;
-	public notes!: string;
 }
 
 QuotationMaster.init(
@@ -49,11 +47,6 @@ QuotationMaster.init(
 			type: DataTypes.ENUM(...Object.values(QUOTATION_STATUS)),
 			allowNull: false,
 			defaultValue: QUOTATION_STATUS.PENDING,
-		},
-		notes: {
-			type: DataTypes.TEXT,
-			allowNull: false,
-			defaultValue: "",
 		},
 	},
 	{

@@ -6,6 +6,8 @@ import {
 	QuotationAttributeOptions,
 	QuotationAttributeOptionsInput,
 	QuotationMaster,
+	QuotationOtherDetail,
+	QuotationOtherDetailInput,
 	QuotationProduct,
 	SubCategory,
 } from "../models";
@@ -37,7 +39,7 @@ export default class QuotationService {
 			include: [
 				{
 					model: QuotationProduct,
-					attributes: ["id", "quotation_id", "product_id", "qty", "styleMaster"],
+					attributes: ["id", "quotation_id", "product_id", "qty", "price"],
 					include: [
 						{
 							model: Products,
@@ -45,6 +47,7 @@ export default class QuotationService {
 							include: [{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] }],
 						},
 						{ model: QuotationAttributeOptions, attributes: ["id", "quotation_product_id", "attribute_name", "option_name"] },
+						{ model: QuotationOtherDetail, attributes: ["id", "quotation_product_id", "detail_name", "detail_value"] },
 					],
 				},
 				{
@@ -82,20 +85,21 @@ export default class QuotationService {
 	public findOne = async (searchObject: any) => {
 		return await QuotationMaster.findOne({
 			where: { ...searchObject },
-			attributes: ["id", "customer_id", "quotation_date", "status", "notes"],
+			attributes: ["id", "customer_id", "quotation_date", "status"],
 		});
 	};
 
-	public placeQuotation = async (categoryData: QuotationDTO) => {
+	public placeQuotation = async (quotationData: QuotationDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			return await QuotationMaster.create(categoryData, { transaction }).then(async (quotation) => {
-				const quotationProducts: Array<QuotationProductsDTO> = categoryData.quotationProducts.map((quoPro) => {
+			return await QuotationMaster.create(quotationData, { transaction }).then(async (quotation) => {
+				const quotationProducts: Array<QuotationProductsDTO> = quotationData.quotationProducts.map((quoPro) => {
 					return {
 						product_id: quoPro.product_id,
 						qty: quoPro.qty,
 						quotation_id: quotation.id,
+						notes: quoPro.notes,
 						attributeOptions: quoPro.attributeOptions,
-						styleMaster: quoPro.styleMaster,
+						otherDetails: quoPro.otherDetails,
 					} as QuotationProductsDTO;
 				});
 				for await (const quoProduct of quotationProducts) {
@@ -107,19 +111,35 @@ export default class QuotationService {
 								option_name: quoPro.option_name,
 							} as QuotationAttributeOptionsInput;
 						});
-
 						await QuotationAttributeOptions.bulkCreate(attributeOptions, { transaction });
+
+						const otherDetails: Array<QuotationOtherDetailInput> = quoProduct.otherDetails.map((quoPro) => {
+							return {
+								quotation_product_id: products.id,
+								detail_name: quoPro.detail_name,
+								detail_value: quoPro.detail_value,
+							} as QuotationOtherDetailInput;
+						});
+						await QuotationOtherDetail.bulkCreate(otherDetails, { transaction });
 					});
 				}
 
-				await AddToQuote.destroy({ where: { customer_id: categoryData.customer_id } });
+				await AddToQuote.destroy({ where: { customer_id: quotationData.customer_id } });
 				return "Quotation created successfully";
 			});
 		});
 	};
 
+	public changeProductPrice = async (quotation_product_id: string, price: number) => {
+		return await QuotationProduct.update({ price }, { where: { id: quotation_product_id } }).then(() => {
+			return "Quotation Product Price changed successfully";
+		});
+	};
+
 	public changeStatus = async (quotation_id: string, status: QUOTATION_STATUS) => {
-		return await QuotationMaster.update({ status }, { where: { id: quotation_id } });
+		return await QuotationMaster.update({ status }, { where: { id: quotation_id } }).then(() => {
+			return "Quotation Status changed successfully";
+		});
 	};
 
 	public delete = async (quotation_id: string) => {

@@ -9,7 +9,8 @@ const basicValidatorHandler = new BasicValidatorHandler();
 
 router.get("/", basicValidatorHandler.handler(controller.getAll.validation), use(controller.getAll.controller));
 router.get("/:id", use(controller.findOne.controller));
-router.post("/", basicValidatorHandler.handler(controller.placeQuotation.validation), use(controller.placeQuotation.controller));
+router.post("/", use(controller.placeQuotation.controller));
+router.put("/:id", basicValidatorHandler.handler(controller.changeProductPrice.validation), use(controller.changeProductPrice.controller));
 router.put("/status/:id", basicValidatorHandler.handler(controller.changeStatus.validation), use(controller.changeStatus.controller));
 router.delete("/:id", use(controller.delete.controller));
 

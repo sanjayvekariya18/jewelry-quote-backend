@@ -19,6 +19,11 @@ export { default as QuotationMaster } from "./quotation.model";
 export { default as QuotationProduct } from "./quotationProduct.model";
 export { default as QuotationAttributeOptions } from "./quotation_attribute_option.model";
 export { default as StyleMaster } from "./styleMaster.model";
+export { default as ATQOtherDetail } from "./atqOtherDetail.model";
+export { default as OtherDetailMaster } from "./otherDetailMaster.model";
+export { default as ProductOtherDetail } from "./productOtherDetail.model";
+export { default as QuotationOtherDetail } from "./quotationOtherDetail.model";
+
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
 import { SubcategoryAttribute, SubcategoryInput, SubcategoryOutput } from "./subCategory.model";
@@ -44,6 +49,10 @@ import {
 	QuotationAttributeOptionsOutput,
 } from "./quotation_attribute_option.model";
 import { StyleMasterAttributes, StyleMasterInput, StyleMasterOutput } from "./styleMaster.model";
+import { ATQOtherDetailAttribute, ATQOtherDetailInput, ATQOtherDetailOutput } from "./atqOtherDetail.model";
+import { OtherDetailMasterAttribute, OtherDetailMasterInput, OtherDetailMasterOutput } from "./otherDetailMaster.model";
+import { ProductOtherDetailAttribute, ProductOtherDetailInput, ProductOtherDetailOutput } from "./productOtherDetail.model";
+import { QuotationOtherDetailAttribute, QuotationOtherDetailInput, QuotationOtherDetailOutput } from "./quotationOtherDetail.model";
 
 export {
 	UserMasterAttributes,
@@ -110,4 +119,16 @@ export {
 	StyleMasterAttributes,
 	StyleMasterInput,
 	StyleMasterOutput,
+	ATQOtherDetailAttribute,
+	ATQOtherDetailInput,
+	ATQOtherDetailOutput,
+	OtherDetailMasterAttribute,
+	OtherDetailMasterInput,
+	OtherDetailMasterOutput,
+	ProductOtherDetailAttribute,
+	ProductOtherDetailInput,
+	ProductOtherDetailOutput,
+	QuotationOtherDetailAttribute,
+	QuotationOtherDetailInput,
+	QuotationOtherDetailOutput,
 };

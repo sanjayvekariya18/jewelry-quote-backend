@@ -109,16 +109,15 @@ Table quotation_master {
   customer_id uuid [not null, ref: > customers.id]
   quotation_date datetime
   status quotation_status [not null, default: "pending"]
-  notes text [default: ""]
 }
 
 Table quotation_products {
   id uuid [primary key]
   quotation_id uuid [not null, ref: > quotation_master.id]
   product_id uuid [not null, ref: > products.id]
-  // price integer [default: null]
+  price integer [default: null]
   qty integer [not null]
-  styleMaster JSON
+  notes text [default: ""]
 }
 
 Table quotation_product_attribute_option {
@@ -126,6 +125,19 @@ Table quotation_product_attribute_option {
   quotation_product_id uuid [not null, ref: > quotation_products.id]
   attribute_name text
   option_name text
+}
+
+Table quotation_product_other_details {
+  id uuid [primary key]
+  quotation_product_id uuid [not null, ref: > quotation_products.id]
+  detail_name string [not null]
+  detail_value string [not null]
+}
+
+Table other_detail_master {
+  id uuid [primary key]
+  detail_name string [not null]
+  detail_type other_details_type [not null]
 }
 
 Table attributes {
@@ -159,12 +171,31 @@ Table product_attributes_option {
   option_id uuid [not null, ref: > options.id]
 }
 
+Enum other_details_type {
+  textbox
+  label
+}
+
+Table product_other_details {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  other_detail_id uuid [not null, ref: > other_detail_master.id]
+  detail_value string [not null]
+  // detail_type other_details_type [not null]
+}
+// Table product_other_details {
+//   id uuid [primary key]
+//   product_id uuid [not null, ref: > products.id]
+//   detail_name string [not null]
+//   detail_value string [not null]
+//   detail_type other_details_type [not null]
+// }
+
 Table add_to_quote {
   id uuid [primary key]
   product_id uuid [not null, ref: > products.id]
   customer_id uuid [not null, ref: > customers.id]
   qty integer [not null]
-  styleMaster JSON
 }
 
 Table add_to_quote_product_attributes {
@@ -172,4 +203,12 @@ Table add_to_quote_product_attributes {
   add_to_quote_id uuid [not null, ref: > add_to_quote.id]
   attribute_id uuid [not null, ref: > attributes.id]
   option_id uuid [not null, ref: > options.id]
+}
+
+
+Table add_to_quote_other_details {
+  id uuid [primary key]
+  add_to_quote_id uuid [not null, ref: > add_to_quote.id]
+  detail_name string [not null]
+  detail_value string [not null]
 }

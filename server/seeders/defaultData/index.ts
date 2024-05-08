@@ -11,6 +11,7 @@ import attributeOptionsSeed from "./attributeOptions.seed";
 import categorySeed from "./category.seed";
 import subcategorySeed from "./subcategory.seed";
 import styleMasterSeed from "./styleMaster.seed";
+import otherDetailMasterSeed from "./otherDetailMaster.seed";
 
 class DataSeed {
 	static async run() {
@@ -34,6 +35,7 @@ class DataSeed {
 				await categorySeed(transaction, adminUser.id);
 				await subcategorySeed(transaction, adminUser.id);
 				await styleMasterSeed(transaction, adminUser.id);
+				await otherDetailMasterSeed(transaction, adminUser.id);
 			} catch (error) {
 				transaction.rollback();
 				logger.error(`Error occurred in seeder : ${error}`);

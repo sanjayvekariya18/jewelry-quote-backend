@@ -5,12 +5,17 @@ export default class AddToQuoteValidations {
 		attributeOptions: "required|array|min:1",
 		"attributeOptions.*.attribute_id": "required|uuid",
 		"attributeOptions.*.option_id": "required|uuid",
-		styleMaster: "required|array|min:1",
-		"styleMaster.*": "required|string",
+		otherDetails: "required|array|min:1",
+		"otherDetails.*.detail_name": "required|string",
+		"otherDetails.*.detail_value": "required|string",
+		notes: "string",
+		// styleMaster: "required|array|min:1",
+		// "styleMaster.*": "required|string",
 	};
 
 	public edit = {
 		qty: "required|numeric",
+		notes: "string",
 		// attributeOptions: "required|array|min:1",
 		// "attributeOptions.*.attribute_id": "required|uuid",
 		// "attributeOptions.*.option_id": "required|uuid",

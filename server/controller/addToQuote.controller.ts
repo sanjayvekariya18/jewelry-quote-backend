@@ -3,12 +3,15 @@ import { AddToQuoteService, CustomerDetailsService } from "../services";
 import { AddToQuoteValidations } from "../validations";
 import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import { FormErrorsHandler, UnauthorizedUserHandler } from "../errorHandler";
-import { ProductAttributeOptions, Products, StyleMaster } from "../models";
+import { OtherDetailMaster, ProductAttributeOptions, ProductOtherDetail, Products } from "../models";
+import { sequelizeConnection } from "../config/database";
+import { OTHER_DETAIL_TYPES } from "../enum";
 
 export default class AddToQuoteController {
 	private service = new AddToQuoteService();
 	private customerMasterService = new CustomerDetailsService();
 	private validation = new AddToQuoteValidations();
+	private Sequelize = sequelizeConnection.Sequelize;
 
 	public getAll = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -49,14 +52,39 @@ export default class AddToQuoteController {
 				return res.api.validationErrors({ message: "Please enter all attributes and options. Attributes should be included in same subCategory" });
 			}
 
-			const checkStyle = await StyleMaster.findAll({ where: { sub_category_id: productExist.sub_category_id }, raw: true }).then((data) =>
-				data.map((row) => row.name)
-			);
+			const getProductOtherDetails: any = await ProductOtherDetail.findAll({
+				where: { product_id: ATQData.product_id },
+				attributes: [
+					"id",
+					"product_id",
+					"other_detail_id",
+					"detail_value",
+					[this.Sequelize.col("OtherDetailMaster.detail_name"), "detail_name"],
+					[this.Sequelize.col("OtherDetailMaster.detail_type"), "detail_type"],
+				],
+				include: [{ model: OtherDetailMaster, attributes: [] }],
+			}).then((data) => data.map((row) => row.get({ plain: true })));
 
-			const isExists = ATQData.styleMaster.every((data) => checkStyle.includes(data));
-			if (isExists == false) {
-				return res.api.validationErrors({ message: "One or more style master not available" });
+			if (getProductOtherDetails.length != ATQData.otherDetails.length) {
+				return res.api.validationErrors({ message: "All Product Other Detail are required" });
 			}
+			const checkExists = ATQData.otherDetails.every((othDet) =>
+				getProductOtherDetails.findIndex((row: any) => row.detail_name == othDet.detail_name) != -1 ? true : false
+			);
+			if (!checkExists) return res.api.validationErrors({ message: "One or more Product Other Detail not available" });
+
+			// const checkOtherDetailValue = ATQData.otherDetails.every((othDet) =>
+			// 	getProductOtherDetails.findIndex((row: any) => {
+			// 		console.log("row.detail_name", row.detail_name);
+			// 		console.log("othDet.detail_name", othDet.detail_name);
+			// 		console.log("row.detail_type", row.detail_type);
+			// 		console.log("row.detail_value", row.detail_value);
+			// 		console.log("othDet.detail_value", othDet.detail_value);
+			// 		return row.detail_name == othDet.detail_name && row.detail_type == OTHER_DETAIL_TYPES.LABEL && row.detail_value != othDet.detail_value;
+			// 	}) != -1
+			// 		? true
+			// 		: false
+			// );
 
 			const recordExist = await this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });
 			if (recordExist || recordExist != null) {
@@ -73,37 +101,22 @@ export default class AddToQuoteController {
 	public edit = {
 		validation: this.validation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const errors: any = {};
-			if (Number.isNaN(req.body["qty"])) {
-				errors["qty"] = ["Quantity must be numeric"];
-			} else if (Number(req.body["qty"]) < 1) {
-				errors["qty"] = ["Quantity must be greater than 0 (zero)"];
-			}
-
-			if (Object.keys(errors).length > 0) {
-				throw new FormErrorsHandler(errors);
-			}
-
 			const ATQId = req.params["id"];
-			const ATQData = new EditAddToQuoteDTO(req.body);
-
-			const isValidReq = await this.service.findOne({
-				id: ATQId,
-				customer_id: req.customer.id,
-			});
+			const isValidReq = await this.service.findOne({ id: ATQId, customer_id: req.customer.id });
 
 			if (isValidReq && isValidReq != null) {
-				// let ids = await ProductAttributeOptions.findAll({
-				// 	where: { product_id: isValidReq.id },
-				// 	attributes: ["attribute_id"],
-				// 	raw: true,
-				// }).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
+				const errors: any = {};
+				if (Number.isNaN(req.body["qty"])) {
+					errors["qty"] = ["Quantity must be numeric"];
+				} else if (Number(req.body["qty"]) < 1) {
+					errors["qty"] = ["Quantity must be greater than 0 (zero)"];
+				}
 
-				// let checkAttributes = ATQData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
-				// if (ids.length != checkAttributes.length) {
-				// 	return res.api.validationErrors({ message: "Please enter all attributes and options. Attributes should be included in same subCategory" });
-				// }
+				if (Object.keys(errors).length > 0) {
+					throw new FormErrorsHandler(errors);
+				}
 
+				const ATQData = new EditAddToQuoteDTO(req.body);
 				const data = await this.service.edit(ATQId, ATQData);
 				return res.api.create(data);
 			} else {

@@ -1,6 +1,7 @@
 import { logger } from "../config";
 import {
 	ATQAttributeOptions,
+	ATQOtherDetail,
 	AddToQuote,
 	Attributes,
 	AttributesOptions,
@@ -9,11 +10,14 @@ import {
 	Category,
 	CustomerDetails,
 	Options,
+	OtherDetailMaster,
 	PermissionMaster,
 	ProductAttributeOptions,
+	ProductOtherDetail,
 	Products,
 	QuotationAttributeOptions,
 	QuotationMaster,
+	QuotationOtherDetail,
 	QuotationProduct,
 	StyleMaster,
 	SubCategory,
@@ -193,6 +197,38 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`StyleMaster Table Error : ${error}`);
+		});
+
+	await OtherDetailMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`OtherDetailMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`OtherDetailMaster Table Error : ${error}`);
+		});
+
+	await ProductOtherDetail.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ProductOtherDetail Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ProductOtherDetail Table Error : ${error}`);
+		});
+
+	await ATQOtherDetail.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ATQOtherDetail Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ATQOtherDetail Table Error : ${error}`);
+		});
+
+	await QuotationOtherDetail.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`QuotationOtherDetail Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`QuotationOtherDetail Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

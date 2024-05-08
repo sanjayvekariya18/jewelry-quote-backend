@@ -6,10 +6,11 @@ export interface QuotationProductAttribute {
 	quotation_id: string;
 	product_id: string;
 	qty: number;
-	styleMaster: Array<string>;
+	price: number | null;
+	// styleMaster: Array<string>;
 }
 
-export interface QuotationProductInput extends Optional<QuotationProductAttribute, "id"> {}
+export interface QuotationProductInput extends Optional<QuotationProductAttribute, "id" | "price"> {}
 export interface QuotationProductOutput extends Required<QuotationProductAttribute> {}
 
 class QuotationProduct extends Model<QuotationProductAttribute, QuotationProductInput> implements QuotationProductAttribute {
@@ -17,7 +18,8 @@ class QuotationProduct extends Model<QuotationProductAttribute, QuotationProduct
 	public quotation_id!: string;
 	public product_id!: string;
 	public qty!: number;
-	public styleMaster!: Array<string>;
+	public price!: number | null;
+	// public styleMaster!: Array<string>;
 }
 
 QuotationProduct.init(
@@ -56,10 +58,15 @@ QuotationProduct.init(
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: false,
 		},
-		styleMaster: {
-			type: DataTypes.JSON,
-			allowNull: false,
+		price: {
+			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: true,
+			defaultValue: null,
 		},
+		// styleMaster: {
+		// 	type: DataTypes.JSON,
+		// 	allowNull: false,
+		// },
 	},
 	{
 		sequelize: sequelizeConnection,

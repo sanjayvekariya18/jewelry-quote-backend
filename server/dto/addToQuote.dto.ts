@@ -13,12 +13,25 @@ export class ATQAttributesOptionsDTO {
 	}
 }
 
+export class ATQOtherDetailDTO {
+	add_to_quote_id?: string;
+	detail_name: string;
+	detail_value: string;
+
+	constructor(data: any) {
+		this.detail_name = data.detail_name;
+		this.detail_value = data.detail_value;
+	}
+}
+
 export class CreateAddToQuoteDTO {
 	customer_id: string;
 	product_id: string;
 	qty: number;
 	attributeOptions: Array<ATQAttributesOptionsDTO>;
-	styleMaster: Array<string>;
+	otherDetails: Array<ATQOtherDetailDTO>;
+	notes?: string;
+	// styleMaster: Array<string>;
 
 	constructor(data: any) {
 		this.customer_id = data.loggedInUserId;
@@ -31,16 +44,26 @@ export class CreateAddToQuoteDTO {
 					option_id: row.option_id,
 				})
 		);
-		this.styleMaster = data.styleMaster.filter(notEmpty);
+		this.otherDetails = data.otherDetails.filter(notEmpty).map(
+			(row: any) =>
+				new ATQOtherDetailDTO({
+					detail_name: row.detail_name,
+					detail_value: row.detail_value,
+				})
+		);
+		data.notes != undefined ? (this.notes = data.notes.trim()) : delete this.notes;
+		// this.styleMaster = data.styleMaster.filter(notEmpty);
 	}
 }
 
 export class EditAddToQuoteDTO {
 	qty: number;
+	notes?: string;
 	// attributeOptions: Array<ATQAttributesOptionsDTO>;
 
 	constructor(data: any) {
 		this.qty = Number(data.qty);
+		data.notes != undefined ? (this.notes = data.notes.trim()) : delete this.notes;
 		// this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
 		// 	(row: any) =>
 		// 		new ATQAttributesOptionsDTO({

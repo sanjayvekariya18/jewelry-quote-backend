@@ -1,5 +1,14 @@
 import { Op, Transaction } from "sequelize";
-import { Attributes, AttributesOptions, Options, ProductAttributeOptions, Products, SubCategory } from "../models";
+import {
+	Attributes,
+	AttributesOptions,
+	Options,
+	OtherDetailMaster,
+	ProductAttributeOptions,
+	ProductOtherDetail,
+	Products,
+	SubCategory,
+} from "../models";
 import { ProductDTO, SearchProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 
@@ -30,6 +39,7 @@ export default class ProductService {
 				},
 				{
 					model: ProductAttributeOptions,
+					attributes: ["id", "product_id", "attribute_id", "option_id"],
 					include: [
 						{
 							model: Attributes,
@@ -42,6 +52,11 @@ export default class ProductService {
 						},
 					],
 				},
+				{
+					model: ProductOtherDetail,
+					attributes: ["id", "product_id", "other_detail_id", "detail_value"],
+					include: [{ model: OtherDetailMaster, attributes: ["id", "detail_name", "detail_type"] }],
+				},
 			],
 			order: [["name", "ASC"]],
 			attributes: [
@@ -52,6 +67,19 @@ export default class ProductService {
 				"name",
 				"description",
 				"is_active",
+				// [
+				// 	this.Sequelize.literal(`(
+				//         CASE WHEN
+				//             (select
+				//                 "product_id"."product_id"
+				//             from
+				//                 "wishListGemstone"
+				//             where
+				//                 "customerId" = ${customerId} and "wishListGemstone"."gemstoneId" = "Gemstone"."id") IS NOT NULL
+				//         THEN true ELSE false END)
+				//     `),
+				// 	"isAddedToWishList",
+				// ],
 			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
@@ -94,6 +122,11 @@ export default class ProductService {
 							attributes: ["id", "name"],
 						},
 					],
+				},
+				{
+					model: ProductOtherDetail,
+					attributes: ["id", "product_id", "other_detail_id", "detail_value"],
+					include: [{ model: OtherDetailMaster, attributes: ["id", "detail_name", "detail_type"] }],
 				},
 			],
 			order: [["name", "ASC"]],
@@ -142,6 +175,11 @@ export default class ProductService {
 					],
 					attributes: ["id", "product_id", "attribute_id", "option_id"],
 				},
+				{
+					model: ProductOtherDetail,
+					attributes: ["id", "product_id", "other_detail_id", "detail_value"],
+					include: [{ model: OtherDetailMaster, attributes: ["id", "detail_name", "detail_type"] }],
+				},
 			],
 		}).then((data) => data?.get({ plain: true }));
 
@@ -174,6 +212,12 @@ export default class ProductService {
 					return { ...data, product_id: newProductData.id };
 				});
 				await ProductAttributeOptions.bulkCreate(productAttributeOption1, { ignoreDuplicates: true, transaction });
+
+				let productOtherDetails = productData.otherDetails.map((data) => {
+					return { ...data, product_id: newProductData.id };
+				});
+				await ProductOtherDetail.bulkCreate(productOtherDetails, { ignoreDuplicates: true, transaction });
+
 				return "Product Created Successfully";
 			});
 		});

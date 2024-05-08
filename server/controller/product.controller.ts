@@ -3,7 +3,9 @@ import { ProductService, SubcategoryService } from "../services";
 import { ProductValidation } from "../validations";
 import { SearchProductDTO, ProductDTO } from "../dto";
 import { NotExistHandler } from "../errorHandler";
-import { Products, SubCategoryAttributes } from "../models";
+import { OtherDetailMaster, Products, SubCategoryAttributes } from "../models";
+import fs from "fs";
+import path from "path";
 
 export default class ProductController {
 	private service = new ProductService();
@@ -38,6 +40,57 @@ export default class ProductController {
 		},
 	};
 
+	public getFilesByProductVariantIds = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const { stockId }: any = req.query;
+			console.log("stockId", stockId);
+
+			const getFileType = (fileName: any) => {
+				const ext = path.extname(fileName).toLowerCase();
+				if (ext === ".jpg" || ext === ".png" || ext === ".gif" || ext === ".jpeg" || ext === ".webp") {
+					return "image";
+				} else if (ext === ".mp4" || ext === ".avi" || ext === ".mov") {
+					return "video";
+				}
+				return "unknown";
+			};
+
+			const excludeFileList = ["engraving.png"];
+
+			// Function to list files and determine their types
+			const listFilesInFolder = (folderPath: any) => {
+				let _folderPath = `public/${folderPath}`;
+				const files = fs.readdirSync(_folderPath);
+				const fileObjects: any = [];
+
+				files.forEach((fileName) => {
+					if (!excludeFileList.includes(fileName)) {
+						if (fs.lstatSync(`${_folderPath}/${fileName}`).isFile()) {
+							const filePath = path.join(`/${folderPath}`, fileName);
+							const fileType = getFileType(fileName);
+
+							fileObjects.push({
+								fileUrl: filePath,
+								fileType,
+							});
+						}
+					}
+				});
+
+				return fileObjects;
+			};
+
+			let files: any = [];
+			let mainFilePath = `public/productsFiles/${stockId}`;
+			let existMainFile = fs.existsSync(mainFilePath);
+
+			if (existMainFile) files = listFilesInFolder(`productsFiles/${stockId}`);
+			else files = [];
+
+			return res.api.create(files);
+		},
+	};
+
 	public create = {
 		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -48,16 +101,23 @@ export default class ProductController {
 				throw new NotExistHandler("Subcategory not found");
 			}
 
-			let ids = await SubCategoryAttributes.findAll({
+			let subCategoryids = await SubCategoryAttributes.findAll({
 				where: { sub_category_id: productData.sub_category_id },
 				attributes: ["attribute_id"],
 				raw: true,
 			}).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
 
-			productData.attributeOptions = productData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
+			productData.attributeOptions = productData.attributeOptions.filter((attOps) => subCategoryids.includes(attOps.attribute_id));
 			if (productData.attributeOptions.length == 0) {
 				return res.api.validationErrors({ message: "Attributes not found in sub category" });
 			}
+
+			const otherDetailIds = await OtherDetailMaster.findAll({ attributes: ["id"], raw: true }).then((othDet) => othDet.map((row) => row.id));
+			const otherDetailExists = productData.otherDetails.every((attOps) => otherDetailIds.includes(attOps.other_detail_id));
+			if (otherDetailExists == false) {
+				return res.api.validationErrors({ message: "One or more Other detail not found" });
+			}
+
 			const data = await this.service.create(productData);
 			return res.api.create(data);
 		},
@@ -88,6 +148,13 @@ export default class ProductController {
 			if (productData.attributeOptions.length == 0) {
 				return res.api.validationErrors({ message: "Attributes not found in sub category" });
 			}
+
+			const otherDetailIds = await OtherDetailMaster.findAll({ attributes: ["id"], raw: true }).then((othDet) => othDet.map((row) => row.id));
+			const otherDetailExists = productData.otherDetails.every((attOps) => otherDetailIds.includes(attOps.other_detail_id));
+			if (otherDetailExists == false) {
+				return res.api.validationErrors({ message: "One or more Other detail not found" });
+			}
+
 			const data = await this.service.edit(productId, productData);
 			return res.api.create(data);
 		},

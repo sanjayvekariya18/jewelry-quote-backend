@@ -2,17 +2,28 @@
 	{ "name": "metal" },
 	{ "name": "metal_color" },
 	{ "name": "metal_purity" },
-	{ "name": "metal_type" },
-	{ "name": "jewelry_size" },
-	{ "name": "setting_type" },
-	{ "name": "prong_setting" },
-	{ "name": "prong_type" },
-	{ "name": "shank_type" },
-	{ "name": "band_type" },
-	{ "name": "fit_type" },
-	{ "name": "lock_type" },
-	{ "name": "bail_type" },
-	{ "name": "length" },
-	{ "name": "width" },
-	{ "name": "thinkness" }
+
+	{ "name": "rn_jewelry_size" },
+	{ "name": "er_pn_jewelry_size" },
+	{ "name": "br_nk_jewelry_size" },
+
+	{ "name": "p_diamond_type" },
+	{ "name": "p_shape" },
+	{ "name": "p_color" },
+	{ "name": "p_clarity" },
+
+	{ "name": "sd1_diamond_type" },
+	{ "name": "sd1_shape" },
+	{ "name": "sd1_color" },
+	{ "name": "sd1_clarity" },
+
+	{ "name": "sd2_diamond_type" },
+	{ "name": "sd2_shape" },
+	{ "name": "sd2_color" },
+	{ "name": "sd2_clarity" },
+
+	{ "name": "o_diamond_type" },
+	{ "name": "o_shape" },
+	{ "name": "o_color" },
+	{ "name": "o_clarity" }
 ]

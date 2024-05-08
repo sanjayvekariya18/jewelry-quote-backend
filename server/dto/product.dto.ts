@@ -31,12 +31,26 @@ export class ProductAttributesOptionsDTO {
 	}
 }
 
+export class ProductOtherDetailDTO {
+	product_id?: string;
+	other_detail_id: string;
+	detail_value: string;
+	last_updated_by: string;
+
+	constructor(data: any) {
+		this.other_detail_id = data.other_detail_id;
+		this.detail_value = data.detail_value;
+		this.last_updated_by = data.last_updated_by;
+	}
+}
+
 export class ProductDTO {
 	stock_id: string;
 	sub_category_id: string;
 	name: string;
 	description?: string;
 	attributeOptions: Array<ProductAttributesOptionsDTO>;
+	otherDetails: Array<ProductOtherDetailDTO>;
 	last_updated_by: string;
 
 	constructor(data: any) {
@@ -49,6 +63,14 @@ export class ProductDTO {
 				new ProductAttributesOptionsDTO({
 					attribute_id: row.attribute_id,
 					option_id: row.option_id,
+					last_updated_by: data.loggedInUserId,
+				})
+		);
+		this.otherDetails = data.otherDetails.filter(notEmpty).map(
+			(row: any) =>
+				new ProductOtherDetailDTO({
+					other_detail_id: row.other_detail_id,
+					detail_value: row.detail_value,
 					last_updated_by: data.loggedInUserId,
 				})
 		);

@@ -16,3 +16,8 @@ export enum QUOTATION_STATUS {
 	PENDING = "pending",
 	COMPLETED = "completed",
 }
+
+export enum OTHER_DETAIL_TYPES {
+	LABEL = "label",
+	TEXTBOX = "textbox",
+}

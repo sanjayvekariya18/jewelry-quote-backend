@@ -1,5 +1,6 @@
 import {
 	ATQAttributeOptions,
+	ATQOtherDetail,
 	AddToQuote,
 	Attributes,
 	AttributesOptions,
@@ -8,11 +9,14 @@ import {
 	Category,
 	CustomerDetails,
 	Options,
+	OtherDetailMaster,
 	PermissionMaster,
 	ProductAttributeOptions,
+	ProductOtherDetail,
 	Products,
 	QuotationAttributeOptions,
 	QuotationMaster,
+	QuotationOtherDetail,
 	QuotationProduct,
 	StyleMaster,
 	SubCategory,
@@ -50,8 +54,9 @@ const initSchemaRelationship = () => {
 	Products.hasOne(SubCategory, { sourceKey: "sub_category_id", foreignKey: "id" });
 	Products.hasMany(WishList, { sourceKey: "id", foreignKey: "product_id" });
 	Products.hasMany(AddToQuote, { sourceKey: "id", foreignKey: "product_id" });
-	Products.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "product_id" });
 	Products.hasMany(QuotationProduct, { sourceKey: "id", foreignKey: "product_id" });
+	Products.hasMany(ProductAttributeOptions, { sourceKey: "id", foreignKey: "product_id" });
+	Products.hasMany(ProductOtherDetail, { sourceKey: "id", foreignKey: "product_id" });
 
 	// Wishlist
 	WishList.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
@@ -94,6 +99,7 @@ const initSchemaRelationship = () => {
 
 	// AddToQuote
 	AddToQuote.hasMany(ATQAttributeOptions, { sourceKey: "id", foreignKey: "add_to_quote_id" });
+	AddToQuote.hasMany(ATQOtherDetail, { sourceKey: "id", foreignKey: "add_to_quote_id" });
 	AddToQuote.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
 	AddToQuote.hasOne(CustomerDetails, { sourceKey: "customer_id", foreignKey: "id" });
 
@@ -108,6 +114,7 @@ const initSchemaRelationship = () => {
 
 	// QuotationProduct
 	QuotationProduct.hasMany(QuotationAttributeOptions, { sourceKey: "id", foreignKey: "quotation_product_id" });
+	QuotationProduct.hasMany(QuotationOtherDetail, { sourceKey: "id", foreignKey: "quotation_product_id" });
 	QuotationProduct.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
 	QuotationProduct.hasOne(QuotationMaster, { sourceKey: "quotation_id", foreignKey: "id" });
 
@@ -117,6 +124,19 @@ const initSchemaRelationship = () => {
 	// StyleMaster
 	StyleMaster.hasOne(StyleMaster, { sourceKey: "parent_id", foreignKey: "id", as: "parent_style" });
 	StyleMaster.hasOne(SubCategory, { sourceKey: "sub_category_id", foreignKey: "id" });
+
+	// OtherDetailMaster
+	OtherDetailMaster.hasMany(ProductOtherDetail, { sourceKey: "id", foreignKey: "other_detail_id" });
+
+	// ProductOtherDetail
+	ProductOtherDetail.hasOne(OtherDetailMaster, { sourceKey: "other_detail_id", foreignKey: "id" });
+	ProductOtherDetail.hasOne(Products, { sourceKey: "product_id", foreignKey: "id" });
+
+	// ATQOtherDetail
+	ATQOtherDetail.hasOne(AddToQuote, { sourceKey: "add_to_quote_id", foreignKey: "id" });
+
+	// QuotationOtherDetail
+	QuotationOtherDetail.hasOne(QuotationProduct, { sourceKey: "quotation_product_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;
