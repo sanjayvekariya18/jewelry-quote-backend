@@ -19,11 +19,14 @@ export default class AttributesService {
 			include: [
 				{
 					model: AttributesOptions,
-					attributes: ["id", "attribute_id", "option_id"],
+					attributes: ["id", "attribute_id", "option_id", "position"],
 					include: [{ model: Options, attributes: ["id", "name", "details"] }],
 				},
 			],
-			order: [["name", "ASC"]],
+			order: [
+				["name", "ASC"],
+				[AttributesOptions, "position", "ASC"],
+			],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});
@@ -36,20 +39,22 @@ export default class AttributesService {
 			include: [
 				{
 					model: AttributesOptions,
-					attributes: ["id", "attribute_id", "option_id"],
+					attributes: ["id", "attribute_id", "option_id", "position"],
 					include: [{ model: Options, attributes: ["id", "name", "details"] }],
 				},
 			],
+			order: [[AttributesOptions, "position", "ASC"]],
 		});
 	};
 
 	public create = async (attributes: AttributesDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await Attributes.create(attributes, { transaction }).then(async (attributeData) => {
-				const assignAttributesOptions: Array<AttributesOptionsInput> = attributes.options.map((option_id) => {
+				const assignAttributesOptions: Array<AttributesOptionsInput> = attributes.options.map((option_id, i) => {
 					return {
 						attribute_id: attributeData.id,
 						option_id: option_id,
+						position: i + 1,
 						last_updated_by: attributes.last_updated_by,
 					} as AttributesOptionsInput;
 				});
@@ -63,10 +68,11 @@ export default class AttributesService {
 		await executeTransaction(async (transaction: Transaction) => {
 			await AttributesOptions.destroy({ where: { attribute_id: attribute_id }, transaction });
 			return await Attributes.update(attributes, { where: { id: attribute_id }, transaction }).then(async () => {
-				const assignAttributesOptions: Array<AttributesOptionsInput> = attributes.options.map((option_id) => {
+				const assignAttributesOptions: Array<AttributesOptionsInput> = attributes.options.map((option_id, i) => {
 					return {
 						attribute_id: attribute_id,
 						option_id,
+						position: i + 1,
 						last_updated_by: attributes.last_updated_by,
 					} as AttributesOptionsInput;
 				});

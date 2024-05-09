@@ -17,6 +17,7 @@ const attributeOptionsSeed = async (transaction: Transaction, adminUserId: strin
 			tableData.push({
 				attribute_id: attributeId.id,
 				option_id: optionId.id,
+				position: data.position,
 				last_updated_by: adminUserId,
 			} as AttributesOptionsAttribute);
 			lastAttributeId = attributeId.id;

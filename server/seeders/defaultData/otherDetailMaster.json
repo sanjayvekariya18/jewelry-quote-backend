@@ -1,4 +1,5 @@
 [
+	{ "name": "br_nk_jewelry_size", "type": "textbox" },
 	{ "name": "length", "type": "textbox" },
 	{ "name": "width", "type": "textbox" },
 	{ "name": "thickness", "type": "textbox" },
@@ -8,11 +9,15 @@
 	{ "name": "m10k", "type": "label" },
 	{ "name": "m925", "type": "label" },
 	{ "name": "p_mm_size", "type": "textbox" },
+	{ "name": "p_piece", "type": "label" },
 	{ "name": "p_carat", "type": "textbox" },
 	{ "name": "sd1_mm_size", "type": "textbox" },
+	{ "name": "sd1_piece", "type": "label" },
 	{ "name": "sd1_carat", "type": "textbox" },
 	{ "name": "sd2_mm_size", "type": "textbox" },
+	{ "name": "sd2_piece", "type": "label" },
 	{ "name": "sd2_carat", "type": "textbox" },
 	{ "name": "o_mm_size", "type": "textbox" },
+	{ "name": "o_piece", "type": "label" },
 	{ "name": "o_carat", "type": "textbox" }
 ]

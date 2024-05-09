@@ -44,7 +44,9 @@ export default class ProductService {
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+							include: [
+								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+							],
 						},
 						{
 							model: Options,
@@ -58,14 +60,26 @@ export default class ProductService {
 					include: [{ model: OtherDetailMaster, attributes: ["id", "detail_name", "detail_type"] }],
 				},
 			],
-			order: [["name", "ASC"]],
+			order: [
+				["name", "ASC"],
+				[ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
+			],
 			attributes: [
 				"id",
 				"stock_id",
 				"sub_category_id",
-				// [this.Sequelize.col("SubCategory.name"), "sub_category_name"],
 				"name",
 				"description",
+				"metal_type",
+				"style",
+				"setting_type",
+				"sub_setting",
+				"prong_type",
+				"shank_type",
+				"band_type",
+				"fit_type",
+				"lock_type",
+				"bail_type",
 				"is_active",
 				// [
 				// 	this.Sequelize.literal(`(
@@ -115,7 +129,9 @@ export default class ProductService {
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+							include: [
+								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+							],
 						},
 						{
 							model: Options,
@@ -129,14 +145,26 @@ export default class ProductService {
 					include: [{ model: OtherDetailMaster, attributes: ["id", "detail_name", "detail_type"] }],
 				},
 			],
-			order: [["name", "ASC"]],
+			order: [
+				["name", "ASC"],
+				[ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
+			],
 			attributes: [
 				"id",
 				"stock_id",
 				"sub_category_id",
-				// [this.Sequelize.col("SubCategory.name"), "sub_category_name"],
 				"name",
 				"description",
+				"metal_type",
+				"style",
+				"setting_type",
+				"sub_setting",
+				"prong_type",
+				"shank_type",
+				"band_type",
+				"fit_type",
+				"lock_type",
+				"bail_type",
 			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
@@ -153,9 +181,18 @@ export default class ProductService {
 				"id",
 				"stock_id",
 				"sub_category_id",
-				// [this.Sequelize.col("SubCategory.name"), "sub_category_name"],
 				"name",
 				"description",
+				"metal_type",
+				"style",
+				"setting_type",
+				"sub_setting",
+				"prong_type",
+				"shank_type",
+				"band_type",
+				"fit_type",
+				"lock_type",
+				"bail_type",
 				"is_active",
 			],
 			include: [
@@ -166,7 +203,9 @@ export default class ProductService {
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+							include: [
+								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+							],
 						},
 						{
 							model: Options,
@@ -181,6 +220,7 @@ export default class ProductService {
 					include: [{ model: OtherDetailMaster, attributes: ["id", "detail_name", "detail_type"] }],
 				},
 			],
+			order: [[ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"]],
 		}).then((data) => data?.get({ plain: true }));
 
 		let resp: Array<any> = [];
@@ -201,7 +241,24 @@ export default class ProductService {
 	public simpleFindOne = async (searchObject: any) => {
 		return await Products.findOne({
 			where: searchObject,
-			attributes: ["id", "stock_id", "sub_category_id", "name", "description", "is_active"],
+			attributes: [
+				"id",
+				"stock_id",
+				"sub_category_id",
+				"name",
+				"description",
+				"metal_type",
+				"style",
+				"setting_type",
+				"sub_setting",
+				"prong_type",
+				"shank_type",
+				"band_type",
+				"fit_type",
+				"lock_type",
+				"bail_type",
+				"is_active",
+			],
 		});
 	};
 
@@ -226,11 +283,17 @@ export default class ProductService {
 	public edit = async (product_id: string, productData: ProductDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			await ProductAttributeOptions.destroy({ where: { product_id }, transaction });
+			await ProductOtherDetail.destroy({ where: { product_id }, transaction });
 			return await Products.update(productData, { where: { id: product_id }, transaction }).then(async () => {
 				let productAttributeOption1 = productData.attributeOptions.map((data) => {
 					return { ...data, product_id };
 				});
 				await ProductAttributeOptions.bulkCreate(productAttributeOption1, { ignoreDuplicates: true, transaction });
+
+				let productOtherDetails = productData.otherDetails.map((data) => {
+					return { ...data, product_id };
+				});
+				await ProductOtherDetail.bulkCreate(productOtherDetails, { ignoreDuplicates: true, transaction });
 
 				return "Product Edited Successfully";
 			});

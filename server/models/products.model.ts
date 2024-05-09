@@ -10,6 +10,7 @@ export interface ProductsAttributes {
 	metal_type: string;
 	style: string;
 	setting_type: string;
+	sub_setting: string;
 	prong_type: string;
 	shank_type: string;
 	band_type: string;
@@ -29,6 +30,7 @@ export interface ProductsInput
 		| "metal_type"
 		| "style"
 		| "setting_type"
+		| "sub_setting"
 		| "prong_type"
 		| "shank_type"
 		| "band_type"
@@ -50,6 +52,7 @@ class Products extends Model<ProductsAttributes, ProductsInput> implements Produ
 	public metal_type!: string;
 	public style!: string;
 	public setting_type!: string;
+	public sub_setting!: string;
 	public prong_type!: string;
 	public shank_type!: string;
 	public band_type!: string;
@@ -105,6 +108,11 @@ Products.init(
 			defaultValue: "",
 		},
 		setting_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		sub_setting: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			defaultValue: "",

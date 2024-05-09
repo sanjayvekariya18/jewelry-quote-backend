@@ -41,7 +41,9 @@ export default class AddToQuoteService {
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] }],
+							include: [
+								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+							],
 						},
 						{ model: Options, attributes: ["id", "name", "details"] },
 					],
@@ -49,8 +51,10 @@ export default class AddToQuoteService {
 				{ model: ATQOtherDetail, attributes: ["id", "add_to_quote_id", "detail_name", "detail_value"] },
 			],
 			attributes: ["id", "product_id", "customer_id", "qty", "notes"],
-			order: [["createdAt", "DESC"]],
-			// raw: true,
+			order: [
+				["createdAt", "DESC"],
+				[ATQAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
+			],
 		});
 	};
 

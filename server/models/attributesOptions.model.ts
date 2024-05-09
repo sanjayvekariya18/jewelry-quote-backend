@@ -5,6 +5,7 @@ export interface AttributesOptionsAttribute {
 	id: string;
 	attribute_id: string;
 	option_id: string;
+	position: number;
 	last_updated_by: string;
 }
 
@@ -15,6 +16,7 @@ class AttributesOptions extends Model<AttributesOptionsAttribute, AttributesOpti
 	public id!: string;
 	public attribute_id!: string;
 	public option_id!: string;
+	public position!: number;
 	public last_updated_by!: string;
 }
 
@@ -49,6 +51,10 @@ AttributesOptions.init(
 			},
 			onUpdate: "RESTRICT",
 			onDelete: "CASCADE",
+		},
+		position: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
 		},
 		last_updated_by: {
 			allowNull: false,

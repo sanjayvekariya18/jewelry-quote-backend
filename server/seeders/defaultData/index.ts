@@ -12,6 +12,7 @@ import categorySeed from "./category.seed";
 import subcategorySeed from "./subcategory.seed";
 import styleMasterSeed from "./styleMaster.seed";
 import otherDetailMasterSeed from "./otherDetailMaster.seed";
+import subCategoryAttributesSeed from "./subCategoryAttributes.seed";
 
 class DataSeed {
 	static async run() {
@@ -34,6 +35,7 @@ class DataSeed {
 				await attributeOptionsSeed(transaction, adminUser.id);
 				await categorySeed(transaction, adminUser.id);
 				await subcategorySeed(transaction, adminUser.id);
+				await subCategoryAttributesSeed(transaction, adminUser.id);
 				await styleMasterSeed(transaction, adminUser.id);
 				await otherDetailMasterSeed(transaction, adminUser.id);
 			} catch (error) {

@@ -18,12 +18,14 @@ export class AttributesDTO {
 	name: string;
 	details?: string;
 	options: Array<string>;
+	position: number;
 	last_updated_by: string;
 
 	constructor(data: any) {
 		this.name = data.name.trim();
 		this.details = data.details;
 		this.options = data.options.filter(notEmpty);
+		this.position = data.position;
 		this.last_updated_by = data.loggedInUserId;
 	}
 }

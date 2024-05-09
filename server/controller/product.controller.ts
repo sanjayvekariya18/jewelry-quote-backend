@@ -2,10 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { ProductService, SubcategoryService } from "../services";
 import { ProductValidation } from "../validations";
 import { SearchProductDTO, ProductDTO } from "../dto";
-import { NotExistHandler } from "../errorHandler";
-import { OtherDetailMaster, Products, SubCategoryAttributes } from "../models";
+import { DuplicateRecord, NotExistHandler } from "../errorHandler";
+import { OtherDetailMaster, Products, StyleMaster, SubCategoryAttributes } from "../models";
 import fs from "fs";
 import path from "path";
+import { Op } from "sequelize";
 
 export default class ProductController {
 	private service = new ProductService();
@@ -40,7 +41,7 @@ export default class ProductController {
 		},
 	};
 
-	public getFilesByProductVariantIds = {
+	public getFilesByProductStockId = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const stock_id: string = req.params["stock_id"] as string;
 
@@ -91,10 +92,26 @@ export default class ProductController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const productData = new ProductDTO(req.body);
 
+			const checkStockIdExists = await this.service.simpleFindOne({ stock_id: productData.stock_id });
+			if (checkStockIdExists) throw new DuplicateRecord("Stock id already exists");
+
 			const subcategoryExist = await this.subcategoryService.simpleFindOne({ id: productData.sub_category_id, is_deleted: false });
-			if (subcategoryExist == null) {
-				throw new NotExistHandler("Subcategory not found");
+			if (subcategoryExist == null) throw new NotExistHandler("Subcategory not found");
+
+			const error = [];
+			if (productData.style) {
+				const checkStyle = await StyleMaster.findOne({ where: { name: productData.style } });
+				if (checkStyle == null) error.push("style");
 			}
+			if (productData.setting_type) {
+				const checkStyle = await StyleMaster.findOne({ where: { name: productData.setting_type } });
+				if (checkStyle == null) error.push("setting type");
+			}
+			if (productData.sub_setting) {
+				const checkStyle = await StyleMaster.findOne({ where: { name: productData.sub_setting } });
+				if (checkStyle == null) error.push("sub setting");
+			}
+			if (error.length > 0) return res.api.validationErrors({ message: `${error.join(", ")} not found` });
 
 			let subCategoryids = await SubCategoryAttributes.findAll({
 				where: { sub_category_id: productData.sub_category_id },
@@ -128,18 +145,38 @@ export default class ProductController {
 			}
 			const productData = new ProductDTO(req.body);
 
+			const checkStockIdExists = await this.service.simpleFindOne({ id: { [Op.not]: productId }, stock_id: productData.stock_id });
+			if (checkStockIdExists) {
+				throw new DuplicateRecord("Stock id already exists");
+			}
+
 			const subcategoryExist = await this.subcategoryService.simpleFindOne({ id: productData.sub_category_id, is_deleted: false });
 			if (subcategoryExist && subcategoryExist == null) {
 				throw new NotExistHandler("Subcategory not found");
 			}
 
-			let ids = await SubCategoryAttributes.findAll({
+			const error = [];
+			if (productData.style) {
+				const checkStyle = await StyleMaster.findOne({ where: { name: productData.style } });
+				if (checkStyle == null) error.push("style");
+			}
+			if (productData.setting_type) {
+				const checkStyle = await StyleMaster.findOne({ where: { name: productData.setting_type } });
+				if (checkStyle == null) error.push("setting type");
+			}
+			if (productData.sub_setting) {
+				const checkStyle = await StyleMaster.findOne({ where: { name: productData.sub_setting } });
+				if (checkStyle == null) error.push("sub setting");
+			}
+			if (error.length > 0) return res.api.validationErrors({ message: `${error.join(", ")} not found` });
+
+			let subCategoryIds = await SubCategoryAttributes.findAll({
 				where: { sub_category_id: productData.sub_category_id },
 				attributes: ["attribute_id"],
 				raw: true,
 			}).then((subCatAtt) => subCatAtt.map((row) => row.attribute_id));
 
-			productData.attributeOptions = productData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
+			productData.attributeOptions = productData.attributeOptions.filter((attOps) => subCategoryIds.includes(attOps.attribute_id));
 			if (productData.attributeOptions.length == 0) {
 				return res.api.validationErrors({ message: "Attributes not found in sub category" });
 			}

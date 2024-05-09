@@ -2,6 +2,7 @@ import { Op, Transaction } from "sequelize";
 import { CreateSubCategoryDTO, EditSubCategoryDTO, SearchSubCategoryDTO } from "../dto";
 import { Attributes, AttributesOptions, Category, Options, SubCategory, SubCategoryAttributes, SubCategoryAttributesAttribute } from "../models";
 import { executeTransaction, sequelizeConnection } from "../config/database";
+import { NotFoundHandler } from "../errorHandler";
 
 export default class SubcategoryService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -102,8 +103,11 @@ export default class SubcategoryService {
 					],
 				},
 			],
+			order: [[SubCategoryAttributes, Attributes, AttributesOptions, "position", "ASC"]],
 		});
-
+		if (data == null) {
+			throw new NotFoundHandler("Sub Category Not found");
+		}
 		let resp: Array<any> = [];
 		for (const data1 of data.SubCategoryAttributes) {
 			resp.push({
