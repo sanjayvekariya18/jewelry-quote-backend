@@ -9,5 +9,7 @@ router.get("/category", use(controller.category.controller));
 router.get("/sub-category", use(controller.subCategory.controller));
 router.get("/users", use(controller.users.controller));
 router.get("/customers", use(controller.customers.controller));
+router.get("/attributes", use(controller.attributes.controller));
+router.get("/options", use(controller.options.controller));
 
 export default router;

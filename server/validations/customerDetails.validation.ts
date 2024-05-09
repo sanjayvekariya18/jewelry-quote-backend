@@ -1,6 +1,6 @@
 export default class CustomerDetailsValidations {
 	public login = {
-		customer_email: "required|email",
+		login_id: "required|numeric",
 		password: "required|string",
 	};
 
@@ -12,11 +12,12 @@ export default class CustomerDetailsValidations {
 	};
 
 	public create = {
+		token: "required|string",
 		customer_name: "required|string",
 		customer_email: "required|string|email",
-		country_code: "required|string",
+		country_code: "required|numeric",
 		mobile_number: "required|digits:10",
-		password: "required|string",
+		// password: "required|string",
 		whatsapp_number: "string",
 		customer_address: "string",
 		website: "string",

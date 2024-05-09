@@ -17,9 +17,10 @@ export class SearchCustomerDetailsDTO {
 export class CreateCustomerDetailsDTO {
 	customer_name: string;
 	customer_email: string;
+	// login_id: string;
 	country_code: string;
 	mobile_number: string;
-	password: string;
+	// password: string;
 	whatsapp_number?: string;
 	customer_address?: string;
 	website?: string;
@@ -33,9 +34,10 @@ export class CreateCustomerDetailsDTO {
 	constructor(data: any) {
 		this.customer_name = data.customer_name;
 		this.customer_email = data.customer_email;
+		// this.login_id = data.login_id;
 		this.country_code = data.country_code;
 		this.mobile_number = data.mobile_number;
-		this.password = data.password;
+		// this.password = data.password;
 		data.whatsapp_number != undefined ? (this.whatsapp_number = data.whatsapp_number) : delete this.whatsapp_number;
 		data.customer_address != undefined ? (this.customer_address = data.customer_address) : delete this.customer_address;
 		data.website != undefined ? (this.website = data.website) : delete this.website;

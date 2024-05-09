@@ -2,29 +2,53 @@ Project JewelleryCatelog {
   database_type: "mysql"
 }
 
+Table user_master {
+  id uuid [primary key]
+  name text [not null]
+  email text [not null]
+  mobile_number text [null]
+  password text [not null]
+  is_active bool [default: true]
+}
+
 Table permission_master {
   id uuid [primary key]
   permission_name text [not null, unique]
   permission_group text [not null]
 }
 
-Table users {
-  id uuid [primary key]
-  name text [not null]
-  email text [not null]
-  mobile_number text [not null]
-  password text [not null]
-  is_active bool [default: true]
-}
-
 Table user_permissions {
   id uuid [primary key]
-  user_id text [not null, ref: > users.id]
+  user_id text [not null, ref: > user_master.id]
   permission_id text [not null, ref: > permission_master.id]
   view bool [not null]
   create bool [not null]
   edit bool [not null]
   delete bool [not null]
+}
+
+Table category {
+  id uuid [primary key]
+  name text [not null]
+  details text [default: ""]
+  img_url text [default: null]
+  logo_url text [default: null]
+}
+
+Table sub_category {
+  id uuid [primary key]
+  category_id uuid [not null, ref: > category.id]
+  name text [not null]
+  details text [default: ""]
+  img_url text [default: null]
+  logo_url text [default: null]
+}
+
+Table style_master {
+  id uuid [primary key]
+  sub_category_id uuid [not null, ref: > sub_category.id]
+  parent_id uuid [not null, ref: > style_master.id]
+  name text
 }
 
 Table customers {
@@ -39,36 +63,19 @@ Table customers {
   business_registration text [ null]
   customer_fax text [null]
   customer_business_card text [null]
-  any_association_membership text [null]
+  association_membership text [null]
   customer_social_media text [null]
   business_reference text [null]//company name/person name/person contact no
-}
-
-Table categories {
-  id uuid [primary key]
-  name text [not null]
-  description text [default: ""]
-  logo_url text [default: null]
-  image_url text [default: null]
-  is_deleted bool [default: false]
-}
-
-Table sub_categories {
-  id uuid [primary key]
-  category_id uuid [not null, ref: > categories.id]
-  name text [not null]
-  description text [default: ""]
-  logo_url text [default: null]
-  image_url text [default: null]
-  is_deleted bool [default: false]
+  is_active bool [default: true]
 }
 
 Table products {
   id uuid [primary key]
-  sub_category_id uuid [not null, ref: > sub_categories.id]
+  stock_id text
+  sub_category_id uuid [not null, ref: > sub_category.id]
   name text
   description text [default: ""]
-  
+  is_active bool [default: true]
 }
 
 Table wishlist {
@@ -81,8 +88,9 @@ Table catelog {
   id uuid [primary key]
   name text
   description text [default: ""]
-  image text
-  pdf text
+  img_url text
+  pdf_url text
+  is_active bool [default: true]
 }
 
 Table catelog_products {
@@ -96,7 +104,7 @@ Enum quotation_status {
   completed
 }
 
-Table quotation {
+Table quotation_master {
   id uuid [primary key]
   customer_id uuid [not null, ref: > customers.id]
   quotation_date datetime
@@ -105,8 +113,102 @@ Table quotation {
 
 Table quotation_products {
   id uuid [primary key]
-  quotation_id uuid [not null, ref: > quotation.id]
+  quotation_id uuid [not null, ref: > quotation_master.id]
   product_id uuid [not null, ref: > products.id]
   price integer [default: null]
+  qty integer [not null]
+  notes text [default: ""]
 }
 
+Table quotation_product_attribute_option {
+  id uuid [primary key]
+  quotation_product_id uuid [not null, ref: > quotation_products.id]
+  attribute_name text
+  option_name text
+}
+
+Table quotation_product_other_details {
+  id uuid [primary key]
+  quotation_product_id uuid [not null, ref: > quotation_products.id]
+  detail_name string [not null]
+  detail_value string [not null]
+}
+
+Table other_detail_master {
+  id uuid [primary key]
+  detail_name string [not null]
+  detail_type other_details_type [not null]
+}
+
+Table attributes {
+  id uuid [primary key]
+  name text
+  details text [default: ""]
+}
+
+Table options {
+  id uuid [primary key]
+  name text
+  details text [default: ""]
+}
+
+Table attribute_option {
+  id uuid [primary key]
+  attribute_id uuid [not null, ref: > attributes.id]
+  option_id uuid [not null, ref: > options.id]
+}
+
+Table sub_category_attributes {
+  id uuid [primary key]
+  sub_category_id uuid [not null, ref: > sub_category.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+}
+
+Table product_attributes_option {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+  option_id uuid [not null, ref: > options.id]
+}
+
+Enum other_details_type {
+  textbox
+  label
+}
+
+Table product_other_details {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  other_detail_id uuid [not null, ref: > other_detail_master.id]
+  detail_value string [not null]
+  // detail_type other_details_type [not null]
+}
+// Table product_other_details {
+//   id uuid [primary key]
+//   product_id uuid [not null, ref: > products.id]
+//   detail_name string [not null]
+//   detail_value string [not null]
+//   detail_type other_details_type [not null]
+// }
+
+Table add_to_quote {
+  id uuid [primary key]
+  product_id uuid [not null, ref: > products.id]
+  customer_id uuid [not null, ref: > customers.id]
+  qty integer [not null]
+}
+
+Table add_to_quote_product_attributes {
+  id uuid [primary key]
+  add_to_quote_id uuid [not null, ref: > add_to_quote.id]
+  attribute_id uuid [not null, ref: > attributes.id]
+  option_id uuid [not null, ref: > options.id]
+}
+
+
+Table add_to_quote_other_details {
+  id uuid [primary key]
+  add_to_quote_id uuid [not null, ref: > add_to_quote.id]
+  detail_name string [not null]
+  detail_value string [not null]
+}

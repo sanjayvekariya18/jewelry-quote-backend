@@ -1,0 +1,8 @@
+[
+	{ "name": "engagement ring", "category": "ring" },
+	{ "name": "wedding band", "category": "ring" },
+	{ "name": "earring", "category": "earring" },
+	{ "name": "pendant", "category": "pendant" },
+	{ "name": "bracelet", "category": "bracelet" },
+	{ "name": "necklace", "category": "necklace" }
+]

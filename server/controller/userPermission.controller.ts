@@ -18,7 +18,7 @@ export default class UserPermissionController {
 				throw new NotExistHandler("User Not Found");
 			}
 			const data = await this.userPermissionService.getAll(user_id);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -30,7 +30,7 @@ export default class UserPermissionController {
 				throw new NotExistHandler("User Not Found");
 			}
 			const data = await this.userPermissionService.permissionsNotAssigned(user_id);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -44,7 +44,7 @@ export default class UserPermissionController {
 			}
 
 			const data = await this.userPermissionService.create(permissionData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -80,12 +80,12 @@ export default class UserPermissionController {
 			await this.userPermissionService
 				.delete(userPermissionId)
 				.then(() => {
-					res.api.create({
+					return res.api.create({
 						message: `User Permission deleted`,
 					});
 				})
 				.catch((error) => {
-					res.api.serverError(error);
+					return res.api.serverError(error);
 				});
 		},
 	};

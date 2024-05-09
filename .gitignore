@@ -130,5 +130,6 @@ dist
 .pnp.*
 
 public/images/*
+public/productsFiles/*
 
 deploy_local.sh

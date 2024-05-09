@@ -7,12 +7,40 @@ export interface ProductsAttributes {
 	sub_category_id: string;
 	name: string;
 	description: string;
+	metal_type: string;
+	style: string;
+	setting_type: string;
+	sub_setting: string;
+	prong_type: string;
+	shank_type: string;
+	band_type: string;
+	fit_type: string;
+	lock_type: string;
+	bail_type: string;
 	is_active: boolean;
 	is_deleted: boolean;
 	last_updated_by: string;
 }
 
-export interface ProductsInput extends Optional<ProductsAttributes, "id" | "description" | "is_active" | "is_deleted" | "last_updated_by"> {}
+export interface ProductsInput
+	extends Optional<
+		ProductsAttributes,
+		| "id"
+		| "description"
+		| "metal_type"
+		| "style"
+		| "setting_type"
+		| "sub_setting"
+		| "prong_type"
+		| "shank_type"
+		| "band_type"
+		| "fit_type"
+		| "lock_type"
+		| "bail_type"
+		| "is_active"
+		| "is_deleted"
+		| "last_updated_by"
+	> {}
 export interface ProductsOutput extends Required<ProductsAttributes> {}
 
 class Products extends Model<ProductsAttributes, ProductsInput> implements ProductsAttributes {
@@ -21,6 +49,16 @@ class Products extends Model<ProductsAttributes, ProductsInput> implements Produ
 	public sub_category_id!: string;
 	public name!: string;
 	public description!: string;
+	public metal_type!: string;
+	public style!: string;
+	public setting_type!: string;
+	public sub_setting!: string;
+	public prong_type!: string;
+	public shank_type!: string;
+	public band_type!: string;
+	public fit_type!: string;
+	public lock_type!: string;
+	public bail_type!: string;
 	public is_active!: boolean;
 	public is_deleted!: boolean;
 	public last_updated_by!: string;
@@ -55,6 +93,56 @@ Products.init(
 			allowNull: false,
 		},
 		description: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		metal_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		style: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		setting_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		sub_setting: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		prong_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		shank_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		band_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		fit_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		lock_type: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			defaultValue: "",
+		},
+		bail_type: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			defaultValue: "",

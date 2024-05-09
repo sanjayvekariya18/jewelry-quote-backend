@@ -2,7 +2,6 @@ import { Transaction } from "sequelize";
 import { CreatePermissionDTO, SearchPermissionDTO } from "../dto";
 import { PermissionMaster, UserMaster, UserPermissions } from "../models";
 import { executeTransaction } from "../config/database";
-import { config } from "../config";
 
 export default class PermissionMasterService {
 	public getAll = async (searchParams: SearchPermissionDTO) => {

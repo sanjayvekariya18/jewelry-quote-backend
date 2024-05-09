@@ -11,9 +11,10 @@ export interface CustomerDetailsAttributes {
 	id: string;
 	customer_name: string;
 	customer_email: string;
+	login_id: string | null;
 	country_code: string;
 	mobile_number: string;
-	password: string;
+	password: string | null;
 	whatsapp_number: string | null;
 	customer_address: string | null;
 	website: string | null;
@@ -32,6 +33,8 @@ export interface CustomerDetailsInput
 		CustomerDetailsAttributes,
 		| "id"
 		| "whatsapp_number"
+		| "login_id"
+		| "password"
 		| "customer_address"
 		| "website"
 		| "business_registration"
@@ -49,9 +52,10 @@ class CustomerDetails extends Model<CustomerDetailsAttributes, CustomerDetailsIn
 	public id!: string;
 	public customer_name!: string;
 	public customer_email!: string;
+	public login_id!: string | null;
 	public country_code!: string;
 	public mobile_number!: string;
-	public password!: string;
+	public password!: string | null;
 	public whatsapp_number!: string | null;
 	public customer_address!: string | null;
 	public website!: string | null;
@@ -81,6 +85,11 @@ CustomerDetails.init(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		login_id: {
+			type: DataTypes.STRING,
+			allowNull: true,
+			defaultValue: null,
+		},
 		country_code: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -91,7 +100,8 @@ CustomerDetails.init(
 		},
 		password: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			allowNull: true,
+			defaultValue: null,
 		},
 		whatsapp_number: {
 			type: DataTypes.STRING,
@@ -139,7 +149,7 @@ CustomerDetails.init(
 		},
 		is_active: {
 			type: DataTypes.BOOLEAN,
-			defaultValue: true,
+			defaultValue: false,
 		},
 		is_deleted: {
 			type: DataTypes.BOOLEAN,

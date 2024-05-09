@@ -1,7 +1,17 @@
 import { Transaction } from "sequelize";
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { CatalogMaster, CatalogProducts, Category } from "../models";
-import { CategoryDTO, CreateCatalogDTO, SearchCatalogDTO, SearchCategoryDTO } from "../dto";
+import {
+	Attributes,
+	AttributesOptions,
+	CatalogMaster,
+	CatalogProducts,
+	Category,
+	Options,
+	ProductAttributeOptions,
+	Products,
+	SubCategory,
+} from "../models";
+import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { Op } from "sequelize";
 
 export default class CatalogService {
@@ -15,9 +25,45 @@ export default class CatalogService {
 				}),
 				is_deleted: false,
 			},
+			distinct: true,
 			order: [["name", "ASC"]],
 			attributes: ["id", "name", "description", "img_url", "pdf_url", "is_active"],
-			include: [{ model: CatalogProducts }],
+			include: [
+				{
+					model: CatalogProducts,
+					attributes: ["id", "catalog_id", "product_id"],
+					include: [
+						{
+							model: Products,
+							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+							include: [
+								{
+									model: SubCategory,
+									attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"],
+									// include: [{ model: Category, attributes: ["id", "name", "details", "img_url", "logo_url"] }],
+								},
+								{
+									model: ProductAttributeOptions,
+									attributes: ["id", "product_id", "attribute_id", "option_id"],
+									include: [
+										{
+											model: Attributes,
+											attributes: ["id", "name", "details"],
+											include: [
+												{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+											],
+										},
+										{
+											model: Options,
+											attributes: ["id", "name"],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
 					offset: searchParams.page * searchParams.rowsPerPage,
@@ -30,7 +76,42 @@ export default class CatalogService {
 		return await CatalogMaster.findOne({
 			where: { ...searchObject, is_deleted: false },
 			attributes: ["id", "name", "description", "img_url", "pdf_url", "is_active"],
-			include: [{ model: CatalogProducts }],
+			include: [
+				{
+					model: CatalogProducts,
+					attributes: ["id", "catalog_id", "product_id"],
+					include: [
+						{
+							model: Products,
+							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+							include: [
+								{
+									model: SubCategory,
+									attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"],
+									// include: [{ model: Category, attributes: ["id", "name", "details", "img_url", "logo_url"] }],
+								},
+								{
+									model: ProductAttributeOptions,
+									attributes: ["id", "product_id", "attribute_id", "option_id"],
+									include: [
+										{
+											model: Attributes,
+											attributes: ["id", "name", "details"],
+											include: [
+												{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+											],
+										},
+										{
+											model: Options,
+											attributes: ["id", "name"],
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			],
 		});
 	};
 
@@ -53,7 +134,7 @@ export default class CatalogService {
 
 	public edit = async (catalog_id: string, categoryData: CreateCatalogDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			await CatalogProducts.destroy({ where: { catalog_id } });
+			await CatalogProducts.destroy({ where: { catalog_id }, transaction });
 			return await CatalogMaster.update(categoryData, { where: { id: catalog_id }, transaction }).then(async () => {
 				let catPro = categoryData.catalog_products.map((product_id) => {
 					return {
@@ -66,6 +147,18 @@ export default class CatalogService {
 				await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
 				return "Catalog Master updated successfully";
 			});
+		});
+	};
+
+	public toggleCatalogActive = async (catalogId: string, loggedInUserId: string) => {
+		return await CatalogMaster.update(
+			{
+				is_active: this.Sequelize.literal(`Not \`is_active\``),
+				last_updated_by: loggedInUserId,
+			},
+			{ where: { id: catalogId } }
+		).then(async () => {
+			return await this.findOne({ id: catalogId });
 		});
 	};
 

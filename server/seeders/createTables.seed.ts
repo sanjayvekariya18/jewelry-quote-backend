@@ -1,12 +1,27 @@
 import { logger } from "../config";
 import {
+	ATQAttributeOptions,
+	ATQOtherDetail,
+	AddToQuote,
+	Attributes,
+	AttributesOptions,
 	CatalogMaster,
 	CatalogProducts,
 	Category,
 	CustomerDetails,
+	Options,
+	OtherDetailMaster,
 	PermissionMaster,
+	ProductAttributeOptions,
+	ProductOtherDetail,
 	Products,
+	QuotationAttributeOptions,
+	QuotationMaster,
+	QuotationOtherDetail,
+	QuotationProduct,
+	StyleMaster,
 	SubCategory,
+	SubCategoryAttributes,
 	UserMaster,
 	UserPermissions,
 	WishList,
@@ -94,6 +109,126 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`CatalogProducts Table Error : ${error}`);
+		});
+
+	await Attributes.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Attributes Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Attributes Table Error : ${error}`);
+		});
+
+	await Options.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Options Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Options Table Error : ${error}`);
+		});
+
+	await AttributesOptions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`AttributesOptions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`AttributesOptions Table Error : ${error}`);
+		});
+
+	await SubCategoryAttributes.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`SubCategoryAttributes Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`SubCategoryAttributes Table Error : ${error}`);
+		});
+
+	await ProductAttributeOptions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ProductAttributeOptions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ProductAttributeOptions Table Error : ${error}`);
+		});
+
+	await AddToQuote.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`AddToQuote Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`AddToQuote Table Error : ${error}`);
+		});
+
+	await ATQAttributeOptions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ATQAttributeOptions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ATQAttributeOptions Table Error : ${error}`);
+		});
+
+	await QuotationMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`QuotationMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`QuotationMaster Table Error : ${error}`);
+		});
+
+	await QuotationProduct.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`QuotationProduct Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`QuotationProduct Table Error : ${error}`);
+		});
+
+	await QuotationAttributeOptions.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`QuotationAttributeOptions Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`QuotationAttributeOptions Table Error : ${error}`);
+		});
+
+	await StyleMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`StyleMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`StyleMaster Table Error : ${error}`);
+		});
+
+	await OtherDetailMaster.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`OtherDetailMaster Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`OtherDetailMaster Table Error : ${error}`);
+		});
+
+	await ProductOtherDetail.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ProductOtherDetail Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ProductOtherDetail Table Error : ${error}`);
+		});
+
+	await ATQOtherDetail.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ATQOtherDetail Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ATQOtherDetail Table Error : ${error}`);
+		});
+
+	await QuotationOtherDetail.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`QuotationOtherDetail Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`QuotationOtherDetail Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

@@ -15,7 +15,7 @@ export default class CategoryController {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.service.getAll(new SearchCategoryDTO(req.query));
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -27,7 +27,7 @@ export default class CategoryController {
 				throw new NotExistHandler("Category Not Found");
 			}
 			const data = await this.service.getCategoryDetails(categoryId);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -52,7 +52,7 @@ export default class CategoryController {
 				}
 			}
 			const data = await this.service.create(categoryData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -90,7 +90,7 @@ export default class CategoryController {
 				}
 			}
 			const data = await this.service.edit(categoryId, categoryData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 

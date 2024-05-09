@@ -4,8 +4,8 @@ import { CatalogValidations } from "../validations";
 import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { removeFile, saveFile } from "../utils/helper";
-import { CatalogMaster } from "../models";
 import { Op } from "sequelize";
+import { Products } from "../models";
 
 export default class CatalogController {
 	private service = new CatalogService();
@@ -15,31 +15,38 @@ export default class CatalogController {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.service.getAll(new SearchCatalogDTO(req.query));
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const catalogId: string = req.params["id"] as string;
-			const catalogExist = await CatalogMaster.findByPk(catalogId, { attributes: ["id", "name", "description", "img_url", "pdf_url"] });
+			const catalogExist = await this.service.findOne({ id: catalogId });
 			if (!catalogExist) {
 				throw new NotExistHandler("Catalog Master Not Found");
 			}
-			const data = await this.service.findOne(catalogId);
-			res.api.create(data);
+			return res.api.create(catalogExist);
 		},
 	};
 
 	public create = {
 		validation: this.validations.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const catalogData = new CreateCatalogDTO(req.body);
+			const catalogData = new CreateCatalogDTO(req.mergedBody);
 			const catalogExist = await this.service.findOne({ name: catalogData.name, is_deleted: false });
-
 			if (catalogExist && catalogExist != null) {
 				throw new DuplicateRecord("Catalog Master already exists");
 			}
+
+			const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
+				product.map((row) => row.id)
+			);
+			const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or more product is not available" });
+			}
+
 			const file: any = req.files;
 			if (file) {
 				if (file.img_url) {
@@ -52,7 +59,7 @@ export default class CatalogController {
 				}
 			}
 			const data = await this.service.create(catalogData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -64,7 +71,7 @@ export default class CatalogController {
 			if (!catalogExist) {
 				throw new NotExistHandler("Catalog master Not Found");
 			}
-			const catalogData = new CreateCatalogDTO(req.body);
+			const catalogData = new CreateCatalogDTO(req.mergedBody);
 			const catalogDuplicateExist = await this.service.findOne({
 				id: { [Op.not]: catalog_id },
 				name: catalogData.name,
@@ -73,6 +80,14 @@ export default class CatalogController {
 
 			if (catalogDuplicateExist && catalogDuplicateExist != null) {
 				throw new DuplicateRecord("Catalog master already exists");
+			}
+
+			const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
+				product.map((row) => row.id)
+			);
+			const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
+			if (isExists == false) {
+				return res.api.validationErrors({ message: "One or more product is not available" });
 			}
 
 			const file: any = req.files;
@@ -90,7 +105,28 @@ export default class CatalogController {
 				}
 			}
 			const data = await this.service.edit(catalog_id, catalogData);
-			res.api.create(data);
+			return res.api.create(data);
+		},
+	};
+
+	public toggleCatalogActive = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const catalog_id: string = req.params["id"] as string;
+			const catalogExist = await this.service.findOne({ id: catalog_id, is_deleted: false });
+
+			if (!catalogExist) {
+				throw new NotExistHandler("Catalog Not Found");
+			}
+			await this.service
+				.toggleCatalogActive(catalog_id, req.authUser.id)
+				.then((flag) => {
+					res.api.create({
+						message: `Catalog is ${flag?.is_active ? "Actived" : "Deactivated"}`,
+					});
+				})
+				.catch((error) => {
+					res.api.serverError(error);
+				});
 		},
 	};
 

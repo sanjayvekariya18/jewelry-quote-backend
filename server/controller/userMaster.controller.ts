@@ -4,7 +4,6 @@ import { UserMasterValidation } from "../validations";
 import { ChangePasswordDTO, CreateUserDTO, EditUserDTO, SearchUserDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { Op } from "sequelize";
-import { removeFile, saveFile } from "../utils/helper";
 import { comparePassword } from "../utils/bcrypt.helper";
 import { UserMaster } from "../models";
 
@@ -16,7 +15,7 @@ export default class UserMasterController {
 		validation: this.validation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.service.getAll(new SearchUserDTO(req.query), req.authUser.id);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -28,7 +27,7 @@ export default class UserMasterController {
 				throw new NotExistHandler("User Not Found");
 			}
 			const data = await this.service.findOne({ id: userId });
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -48,7 +47,7 @@ export default class UserMasterController {
 				}
 			}
 			const data = await this.service.create(userData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -76,7 +75,7 @@ export default class UserMasterController {
 				}
 			}
 			const data = await this.service.edit(userId, userData);
-			res.api.create(data);
+			return res.api.create(data);
 		},
 	};
 
@@ -90,12 +89,12 @@ export default class UserMasterController {
 			await this.service
 				.delete(userId, req.authUser.id)
 				.then(async (data) => {
-					res.api.create({
+					return res.api.create({
 						message: `User deleted`,
 					});
 				})
 				.catch((error) => {
-					res.api.serverError(error);
+					return res.api.serverError(error);
 				});
 		},
 	};
