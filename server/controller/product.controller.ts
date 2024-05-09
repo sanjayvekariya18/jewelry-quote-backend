@@ -42,10 +42,9 @@ export default class ProductController {
 
 	public getFilesByProductVariantIds = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const { stockId }: any = req.query;
-			console.log("stockId", stockId);
+			const stock_id: string = req.params["stock_id"] as string;
 
-			const getFileType = (fileName: any) => {
+			const getFileType = (fileName: string) => {
 				const ext = path.extname(fileName).toLowerCase();
 				if (ext === ".jpg" || ext === ".png" || ext === ".gif" || ext === ".jpeg" || ext === ".webp") {
 					return "image";
@@ -55,36 +54,32 @@ export default class ProductController {
 				return "unknown";
 			};
 
-			const excludeFileList = ["engraving.png"];
-
 			// Function to list files and determine their types
-			const listFilesInFolder = (folderPath: any) => {
+			const listFilesInFolder = (folderPath: string) => {
 				let _folderPath = `public/${folderPath}`;
 				const files = fs.readdirSync(_folderPath);
-				const fileObjects: any = [];
+
+				const fileObjects: Array<{ fileUrl: string; fileType: string }> = [];
 
 				files.forEach((fileName) => {
-					if (!excludeFileList.includes(fileName)) {
-						if (fs.lstatSync(`${_folderPath}/${fileName}`).isFile()) {
-							const filePath = path.join(`/${folderPath}`, fileName);
-							const fileType = getFileType(fileName);
+					if (fs.lstatSync(`${_folderPath}/${fileName}`).isFile()) {
+						const filePath = path.join(`/${folderPath}`, fileName);
+						const fileType = getFileType(fileName);
 
-							fileObjects.push({
-								fileUrl: filePath,
-								fileType,
-							});
-						}
+						fileObjects.push({
+							fileUrl: filePath,
+							fileType,
+						});
 					}
 				});
 
 				return fileObjects;
 			};
 
-			let files: any = [];
-			let mainFilePath = `public/productsFiles/${stockId}`;
+			let files: Array<{ fileUrl: string; fileType: string }> = [];
+			let mainFilePath = `public/productsFiles/${stock_id}`;
 			let existMainFile = fs.existsSync(mainFilePath);
-
-			if (existMainFile) files = listFilesInFolder(`productsFiles/${stockId}`);
+			if (existMainFile) files = listFilesInFolder(`productsFiles/${stock_id}`);
 			else files = [];
 
 			return res.api.create(files);

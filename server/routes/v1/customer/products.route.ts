@@ -8,7 +8,7 @@ const basicValidatorHandler = new BasicValidatorHandler();
 const controller = new ProductController();
 
 router.get("/", basicValidatorHandler.handler(controller.getAllForCustomer.validation), use(controller.getAllForCustomer.controller));
-router.get("/product-images", use(controller.getFilesByProductVariantIds.controller));
+router.get("/product-images/:stock_id", use(controller.getFilesByProductVariantIds.controller));
 router.get("/:id", use(controller.findOne.controller));
 
 export default router;
