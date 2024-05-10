@@ -24,7 +24,8 @@ export default class ProductController {
 	public getAllForCustomer = {
 		validation: this.validations.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.service.getAllForCustomer(new SearchProductDTO(req.query));
+			const customer_id: string = req.customer.id;
+			const data = await this.service.getAllForCustomer(new SearchProductDTO(req.query), customer_id);
 			return res.api.create(data);
 		},
 	};

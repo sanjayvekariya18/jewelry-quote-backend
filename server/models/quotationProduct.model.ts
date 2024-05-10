@@ -7,7 +7,6 @@ export interface QuotationProductAttribute {
 	product_id: string;
 	qty: number;
 	price: number | null;
-	// styleMaster: Array<string>;
 }
 
 export interface QuotationProductInput extends Optional<QuotationProductAttribute, "id" | "price"> {}
@@ -19,7 +18,6 @@ class QuotationProduct extends Model<QuotationProductAttribute, QuotationProduct
 	public product_id!: string;
 	public qty!: number;
 	public price!: number | null;
-	// public styleMaster!: Array<string>;
 }
 
 QuotationProduct.init(
@@ -63,10 +61,6 @@ QuotationProduct.init(
 			allowNull: true,
 			defaultValue: null,
 		},
-		// styleMaster: {
-		// 	type: DataTypes.JSON,
-		// 	allowNull: false,
-		// },
 	},
 	{
 		sequelize: sequelizeConnection,

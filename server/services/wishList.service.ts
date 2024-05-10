@@ -5,12 +5,7 @@ export default class WishListServices {
 	public getAll = async (loggedInUserId: string) => {
 		return await WishList.findAll({
 			where: { customer_id: loggedInUserId },
-			include: [
-				{
-					model: Products,
-					// attributes: [],
-				},
-			],
+			include: [{ model: Products }],
 			attributes: ["id", "customer_id", "product_id"],
 		});
 	};

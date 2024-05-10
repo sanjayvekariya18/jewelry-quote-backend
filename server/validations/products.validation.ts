@@ -19,11 +19,4 @@ export default class ProductValidation {
 		"otherDetails.*.other_detail_id": "required|uuid",
 		"otherDetails.*.detail_value": "required|string",
 	};
-
-	// public edit = {
-	// 	stock_id: "string",
-	// 	sub_category_id: "uuid",
-	// 	name: "string",
-	// 	description: "string",
-	// };
 }

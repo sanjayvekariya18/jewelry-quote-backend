@@ -1,4 +1,4 @@
-import { executeTransaction, sequelizeConnection } from "../config/database";
+import { executeTransaction } from "../config/database";
 import {
 	AddToQuote,
 	CustomerDetails,
@@ -16,14 +16,9 @@ import { Op, Transaction } from "sequelize";
 import { QUOTATION_STATUS } from "../enum";
 
 export default class QuotationService {
-	private Sequelize = sequelizeConnection.Sequelize;
-
 	public getAll = async (searchParams: SearchQuotationDTO) => {
 		return await QuotationMaster.findAndCountAll({
 			where: {
-				// ...(searchParams.searchTxt && {
-				// 	[Op.or]: [{ name: { [Op.like]: `%${searchParams.searchTxt}%` } }],
-				// }),
 				...(searchParams.from_date &&
 					searchParams.to_date && {
 						quotation_date: { [Op.between]: [searchParams.from_date, searchParams.to_date] },

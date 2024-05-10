@@ -7,20 +7,7 @@ const instance = axios.create({
 	},
 });
 
-// Prepare request
-// instance.interceptors.request.use(
-// 	(config) => {
-// 		// let token = ""; //AuthStorage.getToken();
-// 		// if (token) {
-// 		// 	config.headers.Authorization = `Bearer ${token}`;
-// 		// }
-// 		console.log("config", config);
-// 		return config;
-// 	},
-// 	(error) => Promise.reject(error)
-// );
-
-// // Prepare Response
+// Prepare Response
 instance.interceptors.response.use(
 	(response) => {
 		return response.data;
@@ -29,13 +16,6 @@ instance.interceptors.response.use(
 		return Promise.reject(error.response);
 	}
 );
-
-// instance.interceptors.request.use(function (config) {
-//     console.log(config)
-//     return config
-//   }, function (error) {
-//     return Promise.reject(error)
-//   })
 
 const post = (url: string, data: any, token?: string, headersData?: any) =>
 	instance.post(url, data, {

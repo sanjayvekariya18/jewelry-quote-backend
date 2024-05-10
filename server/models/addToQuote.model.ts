@@ -7,7 +7,6 @@ export interface AddToQuoteAttribute {
 	customer_id: string;
 	qty: number;
 	notes: string;
-	// styleMaster: Array<string>;
 }
 
 export interface AddToQuoteInput extends Optional<AddToQuoteAttribute, "id" | "notes"> {}
@@ -19,7 +18,6 @@ class AddToQuote extends Model<AddToQuoteAttribute, AddToQuoteInput> implements 
 	public customer_id!: string;
 	public qty!: number;
 	public notes!: string;
-	// public styleMaster!: Array<string>;
 }
 
 AddToQuote.init(
@@ -63,10 +61,6 @@ AddToQuote.init(
 			allowNull: false,
 			defaultValue: "",
 		},
-		// styleMaster: {
-		// 	type: DataTypes.JSON,
-		// 	allowNull: false,
-		// },
 	},
 	{
 		sequelize: sequelizeConnection,

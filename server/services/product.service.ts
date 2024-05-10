@@ -8,6 +8,7 @@ import {
 	ProductOtherDetail,
 	Products,
 	SubCategory,
+	WishList,
 } from "../models";
 import { ProductDTO, SearchProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
@@ -81,19 +82,6 @@ export default class ProductService {
 				"lock_type",
 				"bail_type",
 				"is_active",
-				// [
-				// 	this.Sequelize.literal(`(
-				//         CASE WHEN
-				//             (select
-				//                 "product_id"."product_id"
-				//             from
-				//                 "wishListGemstone"
-				//             where
-				//                 "customerId" = ${customerId} and "wishListGemstone"."gemstoneId" = "Gemstone"."id") IS NOT NULL
-				//         THEN true ELSE false END)
-				//     `),
-				// 	"isAddedToWishList",
-				// ],
 			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
@@ -103,7 +91,7 @@ export default class ProductService {
 		});
 	};
 
-	public getAllForCustomer = async (searchParams: SearchProductDTO) => {
+	public getAllForCustomer = async (searchParams: SearchProductDTO, customer_id: string) => {
 		return await Products.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
@@ -165,6 +153,20 @@ export default class ProductService {
 				"fit_type",
 				"lock_type",
 				"bail_type",
+				[
+					this.Sequelize.literal(`(
+				        CASE WHEN
+				            (select
+				                product_id
+				            from
+				                wishlist
+                            where
+				                customer_id = '${customer_id}' and wishlist.product_id = Products.id 
+                            limit 1)
+                        IS NOT NULL THEN true ELSE false END)
+				    `),
+					"isAddedToWishList",
+				],
 			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {

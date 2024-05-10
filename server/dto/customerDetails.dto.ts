@@ -17,10 +17,8 @@ export class SearchCustomerDetailsDTO {
 export class CreateCustomerDetailsDTO {
 	customer_name: string;
 	customer_email: string;
-	// login_id: string;
 	country_code: string;
 	mobile_number: string;
-	// password: string;
 	whatsapp_number?: string;
 	customer_address?: string;
 	website?: string;
@@ -34,16 +32,13 @@ export class CreateCustomerDetailsDTO {
 	constructor(data: any) {
 		this.customer_name = data.customer_name;
 		this.customer_email = data.customer_email;
-		// this.login_id = data.login_id;
 		this.country_code = data.country_code;
 		this.mobile_number = data.mobile_number;
-		// this.password = data.password;
 		data.whatsapp_number != undefined ? (this.whatsapp_number = data.whatsapp_number) : delete this.whatsapp_number;
 		data.customer_address != undefined ? (this.customer_address = data.customer_address) : delete this.customer_address;
 		data.website != undefined ? (this.website = data.website) : delete this.website;
 		data.business_registration != undefined ? (this.business_registration = data.business_registration) : delete this.business_registration;
 		data.customer_fax != undefined ? (this.customer_fax = data.customer_fax) : delete this.customer_fax;
-		// data.customer_business_card != undefined ? (this.customer_business_card = data.customer_business_card) : delete this.customer_business_card;
 		data.association_membership != undefined ? (this.association_membership = data.association_membership) : delete this.association_membership;
 		this.customer_social_media = { linked_in: data.linked_in || "", facebook: data.facebook || "", instagram: data.instagram || "" };
 		data.business_reference != undefined ? (this.business_reference = data.business_reference) : delete this.business_reference;
@@ -76,7 +71,6 @@ export class EditCustomerDetailsDTO {
 		data.website != undefined ? (this.website = data.website) : delete this.website;
 		data.business_registration != undefined ? (this.business_registration = data.business_registration) : delete this.business_registration;
 		data.customer_fax != undefined ? (this.customer_fax = data.customer_fax) : delete this.customer_fax;
-		// data.customer_business_card != undefined ? (this.customer_business_card = data.customer_business_card) : delete this.customer_business_card;
 		data.association_membership != undefined ? (this.association_membership = data.association_membership) : delete this.association_membership;
 		this.customer_social_media = {
 			linked_in: data.linked_in != undefined ? data.linked_in : "",

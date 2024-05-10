@@ -28,42 +28,26 @@ export default class CatalogService {
 			distinct: true,
 			order: [["name", "ASC"]],
 			attributes: ["id", "name", "description", "img_url", "pdf_url", "is_active"],
-			include: [
-				{
-					model: CatalogProducts,
-					attributes: ["id", "catalog_id", "product_id"],
-					include: [
-						{
-							model: Products,
-							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
-							include: [
-								{
-									model: SubCategory,
-									attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"],
-									// include: [{ model: Category, attributes: ["id", "name", "details", "img_url", "logo_url"] }],
-								},
-								{
-									model: ProductAttributeOptions,
-									attributes: ["id", "product_id", "attribute_id", "option_id"],
-									include: [
-										{
-											model: Attributes,
-											attributes: ["id", "name", "details"],
-											include: [
-												{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
-											],
-										},
-										{
-											model: Options,
-											attributes: ["id", "name"],
-										},
-									],
-								},
-							],
-						},
-					],
-				},
-			],
+			...(searchParams.page != undefined &&
+				searchParams.rowsPerPage != undefined && {
+					offset: searchParams.page * searchParams.rowsPerPage,
+					limit: searchParams.rowsPerPage,
+				}),
+		});
+	};
+
+	public getAllForCustomer = async (searchParams: SearchCatalogDTO) => {
+		return await CatalogMaster.findAndCountAll({
+			where: {
+				...(searchParams.searchTxt && {
+					[Op.or]: [{ name: { [Op.like]: `%${searchParams.searchTxt}%` } }],
+				}),
+				is_deleted: false,
+				is_active: true,
+			},
+			distinct: true,
+			order: [["name", "ASC"]],
+			attributes: ["id", "name", "description", "img_url", "pdf_url"],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
 					offset: searchParams.page * searchParams.rowsPerPage,
@@ -85,26 +69,60 @@ export default class CatalogService {
 							model: Products,
 							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
 							include: [
-								{
-									model: SubCategory,
-									attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"],
-									// include: [{ model: Category, attributes: ["id", "name", "details", "img_url", "logo_url"] }],
-								},
+								{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] },
 								{
 									model: ProductAttributeOptions,
 									attributes: ["id", "product_id", "attribute_id", "option_id"],
 									include: [
-										{
-											model: Attributes,
-											attributes: ["id", "name", "details"],
-											include: [
-												{ model: AttributesOptions, attributes: ["id"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
-											],
-										},
-										{
-											model: Options,
-											attributes: ["id", "name"],
-										},
+										{ model: Attributes, attributes: ["id", "name"] },
+										{ model: Options, attributes: ["id", "name"] },
+									],
+								},
+							],
+						},
+					],
+				},
+			],
+		});
+	};
+
+	public findOneForCustomer = async (searchObject: any, customer_id: string) => {
+		return await CatalogMaster.findOne({
+			where: { ...searchObject, is_active: true, is_deleted: false },
+			attributes: ["id", "name", "description", "img_url", "pdf_url", "is_active"],
+			include: [
+				{
+					model: CatalogProducts,
+					attributes: ["id", "catalog_id", "product_id"],
+					include: [
+						{
+							model: Products,
+							attributes: [
+								"id",
+								"stock_id",
+								"sub_category_id",
+								"name",
+								"description",
+								[
+									this.Sequelize.literal(`(
+                                        CASE WHEN
+                                            (select product_id from wishlist
+                                            where
+                                                customer_id = '${customer_id}' and wishlist.product_id = \`CatalogProducts->Product\`.id
+                                            limit 1)
+                                        IS NOT NULL THEN true ELSE false END)
+                                    `),
+									"isAddedToWishList",
+								],
+							],
+							include: [
+								{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] },
+								{
+									model: ProductAttributeOptions,
+									attributes: ["id", "product_id", "attribute_id", "option_id"],
+									include: [
+										{ model: Attributes, attributes: ["id", "name"] },
+										{ model: Options, attributes: ["id", "name"] },
 									],
 								},
 							],

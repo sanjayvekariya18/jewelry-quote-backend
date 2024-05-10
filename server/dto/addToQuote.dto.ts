@@ -31,7 +31,6 @@ export class CreateAddToQuoteDTO {
 	attributeOptions: Array<ATQAttributesOptionsDTO>;
 	otherDetails: Array<ATQOtherDetailDTO>;
 	notes?: string;
-	// styleMaster: Array<string>;
 
 	constructor(data: any) {
 		this.customer_id = data.loggedInUserId;
@@ -52,24 +51,15 @@ export class CreateAddToQuoteDTO {
 				})
 		);
 		data.notes != undefined ? (this.notes = data.notes.trim()) : delete this.notes;
-		// this.styleMaster = data.styleMaster.filter(notEmpty);
 	}
 }
 
 export class EditAddToQuoteDTO {
 	qty: number;
 	notes?: string;
-	// attributeOptions: Array<ATQAttributesOptionsDTO>;
 
 	constructor(data: any) {
 		this.qty = Number(data.qty);
 		data.notes != undefined ? (this.notes = data.notes.trim()) : delete this.notes;
-		// this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
-		// 	(row: any) =>
-		// 		new ATQAttributesOptionsDTO({
-		// 			attribute_id: row.attribute_id,
-		// 			option_id: row.option_id,
-		// 		})
-		// );
 	}
 }
