@@ -86,12 +86,12 @@ export default class AddToQuoteController {
 			// 		: false
 			// );
 
-			const recordExist = await this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });
-			if (recordExist || recordExist != null) {
-				return res.api.duplicateRecord({
-					message: `Item already exist to quote`,
-				});
-			}
+			// const recordExist = await   this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });
+			// if (recordExist || recordExist != null) {
+			// 	return res.api.duplicateRecord({
+			// 		message: `Item already exist to quote`,
+			// 	});
+			// }
 
 			const data = await this.service.create(ATQData);
 			res.api.create(data);

@@ -91,15 +91,13 @@ export default class QuotationController {
 	};
 
 	public changeStatus = {
-		validation: this.validations.changeStatus,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const quotation_id: string = req.params["id"] as string;
-			const status: QUOTATION_STATUS = req.body.status as QUOTATION_STATUS;
-			const quotationExist = await this.service.findOne({ id: quotation_id });
+			const quotationExist = await this.service.simpleFindOne({ id: quotation_id, status: QUOTATION_STATUS.PENDING });
 			if (!quotationExist) {
-				throw new NotExistHandler("Quotation Not Found");
+				throw new NotExistHandler("Quotation Not Found with pending status");
 			}
-			const data = await this.service.changeStatus(quotation_id, status);
+			const data = await this.service.changeStatus(quotation_id, QUOTATION_STATUS.COMPLETED);
 			return res.api.create(data);
 		},
 	};
@@ -107,7 +105,7 @@ export default class QuotationController {
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const quotation_id: string = req.params["id"] as string;
-			const quotationExist = await this.service.findOne({ id: quotation_id });
+			const quotationExist = await this.service.simpleFindOne({ id: quotation_id });
 			if (!quotationExist) {
 				throw new NotExistHandler("Quotation Not Found");
 			}

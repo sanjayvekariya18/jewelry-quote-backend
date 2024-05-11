@@ -59,6 +59,7 @@ export class ProductDTO {
 	fit_type?: string;
 	lock_type?: string;
 	bail_type?: string;
+	catelog_master_id?: string;
 	attributeOptions: Array<ProductAttributesOptionsDTO>;
 	otherDetails: Array<ProductOtherDetailDTO>;
 	last_updated_by: string;

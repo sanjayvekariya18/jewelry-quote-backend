@@ -9,8 +9,4 @@ export default class QuotationValidations {
 		page: "integer|min:0",
 		rowsPerPage: "integer|min:1",
 	};
-
-	public changeStatus = {
-		status: "string|in:" + Object.values(QUOTATION_STATUS),
-	};
 }

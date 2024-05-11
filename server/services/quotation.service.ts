@@ -81,6 +81,49 @@ export default class QuotationService {
 		return await QuotationMaster.findOne({
 			where: { ...searchObject },
 			attributes: ["id", "customer_id", "quotation_date", "status"],
+			include: [
+				{
+					model: QuotationProduct,
+					attributes: ["id", "quotation_id", "product_id", "qty", "price"],
+					include: [
+						{
+							model: Products,
+							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+							include: [{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] }],
+						},
+						{ model: QuotationAttributeOptions, attributes: ["id", "quotation_product_id", "attribute_name", "option_name"] },
+						{ model: QuotationOtherDetail, attributes: ["id", "quotation_product_id", "detail_name", "detail_value"] },
+					],
+				},
+				{
+					model: CustomerDetails,
+					attributes: [
+						"id",
+						"customer_name",
+						"customer_email",
+						"login_id",
+						"country_code",
+						"mobile_number",
+						"whatsapp_number",
+						"customer_address",
+						"website",
+						"business_registration",
+						"customer_fax",
+						"customer_business_card",
+						"association_membership",
+						"customer_social_media",
+						"business_reference",
+						"is_active",
+					],
+				},
+			],
+		});
+	};
+
+	public simpleFindOne = async (searchObject: any) => {
+		return await QuotationMaster.findOne({
+			where: { ...searchObject },
+			attributes: ["id", "customer_id", "quotation_date", "status"],
 		});
 	};
 

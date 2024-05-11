@@ -13,8 +13,8 @@
 
 	{ "attribute": "rn_jewelry_size", "option": "3.00", "position": 1 },
 	{ "attribute": "rn_jewelry_size", "option": "3.25", "position": 2 },
-	{ "attribute": "rn_jewelry_size", "option": "3.50", "position": 4 },
-	{ "attribute": "rn_jewelry_size", "option": "3.75", "position": 3 },
+	{ "attribute": "rn_jewelry_size", "option": "3.50", "position": 3 },
+	{ "attribute": "rn_jewelry_size", "option": "3.75", "position": 4 },
 	{ "attribute": "rn_jewelry_size", "option": "4.00", "position": 5 },
 	{ "attribute": "rn_jewelry_size", "option": "4.25", "position": 6 },
 	{ "attribute": "rn_jewelry_size", "option": "4.50", "position": 7 },
