@@ -7,6 +7,17 @@ export default class ProductValidation {
 		rowsPerPage: "numeric",
 	};
 
+	public getAllForCustomer = {
+		searchTxt: "string",
+		sub_category_id: "required_with:style|uuid",
+		style: "required_with:setting_type|string",
+		setting_type: "required_with:sub_setting|string",
+		sub_setting: "string",
+		is_active: "boolean",
+		page: "numeric",
+		rowsPerPage: "numeric",
+	};
+
 	public create = {
 		stock_id: "required|string",
 		sub_category_id: "required|uuid",

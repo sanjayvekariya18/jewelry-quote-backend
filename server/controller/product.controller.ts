@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ProductExcelUploadService, ProductService, SubcategoryService } from "../services";
 import { ProductValidation } from "../validations";
-import { SearchProductDTO, ProductDTO } from "../dto";
+import { SearchProductDTO, ProductDTO, SearchProductForCustomerDTO } from "../dto";
 import { BadResponseHandler, DuplicateRecord, NotExistHandler } from "../errorHandler";
-import { OtherDetailMaster, Products, StyleMaster, SubCategoryAttributes } from "../models";
+import { OtherDetailMaster, StyleMaster, SubCategoryAttributes } from "../models";
 import fs from "fs";
 import path from "path";
 import { Op } from "sequelize";
@@ -24,10 +24,10 @@ export default class ProductController {
 	};
 
 	public getAllForCustomer = {
-		validation: this.validations.getAll,
+		validation: this.validations.getAllForCustomer,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const customer_id: string = req.customer.id;
-			const data = await this.service.getAllForCustomer(new SearchProductDTO(req.query), customer_id);
+			const data = await this.service.getAllForCustomer(new SearchProductForCustomerDTO(req.query), customer_id);
 			return res.api.create(data);
 		},
 	};

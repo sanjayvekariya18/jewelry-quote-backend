@@ -8,9 +8,8 @@ import {
 	ProductOtherDetail,
 	Products,
 	SubCategory,
-	WishList,
 } from "../models";
-import { ProductDTO, SearchProductDTO } from "../dto";
+import { ProductDTO, SearchProductDTO, SearchProductForCustomerDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 
 export default class ProductService {
@@ -91,7 +90,7 @@ export default class ProductService {
 		});
 	};
 
-	public getAllForCustomer = async (searchParams: SearchProductDTO, customer_id: string) => {
+	public getAllForCustomer = async (searchParams: SearchProductForCustomerDTO, customer_id: string) => {
 		return await Products.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
@@ -101,6 +100,15 @@ export default class ProductService {
 				}),
 				...(searchParams.sub_category_id && {
 					sub_category_id: searchParams.sub_category_id,
+				}),
+				...(searchParams.style && {
+					style: searchParams.style,
+				}),
+				...(searchParams.setting_type && {
+					setting_type: searchParams.setting_type,
+				}),
+				...(searchParams.sub_setting && {
+					sub_setting: searchParams.sub_setting,
 				}),
 				is_deleted: false,
 			},

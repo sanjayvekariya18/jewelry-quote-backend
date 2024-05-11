@@ -3,18 +3,7 @@ import { executeTransaction, sequelizeConnection } from "../config/database";
 import XLSX from "xlsx";
 import { BadResponseHandler } from "../errorHandler";
 import ValidationHandler from "../errorHandler/validation.error.handler";
-import {
-	Attributes,
-	CatalogMaster,
-	CatalogProducts,
-	Options,
-	OtherDetailMaster,
-	ProductAttributeOptions,
-	ProductOtherDetail,
-	Products,
-	SubCategory,
-} from "../models";
-import attributeOptionsJsonData from "./../seeders/defaultData/attributeOptions.json";
+import { CatalogMaster, CatalogProducts, OtherDetailMaster, ProductAttributeOptions, ProductOtherDetail, Products, SubCategory } from "../models";
 import styleMasterJsonData from "./../seeders/defaultData/styleMaster.json";
 import { ProductDTO } from "../dto";
 

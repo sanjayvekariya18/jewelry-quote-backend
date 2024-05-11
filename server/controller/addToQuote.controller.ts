@@ -5,7 +5,6 @@ import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import { FormErrorsHandler, UnauthorizedUserHandler } from "../errorHandler";
 import { OtherDetailMaster, ProductAttributeOptions, ProductOtherDetail, Products } from "../models";
 import { sequelizeConnection } from "../config/database";
-import { OTHER_DETAIL_TYPES } from "../enum";
 
 export default class AddToQuoteController {
 	private service = new AddToQuoteService();

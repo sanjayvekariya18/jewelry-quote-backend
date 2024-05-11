@@ -1,16 +1,6 @@
 import { Transaction } from "sequelize";
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import {
-	Attributes,
-	AttributesOptions,
-	CatalogMaster,
-	CatalogProducts,
-	Category,
-	Options,
-	ProductAttributeOptions,
-	Products,
-	SubCategory,
-} from "../models";
+import { Attributes, CatalogMaster, CatalogProducts, Options, ProductAttributeOptions, Products, SubCategory } from "../models";
 import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { Op } from "sequelize";
 

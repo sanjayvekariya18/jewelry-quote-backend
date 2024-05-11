@@ -18,6 +18,28 @@ export class SearchProductDTO {
 	}
 }
 
+export class SearchProductForCustomerDTO {
+	searchTxt?: string;
+	sub_category_id?: string;
+	style?: string;
+	setting_type?: string;
+	sub_setting?: string;
+	is_active?: boolean;
+	page?: number;
+	rowsPerPage?: number;
+
+	constructor(data: any) {
+		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
+		data.sub_category_id != undefined ? (this.sub_category_id = data.sub_category_id) : delete this.sub_category_id;
+		data.style != undefined ? (this.style = data.style) : delete this.style;
+		data.setting_type != undefined ? (this.setting_type = data.setting_type) : delete this.setting_type;
+		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting) : delete this.sub_setting;
+		data.is_active != "" && data.is_active != undefined ? (this.is_active = data.is_active == "true") : delete this.is_active;
+		data.page != undefined && data.page != "" ? (this.page = Number(data.page)) : delete this.page;
+		data.rowsPerPage != undefined && data.rowsPerPage != "" ? (this.rowsPerPage = Number(data.rowsPerPage)) : delete this.rowsPerPage;
+	}
+}
+
 export class ProductAttributesOptionsDTO {
 	attribute_id: string;
 	product_id?: string;

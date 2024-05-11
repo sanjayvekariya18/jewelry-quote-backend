@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { OptionsService } from "../services";
 import { OptionsValidations } from "../validations";
 import { OptionsDTO, SearchOptionsDTO } from "../dto";
-import { DuplicateRecord, NotExistHandler, use } from "../errorHandler";
+import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { Op } from "sequelize";
 import { Options } from "../models";
 
