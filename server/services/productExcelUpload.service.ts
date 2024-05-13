@@ -3,7 +3,17 @@ import { executeTransaction, sequelizeConnection } from "../config/database";
 import XLSX from "xlsx";
 import { BadResponseHandler } from "../errorHandler";
 import ValidationHandler from "../errorHandler/validation.error.handler";
-import { CatalogMaster, CatalogProducts, OtherDetailMaster, ProductAttributeOptions, ProductOtherDetail, Products, SubCategory } from "../models";
+import {
+	CatalogMaster,
+	CatalogProducts,
+	OtherDetailMaster,
+	ProductAttributeOptions,
+	ProductOtherDetail,
+	Products,
+	SubCategory,
+	SubCategoryAttributes,
+	SubcategoryAttribute,
+} from "../models";
 import styleMasterJsonData from "./../seeders/defaultData/styleMaster.json";
 import { ProductDTO } from "../dto";
 
@@ -35,7 +45,7 @@ export default class ProductExcelUploadService {
 				"bail_type",
 				"length",
 				"width",
-				"thinkness",
+				"thickness",
 				"m950",
 				"m18k",
 				"m14k",
@@ -139,6 +149,12 @@ export default class ProductExcelUploadService {
 					{ type: QueryTypes.SELECT, transaction }
 				);
 
+			let allSubCategoryAttributesData = await SubCategoryAttributes.findAll({
+				attributes: ["sub_category_id", "attribute_id"],
+				transaction,
+				raw: true,
+			});
+
 			let newProductData: Array<ProductDTO> = [];
 			let i = 4;
 			for await (const product of productSheetData) {
@@ -146,13 +162,9 @@ export default class ProductExcelUploadService {
 				let attributeOptionData: Array<{ attribute_id: string; option_id: string }> = [];
 				let otherDetailData: Array<{ other_detail_id: string; detail_value: number }> = [];
 
-				if (allProducts.findIndex((row) => row.stock_id == product.stock_id) != -1) {
-					productErrorArr.push({ [product.stock_id]: "Stock Id Already Exists" });
-				}
-
-				let findSubCategory;
+				let findSubCategory: SubcategoryAttribute | undefined | null;
 				if (product.sub_category) {
-					findSubCategory = allSubCategory.find((row) => row.name == product.sub_category);
+					findSubCategory = allSubCategory.find((row) => row.name.toString().toLowerCase() == product.sub_category.toString().toLowerCase());
 					if (findSubCategory == null) {
 						productErrorArr.push({ [product.sub_category]: "Sub Category not found" });
 					}
@@ -162,7 +174,7 @@ export default class ProductExcelUploadService {
 
 				let findCatelogueId;
 				if (product.catalogue_name) {
-					findCatelogueId = allCatalogues.find((row) => row.name == product.catalogue_name);
+					findCatelogueId = allCatalogues.find((row) => row.name.toString().toLowerCase() == product.catalogue_name.toString().toLowerCase());
 					if (findCatelogueId == null) {
 						productErrorArr.push({ ["catalogue_name"]: "Catalogue Name not found" });
 					}
@@ -185,11 +197,19 @@ export default class ProductExcelUploadService {
 					}
 				};
 				const attributeOptionCheck = (option_value: string, attribute_name: string) => {
-					let value = allAtttributeOptionData.find((row) => row.name == attribute_name && row.optionname == option_value);
+					let value = allAtttributeOptionData.find(
+						(row) =>
+							row.name == attribute_name &&
+							row.optionname.toString().replace("_", " ").toLowerCase() == option_value.toString().replace("_", " ").toLowerCase()
+					);
 					if (value == null) {
 						productErrorArr.push({ [option_value]: `${option_value} not found in ${attribute_name}` });
 					} else {
-						attributeOptionData.push({ attribute_id: value.attribute_id, option_id: value.option_id });
+						const checkSubCategoryAttributeExists = allSubCategoryAttributesData.find(
+							(row) => row.sub_category_id == findSubCategory?.id && row.attribute_id == value.attribute_id
+						);
+
+						if (checkSubCategoryAttributeExists) attributeOptionData.push({ attribute_id: value.attribute_id, option_id: value.option_id });
 					}
 				};
 
@@ -200,17 +220,17 @@ export default class ProductExcelUploadService {
 				}
 
 				if (product.style) {
-					if (styleMasterJsonData.findIndex((row) => row.name == product.style) == -1) {
+					if (styleMasterJsonData.findIndex((row) => row.name.toString().toLowerCase() == product.style.toString().toLowerCase()) == -1) {
 						productErrorArr.push({ [product.style]: "Style not found in style master" });
 					}
 				}
 				if (product.setting_type) {
-					if (styleMasterJsonData.findIndex((row) => row.name == product.setting_type) == -1) {
+					if (styleMasterJsonData.findIndex((row) => row.name.toString().toLowerCase() == product.setting_type.toString().toLowerCase()) == -1) {
 						productErrorArr.push({ [product.setting_type]: "Setting Type not found in style master" });
 					}
 				}
 				if (product.sub_setting) {
-					if (styleMasterJsonData.findIndex((row) => row.name == product.sub_setting) == -1) {
+					if (styleMasterJsonData.findIndex((row) => row.name.toString().toLowerCase() == product.sub_setting.toString().toLowerCase()) == -1) {
 						productErrorArr.push({ [product.sub_setting]: "Sub Setting not found in style master" });
 					}
 				}
@@ -250,48 +270,48 @@ export default class ProductExcelUploadService {
 				});
 
 				let whiteDiamondColor = ["d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-				let otherColor = ["fancy_deep", "fancy_vivid", "fancy_intense", "fancy_dark", "fancy", "fancy_light", "light", "very_light", "faint"];
+				let otherColor = ["fancy deep", "fancy vivid", "fancy intense", "fancy dark", "fancy", "fancy light", "light", "very light", "faint"];
 				if (product.p_stone_name && product.p_color) {
-					if (product.p_stone_name == "white_diamond") {
-						if (!whiteDiamondColor.includes(product.p_color)) {
+					if (product.p_stone_name.toString().replace("_", " ").toLowerCase() == "white diamond") {
+						if (!whiteDiamondColor.includes(product.p_color.toString().toLowerCase())) {
 							productErrorArr.push({ ["p_color_match"]: `Primary Diamond Color should be ${whiteDiamondColor.join(", ")}` });
 						}
 					} else {
-						if (!otherColor.includes(product.p_color)) {
+						if (!otherColor.includes(product.p_color.toString().replace("_", " ").toLowerCase())) {
 							productErrorArr.push({ ["p_color_match"]: `Primary Diamond Color should be ${otherColor.join(", ")}` });
 						}
 					}
 				}
 				if (product.sd1_stone_name && product.sd1_color) {
-					if (product.sd1_stone_name == "white_diamond") {
-						if (!whiteDiamondColor.includes(product.sd1_color)) {
+					if (product.sd1_stone_name.toString().replace("_", " ").toLowerCase() == "white diamond") {
+						if (!whiteDiamondColor.includes(product.sd1_color.toString().toLowerCase())) {
 							productErrorArr.push({ ["sd1_color_match"]: `Side Diamond 1 Color should be ${whiteDiamondColor.join(", ")}` });
 						}
 					} else {
-						if (!otherColor.includes(product.sd1_color)) {
+						if (!otherColor.includes(product.sd1_color.toString().replace("_", " ").toLowerCase())) {
 							productErrorArr.push({ ["sd1_color_match"]: `Side Diamond 1 Color should be ${otherColor.join(", ")}` });
 						}
 					}
 				}
 				if (product.sd2_stone_name && product.sd2_color) {
-					if (product.sd2_stone_name == "white_diamond") {
-						if (!whiteDiamondColor.includes(product.sd2_color)) {
+					if (product.sd2_stone_name.toString().replace("_", " ").toLowerCase() == "white diamond") {
+						if (!whiteDiamondColor.includes(product.sd2_color.toString().toLowerCase())) {
 							productErrorArr.push({ ["sd2_color_match"]: `Side Diamond 2 Color should be ${whiteDiamondColor.join(", ")}` });
 						}
 					} else {
-						if (!otherColor.includes(product.sd2_color)) {
+						if (!otherColor.includes(product.sd2_color.toString().replace("_", " ").toLowerCase())) {
 							productErrorArr.push({ ["sd2_color_match"]: `Side Diamond 2 Color should be ${otherColor.join(", ")}` });
 						}
 					}
 				}
 
 				if (product.o_stone_name && product.o_color) {
-					if (product.o_stone_name == "white_diamond") {
-						if (!whiteDiamondColor.includes(product.o_color)) {
+					if (product.o_stone_name.toString().replace("_", " ").toLowerCase() == "white diamond") {
+						if (!whiteDiamondColor.includes(product.o_color.toString().toLowerCase())) {
 							productErrorArr.push({ ["o_color_match"]: `Other Diamond Color should be ${whiteDiamondColor.join(", ")}` });
 						}
 					} else {
-						if (!otherColor.includes(product.o_color)) {
+						if (!otherColor.includes(product.o_color.toString().replace("_", " ").toLowerCase())) {
 							productErrorArr.push({ ["o_color_match"]: `Other Diamond Color should be ${otherColor.join(", ")}` });
 						}
 					}
@@ -303,7 +323,6 @@ export default class ProductExcelUploadService {
 				if (product.m10k) numberValidationCheck(product.m10k, "m10k");
 				if (product.m925) numberValidationCheck(product.m925, "m925");
 
-				// if (product.m18k || product.m14k || product.m10k) {
 				let gold_metal = allAtttributeOptionData.find((row) => row.name == "metal" && row.optionname == "gold");
 				if (gold_metal == null) {
 					productErrorArr.push({ ["gold_metal"]: "Gold Metal not found in attribute" });
@@ -322,27 +341,11 @@ export default class ProductExcelUploadService {
 				} else {
 					attributeOptionData.push({ attribute_id: color_yellow.attribute_id, option_id: color_yellow.option_id });
 				}
-				// } else if (product.m950) {
-				let platinum_metal = allAtttributeOptionData.find((row) => row.name == "metal" && row.optionname == "platinum");
-				if (platinum_metal == null) {
-					productErrorArr.push({ ["platinum_metal"]: "Platinum Metal not found in attribute" });
-				} else {
-					attributeOptionData.push({ attribute_id: platinum_metal.attribute_id, option_id: platinum_metal.option_id });
-				}
-				// } else if (product.m925) {
-				let silver_metal = allAtttributeOptionData.find((row) => row.name == "metal" && row.optionname == "silver");
-				if (silver_metal == null) {
-					productErrorArr.push({ ["silver_metal"]: "Silver Metal not found in attribute" });
-				} else {
-					attributeOptionData.push({ attribute_id: silver_metal.attribute_id, option_id: silver_metal.option_id });
-				}
-				// }
 
 				let fields_to_check_other_details = [
-					"br_nk_jewelry_size",
 					"length",
 					"width",
-					"thinkness",
+					"thickness",
 					"p_mm_size",
 					"p_piece",
 					"p_carat",
@@ -356,6 +359,18 @@ export default class ProductExcelUploadService {
 					"o_piece",
 					"o_carat",
 				];
+
+				if (
+					findSubCategory &&
+					(findSubCategory.name.toString().toLowerCase() == "bracelet" || findSubCategory.name.toString().toLowerCase() == "necklace")
+				) {
+					const findDetail = allOtherDetails.find((row) => row.detail_name == "br_nk_jewelry_size");
+					if (findDetail == null) {
+						productErrorArr.push({ ["br_nk_jewelry_size"]: `br_nk_jewelry_size not found in other details` });
+					} else {
+						otherDetailData.push({ other_detail_id: findDetail.id, detail_value: product.br_nk_jewelry_size });
+					}
+				}
 
 				fields_to_check_other_details.forEach((otherDetail) => {
 					if (product[otherDetail]) {
@@ -394,28 +409,56 @@ export default class ProductExcelUploadService {
 			}
 			if (Object.keys(error.product).length === 0) {
 				for await (const productData of newProductData) {
-					await Products.create(productData, { transaction }).then(async (newProductData) => {
+					const oldProductData = allProducts.find((row) => row.stock_id.toLowerCase() == productData.stock_id.toLowerCase());
+
+					if (oldProductData == null) {
+						await Products.create(productData, { transaction }).then(async (newProductData) => {
+							if (productData.catelog_master_id) {
+								await CatalogProducts.create(
+									{
+										catalog_id: productData.catelog_master_id,
+										product_id: newProductData.id,
+										last_updated_by: productData.last_updated_by,
+									},
+									{ transaction }
+								);
+							}
+
+							let productAttributeOption1 = productData.attributeOptions.map((data) => {
+								return { ...data, product_id: newProductData.id };
+							});
+							await ProductAttributeOptions.bulkCreate(productAttributeOption1, { ignoreDuplicates: true, transaction });
+
+							let productOtherDetails = productData.otherDetails.map((data) => {
+								return { ...data, product_id: newProductData.id };
+							});
+							await ProductOtherDetail.bulkCreate(productOtherDetails, { ignoreDuplicates: true, transaction });
+						});
+					} else {
+						await Products.update(productData, { where: { id: oldProductData.id }, transaction });
+						await ProductAttributeOptions.destroy({ where: { product_id: oldProductData.id }, transaction });
+						await ProductOtherDetail.destroy({ where: { product_id: oldProductData.id }, transaction });
 						if (productData.catelog_master_id) {
+							await CatalogProducts.destroy({ where: { catalog_id: productData.catelog_master_id, product_id: oldProductData.id }, transaction });
 							await CatalogProducts.create(
 								{
 									catalog_id: productData.catelog_master_id,
-									product_id: newProductData.id,
+									product_id: oldProductData.id,
 									last_updated_by: productData.last_updated_by,
 								},
 								{ transaction }
 							);
 						}
-
 						let productAttributeOption1 = productData.attributeOptions.map((data) => {
-							return { ...data, product_id: newProductData.id };
+							return { ...data, product_id: oldProductData.id };
 						});
 						await ProductAttributeOptions.bulkCreate(productAttributeOption1, { ignoreDuplicates: true, transaction });
 
 						let productOtherDetails = productData.otherDetails.map((data) => {
-							return { ...data, product_id: newProductData.id };
+							return { ...data, product_id: oldProductData.id };
 						});
 						await ProductOtherDetail.bulkCreate(productOtherDetails, { ignoreDuplicates: true, transaction });
-					});
+					}
 				}
 				return "Product Bulk uploaded successfully";
 			}
