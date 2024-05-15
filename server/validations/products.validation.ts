@@ -10,6 +10,7 @@ export default class ProductValidation {
 	public getAllForCustomer = {
 		searchTxt: "string",
 		sub_category_id: "required_with:style|uuid",
+		catalog_master_id: "uuid",
 		style: "required_with:setting_type|string",
 		setting_type: "required_with:sub_setting|string",
 		sub_setting: "string",

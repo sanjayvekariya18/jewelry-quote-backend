@@ -8,8 +8,10 @@ import {
 	ATQOtherDetailInput,
 	AddToQuote,
 	Attributes,
+	AttributesOptions,
 	Category,
 	Options,
+	OtherDetailMaster,
 	Products,
 	SubCategory,
 } from "../models";
@@ -23,7 +25,23 @@ export default class AddToQuoteService {
 			include: [
 				{
 					model: Products,
-					attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+					attributes: [
+						"id",
+						"stock_id",
+						"sub_category_id",
+						"name",
+						"description",
+						"metal_type",
+						"style",
+						"setting_type",
+						"sub_setting",
+						"prong_type",
+						"shank_type",
+						"band_type",
+						"fit_type",
+						"lock_type",
+						"bail_type",
+					],
 					include: [
 						{
 							model: SubCategory,
@@ -36,10 +54,7 @@ export default class AddToQuoteService {
 					model: ATQAttributeOptions,
 					attributes: ["id", "attribute_id", "option_id"],
 					include: [
-						{
-							model: Attributes,
-							attributes: ["id", "name"],
-						},
+						{ model: Attributes, attributes: ["id", "name"] },
 						{ model: Options, attributes: ["id", "name"] },
 					],
 				},

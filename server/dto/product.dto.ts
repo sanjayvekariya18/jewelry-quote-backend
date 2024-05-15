@@ -21,6 +21,7 @@ export class SearchProductDTO {
 export class SearchProductForCustomerDTO {
 	searchTxt?: string;
 	sub_category_id?: string;
+	catalog_master_id?: boolean;
 	style?: string;
 	setting_type?: string;
 	sub_setting?: string;
@@ -31,6 +32,7 @@ export class SearchProductForCustomerDTO {
 	constructor(data: any) {
 		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
 		data.sub_category_id != undefined ? (this.sub_category_id = data.sub_category_id) : delete this.sub_category_id;
+		data.catalog_master_id != undefined ? (this.catalog_master_id = data.catalog_master_id) : delete this.catalog_master_id;
 		data.style != undefined ? (this.style = data.style) : delete this.style;
 		data.setting_type != undefined ? (this.setting_type = data.setting_type) : delete this.setting_type;
 		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting) : delete this.sub_setting;

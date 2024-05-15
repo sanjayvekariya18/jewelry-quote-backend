@@ -29,6 +29,7 @@ export default class ProductService {
 				...(searchParams.is_active != undefined && {
 					is_active: searchParams.is_active,
 				}),
+
 				is_deleted: false,
 			},
 			distinct: true,
@@ -100,6 +101,14 @@ export default class ProductService {
 				}),
 				...(searchParams.sub_category_id && {
 					sub_category_id: searchParams.sub_category_id,
+				}),
+				...(searchParams.catalog_master_id && {
+					id: {
+						[Op.in]: this.Sequelize.literal(`
+                                    (SELECT cp.product_id FROM catalog_products cp
+                                    WHERE cp.catalog_id = '${searchParams.catalog_master_id}')
+                                `),
+					},
 				}),
 				...(searchParams.style && {
 					style: searchParams.style,
@@ -209,6 +218,7 @@ export default class ProductService {
 				{ model: SubCategory, attributes: ["id", "name"] },
 				{
 					model: ProductAttributeOptions,
+					attributes: ["id", "product_id", "attribute_id", "option_id"],
 					include: [
 						{
 							model: Attributes,
@@ -217,12 +227,8 @@ export default class ProductService {
 								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
 							],
 						},
-						{
-							model: Options,
-							attributes: ["id", "name"],
-						},
+						{ model: Options, attributes: ["id", "name"] },
 					],
-					attributes: ["id", "product_id", "attribute_id", "option_id"],
 				},
 				{
 					model: ProductOtherDetail,
