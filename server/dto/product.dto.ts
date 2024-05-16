@@ -92,6 +92,7 @@ export class ProductDTO {
 		this.stock_id = data.stock_id.toString().trim();
 		this.sub_category_id = data.sub_category_id;
 		this.name = data.name.toString().trim();
+		data.description != undefined ? (this.description = data.description.toString().trim()) : delete this.description;
 		data.metal_type != undefined ? (this.metal_type = data.metal_type.toString().trim()) : delete this.metal_type;
 		data.style != undefined ? (this.style = data.style.toString().trim()) : delete this.style;
 		data.setting_type != undefined ? (this.setting_type = data.setting_type.toString().trim()) : delete this.setting_type;

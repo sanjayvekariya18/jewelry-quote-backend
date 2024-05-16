@@ -17,7 +17,7 @@ import { QUOTATION_STATUS } from "../enum";
 
 export default class QuotationService {
 	public getAll = async (searchParams: SearchQuotationDTO) => {
-		return await QuotationMaster.findAndCountAll({
+		const data: any = await QuotationMaster.findAndCountAll({
 			where: {
 				...(searchParams.from_date &&
 					searchParams.to_date && {
@@ -91,11 +91,23 @@ export default class QuotationService {
 					offset: searchParams.page * searchParams.rowsPerPage,
 					limit: searchParams.rowsPerPage,
 				}),
+		}).then((quotations) => {
+			return { count: quotations.count, rows: quotations.rows.map((row) => row.get({ plain: true })) };
 		});
+
+		data.rows = data.rows.map((row: any) => {
+			let price = 0;
+			row.QuotationProducts.forEach((pro: any) => {
+				price += pro.price || 0;
+			});
+			return { ...row, totalPrice: price };
+		});
+
+		return data;
 	};
 
 	public findOne = async (searchObject: any) => {
-		return await QuotationMaster.findOne({
+		const data: any = await QuotationMaster.findOne({
 			where: { ...searchObject },
 			attributes: ["id", "customer_id", "quotation_date", "status"],
 			include: [
@@ -134,7 +146,14 @@ export default class QuotationService {
 					],
 				},
 			],
+		}).then((data1) => data1?.get({ plain: true }));
+
+		let price = 0;
+		if (data == null) return null;
+		data.QuotationProducts.forEach((pro: any) => {
+			price += pro.price || 0;
 		});
+		return { ...data, totalPrice: price };
 	};
 
 	public simpleFindOne = async (searchObject: any) => {

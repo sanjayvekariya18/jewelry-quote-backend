@@ -41,6 +41,17 @@ export default class QuotationController {
 		},
 	};
 
+	public findOneForCustomer = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const quotatuon_id: string = req.params["id"] as string;
+			const quotationExist = await this.service.findOne({ id: quotatuon_id, customer_id: req.customer.id });
+			if (!quotationExist) {
+				throw new NotExistHandler("Quotation Not Found");
+			}
+			return res.api.create(quotationExist);
+		},
+	};
+
 	public placeQuotation = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const customer_id: string = req.customer["id"] as string;
