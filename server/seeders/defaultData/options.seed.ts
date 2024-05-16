@@ -4,7 +4,6 @@ import { Options, OptionsInput } from "../../models";
 import jsonData from "./options.json";
 
 const optionSeed = async (transaction: Transaction, adminUserId: string | undefined) => {
-	// const jsonData: Array<any> = JSON.parse(fs.readFileSync(`${__dirname}/options.json`, "utf-8"));
 	let tableData: Array<OptionsInput> = jsonData.map((data) => {
 		return {
 			name: data.name,

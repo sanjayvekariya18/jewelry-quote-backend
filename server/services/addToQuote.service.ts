@@ -25,7 +25,23 @@ export default class AddToQuoteService {
 			include: [
 				{
 					model: Products,
-					attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+					attributes: [
+						"id",
+						"stock_id",
+						"sub_category_id",
+						"name",
+						"description",
+						"metal_type",
+						"style",
+						"setting_type",
+						"sub_setting",
+						"prong_type",
+						"shank_type",
+						"band_type",
+						"fit_type",
+						"lock_type",
+						"bail_type",
+					],
 					include: [
 						{
 							model: SubCategory,
@@ -36,25 +52,16 @@ export default class AddToQuoteService {
 				},
 				{
 					model: ATQAttributeOptions,
-					attributes: ["id"],
+					attributes: ["id", "attribute_id", "option_id"],
 					include: [
-						{
-							model: Attributes,
-							attributes: ["id", "name", "details"],
-							include: [
-								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
-							],
-						},
-						{ model: Options, attributes: ["id", "name", "details"] },
+						{ model: Attributes, attributes: ["id", "name"] },
+						{ model: Options, attributes: ["id", "name"] },
 					],
 				},
 				{ model: ATQOtherDetail, attributes: ["id", "add_to_quote_id", "detail_name", "detail_value"] },
 			],
 			attributes: ["id", "product_id", "customer_id", "qty", "notes"],
-			order: [
-				["createdAt", "DESC"],
-				[ATQAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
-			],
+			order: [["createdAt", "DESC"]],
 		});
 	};
 
@@ -108,6 +115,7 @@ export default class AddToQuoteService {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await AddToQuote.destroy({ where: { id: ATQId }, transaction }).then(async () => {
 				await ATQAttributeOptions.destroy({ where: { add_to_quote_id: ATQId }, transaction });
+				await ATQOtherDetail.destroy({ where: { add_to_quote_id: ATQId }, transaction });
 			});
 		});
 	};

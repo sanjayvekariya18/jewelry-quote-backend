@@ -1,6 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer";
 import { config } from "../config";
-import path from "path";
 import { BadResponseHandler } from "../errorHandler";
 const fs = require("fs");
 
@@ -15,16 +14,8 @@ export default class EmailService {
 
 	constructor() {
 		this.transporter = nodemailer.createTransport(
-			{
-				service: "Gmail", // E.g., 'Gmail' for Gmail
-				auth: {
-					user: config.sys_email_details.email, // Your gmail address.
-					pass: config.sys_email_details.password,
-				},
-			},
-			{
-				from: config.sys_email_details.email,
-			}
+			{ service: "Gmail", auth: { user: config.sys_email_details.email, pass: config.sys_email_details.password } },
+			{ from: config.sys_email_details.email }
 		);
 	}
 

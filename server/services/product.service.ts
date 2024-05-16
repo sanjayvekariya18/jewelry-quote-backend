@@ -9,7 +9,7 @@ import {
 	Products,
 	SubCategory,
 } from "../models";
-import { ProductDTO, SearchProductDTO } from "../dto";
+import { ProductDTO, SearchProductDTO, SearchProductForCustomerDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 
 export default class ProductService {
@@ -29,6 +29,7 @@ export default class ProductService {
 				...(searchParams.is_active != undefined && {
 					is_active: searchParams.is_active,
 				}),
+
 				is_deleted: false,
 			},
 			distinct: true,
@@ -81,19 +82,6 @@ export default class ProductService {
 				"lock_type",
 				"bail_type",
 				"is_active",
-				// [
-				// 	this.Sequelize.literal(`(
-				//         CASE WHEN
-				//             (select
-				//                 "product_id"."product_id"
-				//             from
-				//                 "wishListGemstone"
-				//             where
-				//                 "customerId" = ${customerId} and "wishListGemstone"."gemstoneId" = "Gemstone"."id") IS NOT NULL
-				//         THEN true ELSE false END)
-				//     `),
-				// 	"isAddedToWishList",
-				// ],
 			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
@@ -103,7 +91,7 @@ export default class ProductService {
 		});
 	};
 
-	public getAllForCustomer = async (searchParams: SearchProductDTO) => {
+	public getAllForCustomer = async (searchParams: SearchProductForCustomerDTO, customer_id: string) => {
 		return await Products.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
@@ -113,6 +101,23 @@ export default class ProductService {
 				}),
 				...(searchParams.sub_category_id && {
 					sub_category_id: searchParams.sub_category_id,
+				}),
+				...(searchParams.catalog_master_id && {
+					id: {
+						[Op.in]: this.Sequelize.literal(`
+                                    (SELECT cp.product_id FROM catalog_products cp
+                                    WHERE cp.catalog_id = '${searchParams.catalog_master_id}')
+                                `),
+					},
+				}),
+				...(searchParams.style && {
+					style: searchParams.style,
+				}),
+				...(searchParams.setting_type && {
+					setting_type: searchParams.setting_type,
+				}),
+				...(searchParams.sub_setting && {
+					sub_setting: searchParams.sub_setting,
 				}),
 				is_deleted: false,
 			},
@@ -165,6 +170,20 @@ export default class ProductService {
 				"fit_type",
 				"lock_type",
 				"bail_type",
+				[
+					this.Sequelize.literal(`(
+				        CASE WHEN
+				            (select
+				                product_id
+				            from
+				                wishlist
+                            where
+				                customer_id = '${customer_id}' and wishlist.product_id = Products.id 
+                            limit 1)
+                        IS NOT NULL THEN true ELSE false END)
+				    `),
+					"isAddedToWishList",
+				],
 			],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
@@ -199,6 +218,7 @@ export default class ProductService {
 				{ model: SubCategory, attributes: ["id", "name"] },
 				{
 					model: ProductAttributeOptions,
+					attributes: ["id", "product_id", "attribute_id", "option_id"],
 					include: [
 						{
 							model: Attributes,
@@ -207,12 +227,8 @@ export default class ProductService {
 								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
 							],
 						},
-						{
-							model: Options,
-							attributes: ["id", "name"],
-						},
+						{ model: Options, attributes: ["id", "name"] },
 					],
-					attributes: ["id", "product_id", "attribute_id", "option_id"],
 				},
 				{
 					model: ProductOtherDetail,

@@ -23,15 +23,7 @@ export default class SubcategoryService {
 
 			include: [{ model: Category, attributes: ["id", "name"] }],
 			order: [["name", "ASC"]],
-			attributes: [
-				"id",
-				"name",
-				"details",
-				"logo_url",
-				"img_url",
-				"category_id",
-				//  [this.Sequelize.col("Category.name"), "category_name"]
-			],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id"],
 			...(searchParams.page != undefined &&
 				searchParams.rowsPerPage != undefined && {
 					offset: searchParams.page * searchParams.rowsPerPage,
@@ -47,15 +39,7 @@ export default class SubcategoryService {
 				{ model: Category, attributes: ["id", "name"] },
 				{ model: SubCategoryAttributes, include: [{ model: Attributes, attributes: ["id", "name", "details"] }] },
 			],
-			attributes: [
-				"id",
-				"name",
-				"details",
-				"logo_url",
-				"img_url",
-				"category_id",
-				// [this.Sequelize.col("Category.name"), "category_name"]
-			],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id"],
 		});
 	};
 
@@ -68,21 +52,10 @@ export default class SubcategoryService {
 
 	public getSubCategoryByCategory = async (category_id: string) => {
 		return await SubCategory.findAll({
-			where: {
-				category_id,
-				is_deleted: false,
-			},
+			where: { category_id, is_deleted: false },
 			raw: true,
 			include: [{ model: Category, attributes: ["id", "name"] }],
-			attributes: [
-				"id",
-				"name",
-				"details",
-				"logo_url",
-				"img_url",
-				"category_id",
-				//  [this.Sequelize.col("Category.name"), "categoryName"]
-			],
+			attributes: ["id", "name", "details", "logo_url", "img_url", "category_id"],
 		});
 	};
 
@@ -110,11 +83,7 @@ export default class SubcategoryService {
 		}
 		let resp: Array<any> = [];
 		for (const data1 of data.SubCategoryAttributes) {
-			resp.push({
-				id: data1.Attribute.id,
-				attribute_name: data1.Attribute.name,
-				options: data1.Attribute.AttributesOptions,
-			});
+			resp.push({ id: data1.Attribute.id, attribute_name: data1.Attribute.name, options: data1.Attribute.AttributesOptions });
 		}
 		return resp;
 	};

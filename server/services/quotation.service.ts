@@ -1,4 +1,4 @@
-import { executeTransaction, sequelizeConnection } from "../config/database";
+import { executeTransaction } from "../config/database";
 import {
 	AddToQuote,
 	CustomerDetails,
@@ -16,14 +16,9 @@ import { Op, Transaction } from "sequelize";
 import { QUOTATION_STATUS } from "../enum";
 
 export default class QuotationService {
-	private Sequelize = sequelizeConnection.Sequelize;
-
 	public getAll = async (searchParams: SearchQuotationDTO) => {
-		return await QuotationMaster.findAndCountAll({
+		const data: any = await QuotationMaster.findAndCountAll({
 			where: {
-				// ...(searchParams.searchTxt && {
-				// 	[Op.or]: [{ name: { [Op.like]: `%${searchParams.searchTxt}%` } }],
-				// }),
 				...(searchParams.from_date &&
 					searchParams.to_date && {
 						quotation_date: { [Op.between]: [searchParams.from_date, searchParams.to_date] },
@@ -36,6 +31,85 @@ export default class QuotationService {
 				}),
 			},
 			distinct: true,
+			include: [
+				{
+					model: QuotationProduct,
+					attributes: ["id", "quotation_id", "product_id", "qty", "price"],
+					include: [
+						{
+							model: Products,
+							attributes: [
+								"id",
+								"stock_id",
+								"sub_category_id",
+								"name",
+								"description",
+								"metal_type",
+								"style",
+								"setting_type",
+								"sub_setting",
+								"prong_type",
+								"shank_type",
+								"band_type",
+								"fit_type",
+								"lock_type",
+								"bail_type",
+								"is_active",
+							],
+							include: [{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] }],
+						},
+						{ model: QuotationAttributeOptions, attributes: ["id", "quotation_product_id", "attribute_name", "option_name"] },
+						{ model: QuotationOtherDetail, attributes: ["id", "quotation_product_id", "detail_name", "detail_value"] },
+					],
+				},
+				{
+					model: CustomerDetails,
+					attributes: [
+						"id",
+						"customer_name",
+						"customer_email",
+						"login_id",
+						"country_code",
+						"mobile_number",
+						"whatsapp_number",
+						"customer_address",
+						"website",
+						"business_registration",
+						"customer_fax",
+						"customer_business_card",
+						"association_membership",
+						"customer_social_media",
+						"business_reference",
+						"is_active",
+					],
+				},
+			],
+			order: [["createdAt", "DESC"]],
+			attributes: ["id", "customer_id", "quotation_date", "status", "createdAt"],
+			...(searchParams.page != undefined &&
+				searchParams.rowsPerPage != undefined && {
+					offset: searchParams.page * searchParams.rowsPerPage,
+					limit: searchParams.rowsPerPage,
+				}),
+		}).then((quotations) => {
+			return { count: quotations.count, rows: quotations.rows.map((row) => row.get({ plain: true })) };
+		});
+
+		data.rows = data.rows.map((row: any) => {
+			let price = 0;
+			row.QuotationProducts.forEach((pro: any) => {
+				price += pro.price || 0;
+			});
+			return { ...row, totalPrice: price };
+		});
+
+		return data;
+	};
+
+	public findOne = async (searchObject: any) => {
+		const data: any = await QuotationMaster.findOne({
+			where: { ...searchObject },
+			attributes: ["id", "customer_id", "quotation_date", "status"],
 			include: [
 				{
 					model: QuotationProduct,
@@ -72,17 +146,17 @@ export default class QuotationService {
 					],
 				},
 			],
-			order: [["createdAt", "DESC"]],
-			attributes: ["id", "customer_id", "quotation_date", "status", "createdAt"],
-			...(searchParams.page != undefined &&
-				searchParams.rowsPerPage != undefined && {
-					offset: searchParams.page * searchParams.rowsPerPage,
-					limit: searchParams.rowsPerPage,
-				}),
+		}).then((data1) => data1?.get({ plain: true }));
+
+		let price = 0;
+		if (data == null) return null;
+		data.QuotationProducts.forEach((pro: any) => {
+			price += pro.price || 0;
 		});
+		return { ...data, totalPrice: price };
 	};
 
-	public findOne = async (searchObject: any) => {
+	public simpleFindOne = async (searchObject: any) => {
 		return await QuotationMaster.findOne({
 			where: { ...searchObject },
 			attributes: ["id", "customer_id", "quotation_date", "status"],

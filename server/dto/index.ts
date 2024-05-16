@@ -5,7 +5,7 @@ import { ToggleUserPermissionDTO, UserPermissionsDTO } from "./userPermission.dt
 import { CreatePermissionDTO, SearchPermissionDTO } from "./permissionMaster.dto";
 import { CreateCustomerDetailsDTO, CustomerChangePasswordDTO, EditCustomerDetailsDTO, SearchCustomerDetailsDTO } from "./customerDetails.dto";
 import { CreateWishlistDTO, BulkCreateWishlistDTO } from "./wishlist.dto";
-import { ProductDTO, ProductAttributesOptionsDTO, SearchProductDTO } from "./product.dto";
+import { ProductDTO, ProductAttributesOptionsDTO, SearchProductDTO, SearchProductForCustomerDTO } from "./product.dto";
 import { CreateCatalogDTO, SearchCatalogDTO } from "./catalog.dto";
 import { AttributesDTO, SearchAttributesDTO } from "./attributes.dto";
 import { OptionsDTO, SearchOptionsDTO } from "./options.dto";
@@ -13,6 +13,7 @@ import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "./addToQuote.dto";
 import { SearchQuotationDTO, QuotationDTO, QuotationProductsDTO } from "./quotation.dto";
 import { SearchStyleMasterDTO } from "./styleMaster.dto";
 export {
+	SearchProductForCustomerDTO,
 	ToggleUserPermissionDTO,
 	UserPermissionsDTO,
 	CreatePermissionDTO,

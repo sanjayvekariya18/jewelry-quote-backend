@@ -5,7 +5,6 @@ import { logger } from "../../config";
 import jsonData from "./subcategory.json";
 
 const subcategorySeed = async (transaction: Transaction, adminUserId: string | undefined) => {
-	// const jsonData: Array<any> = JSON.parse(fs.readFileSync(`${__dirname}/subcategory.json`, "utf-8"));
 	const categoryData = await Category.findAll({ where: { is_deleted: false }, raw: true, transaction });
 	let tableData: Array<SubcategoryAttribute> = jsonData.map((data) => {
 		const category = categoryData.find((row) => row.name == data.category);

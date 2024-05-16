@@ -1,27 +1,25 @@
-import { NextFunction, Request, Response } from "express";
-import { AddToQuoteService, CustomerDetailsService } from "../services";
+import { Request, Response } from "express";
+import { AddToQuoteService } from "../services";
 import { AddToQuoteValidations } from "../validations";
 import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import { FormErrorsHandler, UnauthorizedUserHandler } from "../errorHandler";
 import { OtherDetailMaster, ProductAttributeOptions, ProductOtherDetail, Products } from "../models";
 import { sequelizeConnection } from "../config/database";
-import { OTHER_DETAIL_TYPES } from "../enum";
 
 export default class AddToQuoteController {
 	private service = new AddToQuoteService();
-	private customerMasterService = new CustomerDetailsService();
 	private validation = new AddToQuoteValidations();
 	private Sequelize = sequelizeConnection.Sequelize;
 
 	public getAll = {
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		controller: async (req: Request, res: Response): Promise<void> => {
 			let data = await this.service.getAll(req.customer.id);
 			res.api.create(data);
 		},
 	};
 
 	public getATQTotalCount = {
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		controller: async (req: Request, res: Response): Promise<void> => {
 			const data = await this.service.getATQTotalCount(req.customer.id);
 			res.api.create({
 				totalQuote: data,
@@ -31,7 +29,7 @@ export default class AddToQuoteController {
 
 	public create = {
 		validation: this.validation.create,
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		controller: async (req: Request, res: Response): Promise<void> => {
 			const ATQData = new CreateAddToQuoteDTO(req.body);
 
 			const productExist = await Products.findOne({
@@ -41,6 +39,12 @@ export default class AddToQuoteController {
 				return res.api.validationErrors({ message: "Product not found" });
 			}
 
+			// const goldMetal = await Attributes.findOne({ where: { name: "gold" } });
+			// const findGoldInATQ = ATQData.attributeOptions.find((row) => row.attribute_id == goldMetal?.id)
+			// if(findGoldInATQ) {
+
+			// }
+
 			let ids = await ProductAttributeOptions.findAll({
 				where: { product_id: productExist.id },
 				attributes: ["attribute_id"],
@@ -49,7 +53,7 @@ export default class AddToQuoteController {
 
 			let checkAttributes = ATQData.attributeOptions.filter((attOps) => ids.includes(attOps.attribute_id));
 			if (ids.length != checkAttributes.length) {
-				return res.api.validationErrors({ message: "Please enter all attributes and options. Attributes should be included in same subCategory" });
+				// return res.api.validationErrors({ message: "Please enter all attributes and options. Attributes should be included in same subCategory" });
 			}
 
 			const getProductOtherDetails: any = await ProductOtherDetail.findAll({
@@ -66,12 +70,12 @@ export default class AddToQuoteController {
 			}).then((data) => data.map((row) => row.get({ plain: true })));
 
 			if (getProductOtherDetails.length != ATQData.otherDetails.length) {
-				return res.api.validationErrors({ message: "All Product Other Detail are required" });
+				// return res.api.validationErrors({ message: "All Product Other Detail are required" });
 			}
 			const checkExists = ATQData.otherDetails.every((othDet) =>
 				getProductOtherDetails.findIndex((row: any) => row.detail_name == othDet.detail_name) != -1 ? true : false
 			);
-			if (!checkExists) return res.api.validationErrors({ message: "One or more Product Other Detail not available" });
+			// if (!checkExists) return res.api.validationErrors({ message: "One or more Product Other Detail not available" });
 
 			// const checkOtherDetailValue = ATQData.otherDetails.every((othDet) =>
 			// 	getProductOtherDetails.findIndex((row: any) => {
@@ -86,12 +90,12 @@ export default class AddToQuoteController {
 			// 		: false
 			// );
 
-			const recordExist = await this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });
-			if (recordExist || recordExist != null) {
-				return res.api.duplicateRecord({
-					message: `Item already exist to quote`,
-				});
-			}
+			// const recordExist = await   this.service.findOne({ customer_id: req.customer.id, product_id: ATQData.product_id });
+			// if (recordExist || recordExist != null) {
+			// 	return res.api.duplicateRecord({
+			// 		message: `Item already exist to quote`,
+			// 	});
+			// }
 
 			const data = await this.service.create(ATQData);
 			res.api.create(data);
@@ -100,7 +104,7 @@ export default class AddToQuoteController {
 
 	public edit = {
 		validation: this.validation.edit,
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		controller: async (req: Request, res: Response): Promise<void> => {
 			const ATQId = req.params["id"];
 			const isValidReq = await this.service.findOne({ id: ATQId, customer_id: req.customer.id });
 
@@ -126,7 +130,7 @@ export default class AddToQuoteController {
 	};
 
 	public delete = {
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		controller: async (req: Request, res: Response): Promise<void> => {
 			const ATQId = req.params["id"];
 			const isValidReq = await this.service.findOne({
 				id: ATQId,

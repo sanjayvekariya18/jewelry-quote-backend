@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from "express";
-import { ProductService, SubcategoryService } from "../services";
+import { ProductExcelUploadService, ProductService, SubcategoryService } from "../services";
 import { ProductValidation } from "../validations";
-import { SearchProductDTO, ProductDTO } from "../dto";
-import { DuplicateRecord, NotExistHandler } from "../errorHandler";
-import { OtherDetailMaster, Products, StyleMaster, SubCategoryAttributes } from "../models";
+import { SearchProductDTO, ProductDTO, SearchProductForCustomerDTO } from "../dto";
+import { BadResponseHandler, DuplicateRecord, NotExistHandler } from "../errorHandler";
+import { OtherDetailMaster, StyleMaster, SubCategoryAttributes } from "../models";
 import fs from "fs";
 import path from "path";
 import { Op } from "sequelize";
+import { removeFile, saveFile } from "../utils/helper";
 
 export default class ProductController {
 	private service = new ProductService();
+	private excelUploadService = new ProductExcelUploadService();
 	private subcategoryService = new SubcategoryService();
 	private validations = new ProductValidation();
 
@@ -22,9 +24,10 @@ export default class ProductController {
 	};
 
 	public getAllForCustomer = {
-		validation: this.validations.getAll,
+		validation: this.validations.getAllForCustomer,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.service.getAllForCustomer(new SearchProductDTO(req.query));
+			const customer_id: string = req.customer.id;
+			const data = await this.service.getAllForCustomer(new SearchProductForCustomerDTO(req.query), customer_id);
 			return res.api.create(data);
 		},
 	};
@@ -84,6 +87,24 @@ export default class ProductController {
 			else files = [];
 
 			return res.api.create(files);
+		},
+	};
+
+	public bulkCreateExcel = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const file: any = req.files;
+
+			let filename = "";
+			if (file?.productData) {
+				let productData: any = await saveFile(file.productData, "excel");
+				filename = productData.upload_path;
+			} else {
+				throw new BadResponseHandler("File is Required");
+			}
+			const data = await this.excelUploadService.bulkCreateExcel(filename, req.authUser.id).finally(async () => {
+				await removeFile(filename);
+			});
+			return res.api.create(data);
 		},
 	};
 

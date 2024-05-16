@@ -17,7 +17,6 @@ export default class CustomerDetailsValidations {
 		customer_email: "required|string|email",
 		country_code: "required|numeric",
 		mobile_number: "required|digits:10",
-		// password: "required|string",
 		whatsapp_number: "string",
 		customer_address: "string",
 		website: "string",

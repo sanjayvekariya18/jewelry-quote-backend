@@ -1,11 +1,6 @@
-import { sequelizeConnection } from "../config/database";
 import { OtherDetailMaster } from "../models";
-import { SearchCatalogDTO } from "../dto";
-import { Op } from "sequelize";
 
 export default class OtherDetailMasterService {
-	private Sequelize = sequelizeConnection.Sequelize;
-
 	public getAll = async () => {
 		return await OtherDetailMaster.findAndCountAll({
 			attributes: ["id", "detail_name", "detail_type"],

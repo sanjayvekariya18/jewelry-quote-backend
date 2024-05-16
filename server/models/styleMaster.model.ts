@@ -6,7 +6,6 @@ export interface StyleMasterAttributes {
 	parent_id: string | null;
 	sub_category_id: string;
 	name: string;
-	// is_deleted: boolean;
 	last_updated_by: string;
 }
 
@@ -18,7 +17,6 @@ class StyleMaster extends Model<StyleMasterAttributes, StyleMasterInput> impleme
 	public parent_id!: string;
 	public sub_category_id!: string;
 	public name!: string;
-	// public is_deleted!: boolean;
 	public last_updated_by!: string;
 }
 
@@ -58,10 +56,6 @@ StyleMaster.init(
 			allowNull: false,
 			type: DataTypes.STRING,
 		},
-		// is_deleted: {
-		// 	type: DataTypes.BOOLEAN,
-		// 	defaultValue: false,
-		// },
 		last_updated_by: {
 			type: DataTypes.UUID,
 			allowNull: false,

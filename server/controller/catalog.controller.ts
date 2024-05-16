@@ -19,10 +19,30 @@ export default class CatalogController {
 		},
 	};
 
+	public getAllForCustomer = {
+		validation: this.validations.getAll,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.service.getAllForCustomer(new SearchCatalogDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
 	public findOne = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const catalogId: string = req.params["id"] as string;
 			const catalogExist = await this.service.findOne({ id: catalogId });
+			if (!catalogExist) {
+				throw new NotExistHandler("Catalog Master Not Found");
+			}
+			return res.api.create(catalogExist);
+		},
+	};
+
+	public findOneForCustomer = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const catalogId: string = req.params["id"] as string;
+			const customer_id: string = req.customer.id;
+			const catalogExist = await this.service.findOneForCustomer({ id: catalogId }, customer_id);
 			if (!catalogExist) {
 				throw new NotExistHandler("Catalog Master Not Found");
 			}

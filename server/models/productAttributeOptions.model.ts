@@ -91,13 +91,6 @@ ProductAttributeOptions.init(
 		paranoid: false,
 		freezeTableName: true,
 		timestamps: true,
-		// indexes: [
-		// 	{
-		// 		unique: false, // Set to true if you want the index to be unique
-		// 		fields: ["attribute_id", "option_id"],
-		// 		name: "idx_productAttributes_attributeId_optionId",
-		// 	},
-		// ],
 		tableName: `product_attribute_options`,
 	}
 );

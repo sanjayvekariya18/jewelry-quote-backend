@@ -18,6 +18,30 @@ export class SearchProductDTO {
 	}
 }
 
+export class SearchProductForCustomerDTO {
+	searchTxt?: string;
+	sub_category_id?: string;
+	catalog_master_id?: boolean;
+	style?: string;
+	setting_type?: string;
+	sub_setting?: string;
+	is_active?: boolean;
+	page?: number;
+	rowsPerPage?: number;
+
+	constructor(data: any) {
+		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
+		data.sub_category_id != undefined ? (this.sub_category_id = data.sub_category_id) : delete this.sub_category_id;
+		data.catalog_master_id != undefined ? (this.catalog_master_id = data.catalog_master_id) : delete this.catalog_master_id;
+		data.style != undefined ? (this.style = data.style) : delete this.style;
+		data.setting_type != undefined ? (this.setting_type = data.setting_type) : delete this.setting_type;
+		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting) : delete this.sub_setting;
+		data.is_active != "" && data.is_active != undefined ? (this.is_active = data.is_active == "true") : delete this.is_active;
+		data.page != undefined && data.page != "" ? (this.page = Number(data.page)) : delete this.page;
+		data.rowsPerPage != undefined && data.rowsPerPage != "" ? (this.rowsPerPage = Number(data.rowsPerPage)) : delete this.rowsPerPage;
+	}
+}
+
 export class ProductAttributesOptionsDTO {
 	attribute_id: string;
 	product_id?: string;
@@ -59,24 +83,26 @@ export class ProductDTO {
 	fit_type?: string;
 	lock_type?: string;
 	bail_type?: string;
+	catelog_master_id?: string;
 	attributeOptions: Array<ProductAttributesOptionsDTO>;
 	otherDetails: Array<ProductOtherDetailDTO>;
 	last_updated_by: string;
 
 	constructor(data: any) {
-		this.stock_id = data.stock_id.trim();
+		this.stock_id = data.stock_id.toString().trim();
 		this.sub_category_id = data.sub_category_id;
-		this.name = data.name.trim();
-		data.metal_type != undefined ? (this.metal_type = data.metal_type.trim()) : delete this.metal_type;
-		data.style != undefined ? (this.style = data.style.trim()) : delete this.style;
-		data.setting_type != undefined ? (this.setting_type = data.setting_type.trim()) : delete this.setting_type;
-		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting.trim()) : delete this.sub_setting;
-		data.prong_type != undefined ? (this.prong_type = data.prong_type.trim()) : delete this.prong_type;
-		data.shank_type != undefined ? (this.shank_type = data.shank_type.trim()) : delete this.shank_type;
-		data.band_type != undefined ? (this.band_type = data.band_type.trim()) : delete this.band_type;
-		data.fit_type != undefined ? (this.fit_type = data.fit_type.trim()) : delete this.fit_type;
-		data.lock_type != undefined ? (this.lock_type = data.lock_type.trim()) : delete this.lock_type;
-		data.bail_type != undefined ? (this.bail_type = data.bail_type.trim()) : delete this.bail_type;
+		this.name = data.name.toString().trim();
+		data.description != undefined ? (this.description = data.description.toString().trim()) : delete this.description;
+		data.metal_type != undefined ? (this.metal_type = data.metal_type.toString().trim()) : delete this.metal_type;
+		data.style != undefined ? (this.style = data.style.toString().trim()) : delete this.style;
+		data.setting_type != undefined ? (this.setting_type = data.setting_type.toString().trim()) : delete this.setting_type;
+		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting.toString().trim()) : delete this.sub_setting;
+		data.prong_type != undefined ? (this.prong_type = data.prong_type.toString().trim()) : delete this.prong_type;
+		data.shank_type != undefined ? (this.shank_type = data.shank_type.toString().trim()) : delete this.shank_type;
+		data.band_type != undefined ? (this.band_type = data.band_type.toString().trim()) : delete this.band_type;
+		data.fit_type != undefined ? (this.fit_type = data.fit_type.toString().trim()) : delete this.fit_type;
+		data.lock_type != undefined ? (this.lock_type = data.lock_type.toString().trim()) : delete this.lock_type;
+		data.bail_type != undefined ? (this.bail_type = data.bail_type.toString().trim()) : delete this.bail_type;
 		this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
 			(row: any) =>
 				new ProductAttributesOptionsDTO({

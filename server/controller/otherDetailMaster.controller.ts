@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { OtherDetailMasterService } from "../services";
-import { CatalogValidations } from "../validations";
 import { NotExistHandler } from "../errorHandler";
 
 export default class OtherDetailMasterController {
