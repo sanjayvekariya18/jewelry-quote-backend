@@ -34,7 +34,7 @@ export default class QuotationService {
 			include: [
 				{
 					model: QuotationProduct,
-					attributes: ["id", "quotation_id", "product_id", "qty", "price"],
+					attributes: ["id", "quotation_id", "product_id", "qty", "price", "notes"],
 					include: [
 						{
 							model: Products,
@@ -113,11 +113,27 @@ export default class QuotationService {
 			include: [
 				{
 					model: QuotationProduct,
-					attributes: ["id", "quotation_id", "product_id", "qty", "price"],
+					attributes: ["id", "quotation_id", "product_id", "qty", "price", "notes"],
 					include: [
 						{
 							model: Products,
-							attributes: ["id", "stock_id", "sub_category_id", "name", "description"],
+							attributes: [
+								"id",
+								"stock_id",
+								"sub_category_id",
+								"name",
+								"description",
+								"metal_type",
+								"style",
+								"setting_type",
+								"sub_setting",
+								"prong_type",
+								"shank_type",
+								"band_type",
+								"fit_type",
+								"lock_type",
+								"bail_type",
+							],
 							include: [{ model: SubCategory, attributes: ["id", "category_id", "name", "details", "img_url", "logo_url"] }],
 						},
 						{ model: QuotationAttributeOptions, attributes: ["id", "quotation_product_id", "attribute_name", "option_name"] },

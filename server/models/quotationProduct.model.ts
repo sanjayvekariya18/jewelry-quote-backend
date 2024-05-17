@@ -7,6 +7,7 @@ export interface QuotationProductAttribute {
 	product_id: string;
 	qty: number;
 	price: number | null;
+	notes: string;
 }
 
 export interface QuotationProductInput extends Optional<QuotationProductAttribute, "id" | "price"> {}
@@ -18,6 +19,7 @@ class QuotationProduct extends Model<QuotationProductAttribute, QuotationProduct
 	public product_id!: string;
 	public qty!: number;
 	public price!: number | null;
+	public notes!: string;
 }
 
 QuotationProduct.init(
@@ -60,6 +62,11 @@ QuotationProduct.init(
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: true,
 			defaultValue: null,
+		},
+		notes: {
+			type: DataTypes.TEXT,
+			allowNull: false,
+			defaultValue: "",
 		},
 	},
 	{
