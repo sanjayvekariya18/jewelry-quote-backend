@@ -13,6 +13,7 @@ export interface PermissionDetails {
 export interface LoggedInUserDetails {
 	id: string;
 	name: string;
+	user_type: string;
 	permissions: Array<PermissionDetails>;
 }
 
@@ -66,6 +67,7 @@ export default class AuthorizationService {
 		return {
 			id: userId,
 			name: userData?.name || "",
+			user_type: userData?.user_type || "",
 			is_active: userData?.is_active || false,
 			permissions: permissions || [],
 		};

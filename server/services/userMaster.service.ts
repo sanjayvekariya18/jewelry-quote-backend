@@ -3,6 +3,7 @@ import { ChangePasswordDTO, CreateUserDTO, EditUserDTO, SearchUserDTO } from "..
 import { UserMaster } from "../models";
 import { sequelizeConnection } from "../config/database";
 import { hashPassword } from "../utils/bcrypt.helper";
+import { USER_TYPES } from "../enum";
 
 export default class UserService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -14,6 +15,7 @@ export default class UserService {
 					[Op.or]: [{ name: { [Op.like]: `%${searchParams.searchTxt}%` } }, { email: { [Op.like]: `${searchParams.searchTxt}%` } }],
 				}),
 				id: { [Op.not]: loggedInUserId },
+				user_type: { [Op.not]: USER_TYPES.ADMIN },
 				is_deleted: false,
 				...(searchParams.is_active != undefined && {
 					is_active: searchParams.is_active,
@@ -32,7 +34,7 @@ export default class UserService {
 	public findOne = async (searchObject: any, includePassword: boolean = false) => {
 		return await UserMaster.findOne({
 			where: { ...searchObject, is_deleted: false },
-			attributes: ["id", "name", "email", "mobile_number", ...(includePassword == true ? ["password"] : []), "is_active"],
+			attributes: ["id", "name", "email", "mobile_number", "user_type", ...(includePassword == true ? ["password"] : []), "is_active"],
 			raw: true,
 		});
 	};

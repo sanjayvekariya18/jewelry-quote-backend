@@ -6,6 +6,7 @@ import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { Op } from "sequelize";
 import { comparePassword } from "../utils/bcrypt.helper";
 import { UserMaster } from "../models";
+import { USER_TYPES } from "../enum";
 
 export default class UserMasterController {
 	private service = new UserMasterService();
@@ -56,7 +57,7 @@ export default class UserMasterController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const userData = new EditUserDTO(req.body);
 			const userId: string = req.params["id"] as string;
-			const userExist = await UserMaster.findByPk(userId);
+			const userExist = await UserMaster.findOne({ where: { id: userId, user_type: USER_TYPES.USER } });
 			if (!userExist) {
 				throw new NotExistHandler("User Not Found");
 			}
@@ -82,7 +83,7 @@ export default class UserMasterController {
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const userId: string = req.params["id"] as string;
-			const userExist = await UserMaster.findByPk(userId);
+			const userExist = await UserMaster.findOne({ where: { id: userId, user_type: USER_TYPES.USER } });
 			if (!userExist) {
 				throw new NotExistHandler("User Not Found");
 			}
@@ -131,7 +132,7 @@ export default class UserMasterController {
 	public toggleUserActive = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const userId: string = req.params["id"] as string;
-			const userExist = await UserMaster.findByPk(userId);
+			const userExist = await UserMaster.findOne({ where: { id: userId, user_type: USER_TYPES.USER } });
 			if (!userExist) {
 				throw new NotExistHandler("User Not Found");
 			}

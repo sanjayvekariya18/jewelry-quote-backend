@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
+import { USER_TYPES } from "../enum";
 
 export interface UserMasterAttributes {
 	id: string;
@@ -7,12 +8,14 @@ export interface UserMasterAttributes {
 	email: string;
 	mobile_number: string | null;
 	password: string;
+	user_type: USER_TYPES;
 	is_active: boolean;
 	is_deleted: boolean;
 	last_updated_by: string;
 }
 
-export interface UserMasterInput extends Optional<UserMasterAttributes, "id" | "mobile_number" | "is_active" | "is_deleted" | "last_updated_by"> {}
+export interface UserMasterInput
+	extends Optional<UserMasterAttributes, "id" | "mobile_number" | "is_active" | "user_type" | "is_deleted" | "last_updated_by"> {}
 export interface UserMasterOutput extends Required<UserMasterAttributes> {}
 
 class UserMaster extends Model<UserMasterAttributes, UserMasterInput> implements UserMasterAttributes {
@@ -21,6 +24,7 @@ class UserMaster extends Model<UserMasterAttributes, UserMasterInput> implements
 	public email!: string;
 	public mobile_number!: string;
 	public password!: string;
+	public user_type!: USER_TYPES;
 	public is_active!: boolean;
 	public is_deleted!: boolean;
 	public last_updated_by!: string;
@@ -49,6 +53,11 @@ UserMaster.init(
 		password: {
 			type: DataTypes.STRING,
 			allowNull: false,
+		},
+		user_type: {
+			type: DataTypes.ENUM(...Object.values(USER_TYPES)),
+			allowNull: false,
+			defaultValue: USER_TYPES.USER,
 		},
 		is_active: {
 			type: DataTypes.BOOLEAN,

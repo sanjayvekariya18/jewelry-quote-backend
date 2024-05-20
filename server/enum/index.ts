@@ -1,3 +1,8 @@
+export enum USER_TYPES {
+	ADMIN = "admin",
+	USER = "user",
+}
+
 export enum PERMISSIONS {
 	USERS = "users",
 	USER_PERMISSIONS = "user_permissions",

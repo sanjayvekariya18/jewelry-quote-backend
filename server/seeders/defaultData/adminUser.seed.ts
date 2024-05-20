@@ -4,6 +4,7 @@ import { uuidv4 } from "../../utils/helper";
 import logger from "../../config/logger";
 import { sequelizeConnection } from "../../config/database";
 import { UserMaster, UserMasterInput } from "../../models";
+import { USER_TYPES } from "../../enum";
 
 const adminUserSeed = async (transaction: Transaction) => {
 	const adminEmail = "admin@gmail.com";
@@ -16,6 +17,7 @@ const adminUserSeed = async (transaction: Transaction) => {
 			name: "Admin",
 			email: adminEmail,
 			password: hashedPassword,
+			user_type: USER_TYPES.ADMIN,
 			last_updated_by: dummyUserID,
 		};
 

@@ -94,39 +94,23 @@ export default class ProductService {
 	public getAllForCustomer = async (searchParams: SearchProductForCustomerDTO, customer_id: string) => {
 		return await Products.findAndCountAll({
 			where: {
-				...(searchParams.searchTxt && {
-					name: {
-						[Op.like]: "%" + searchParams.searchTxt + "%",
-					},
-				}),
-				...(searchParams.sub_category_id && {
-					sub_category_id: searchParams.sub_category_id,
-				}),
+				...(searchParams.searchTxt && { name: { [Op.like]: "%" + searchParams.searchTxt + "%" } }),
+				...(searchParams.sub_category_id && { sub_category_id: searchParams.sub_category_id }),
 				...(searchParams.catalog_master_id && {
 					id: {
-						[Op.in]: this.Sequelize.literal(`
-                                    (SELECT cp.product_id FROM catalog_products cp
-                                    WHERE cp.catalog_id = '${searchParams.catalog_master_id}')
-                                `),
+						[Op.in]: this.Sequelize.literal(
+							`(SELECT cp.product_id FROM catalog_products cp WHERE cp.catalog_id = '${searchParams.catalog_master_id}')`
+						),
 					},
 				}),
-				...(searchParams.style && {
-					style: searchParams.style,
-				}),
-				...(searchParams.setting_type && {
-					setting_type: searchParams.setting_type,
-				}),
-				...(searchParams.sub_setting && {
-					sub_setting: searchParams.sub_setting,
-				}),
+				...(searchParams.style && { style: { [Op.in]: searchParams.style } }),
+				...(searchParams.setting_type && { setting_type: { [Op.in]: searchParams.setting_type } }),
+				...(searchParams.sub_setting && { sub_setting: { [Op.in]: searchParams.sub_setting } }),
 				is_deleted: false,
 			},
 			distinct: true,
 			include: [
-				{
-					model: SubCategory,
-					attributes: ["id", "name"],
-				},
+				{ model: SubCategory, attributes: ["id", "name"] },
 				{
 					model: ProductAttributeOptions,
 					attributes: ["id", "product_id", "attribute_id", "option_id"],
@@ -185,11 +169,8 @@ export default class ProductService {
 					"isAddedToWishList",
 				],
 			],
-			...(searchParams.page != undefined &&
-				searchParams.rowsPerPage != undefined && {
-					offset: searchParams.page * searchParams.rowsPerPage,
-					limit: searchParams.rowsPerPage,
-				}),
+			offset: searchParams.page * searchParams.rowsPerPage,
+			limit: searchParams.rowsPerPage,
 		});
 	};
 

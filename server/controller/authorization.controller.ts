@@ -53,6 +53,7 @@ export default class AuthorizationController {
 								const tokenPayload = {
 									id: userData.id,
 									name: userData.name,
+									user_type: userData.user_type,
 									permissions: permissions,
 								};
 								await this.tokenServices
