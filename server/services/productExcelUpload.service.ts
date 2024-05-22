@@ -15,7 +15,7 @@ import {
 	SubcategoryAttribute,
 } from "../models";
 import styleMasterJsonData from "./../seeders/defaultData/styleMaster.json";
-import { ProductDTO } from "../dto";
+import { CreateCatalogDTO, ProductDTO } from "../dto";
 
 export default class ProductExcelUploadService {
 	public bulkCreateExcel = async (filename: string, loggedInUserId: string) => {
@@ -133,7 +133,7 @@ export default class ProductExcelUploadService {
 
 			const allProducts = await Products.findAll({ where: { is_deleted: false }, raw: true, transaction });
 			const allSubCategory = await SubCategory.findAll({ where: { is_deleted: false }, raw: true, transaction });
-			const allCatalogues = await CatalogMaster.findAll({ where: { is_deleted: false }, raw: true, transaction });
+			// const allCatalogues = await CatalogMaster.findAll({ where: { is_deleted: false }, raw: true, transaction });
 			const allOtherDetails = await OtherDetailMaster.findAll({ raw: true, transaction });
 			const allAtttributeOptionData: Array<{ attribute_id: string; name: string; option_id: string; optionname: string }> =
 				await sequelizeConnection.query(
@@ -170,14 +170,6 @@ export default class ProductExcelUploadService {
 					}
 				} else {
 					productErrorArr.push({ ["sub_category"]: "Sub Category is required" });
-				}
-
-				let findCatelogueId;
-				if (product.catalogue_name) {
-					findCatelogueId = allCatalogues.find((row) => row.name.toString().toLowerCase() == product.catalogue_name.toString().toLowerCase());
-					if (findCatelogueId == null) {
-						productErrorArr.push({ ["catalogue_name"]: "Catalogue Name not found" });
-					}
 				}
 
 				if (!product.name) productErrorArr.push({ ["name"]: "Name is required" });
@@ -399,7 +391,7 @@ export default class ProductExcelUploadService {
 					otherDetails: otherDetailData,
 				});
 
-				newProductData.push({ ...newProduct, catelog_master_id: findCatelogueId?.id });
+				newProductData.push({ ...newProduct, catelog_master: product.catalogue_name?.toString().toLowerCase() });
 
 				for (const error1 of productErrorArr) {
 					if (!error.product[i]) error.product[i] = [error1];
@@ -413,15 +405,35 @@ export default class ProductExcelUploadService {
 
 					if (oldProductData == null) {
 						await Products.create(productData, { transaction }).then(async (newProductData) => {
-							if (productData.catelog_master_id) {
-								await CatalogProducts.create(
-									{
-										catalog_id: productData.catelog_master_id,
-										product_id: newProductData.id,
+							if (productData.catelog_master) {
+								const findCatalogExists = await CatalogMaster.findOne({ where: { name: productData.catelog_master }, raw: true, transaction });
+								if (findCatalogExists != null) {
+									await CatalogProducts.create(
+										{
+											catalog_id: findCatalogExists.id,
+											product_id: newProductData.id,
+											last_updated_by: productData.last_updated_by,
+										},
+										{ transaction }
+									);
+								} else {
+									let newCatalogData: CreateCatalogDTO = {
+										name: productData.catelog_master,
+										catalog_products: [newProductData.id],
 										last_updated_by: productData.last_updated_by,
-									},
-									{ transaction }
-								);
+									};
+									await CatalogMaster.create(newCatalogData, { transaction }).then(async (data) => {
+										let catPro = newCatalogData.catalog_products.map((product_id) => {
+											return {
+												catalog_id: data.id,
+												product_id,
+												last_updated_by: newCatalogData.last_updated_by,
+											};
+										});
+
+										await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+									});
+								}
 							}
 
 							let productAttributeOption1 = productData.attributeOptions.map((data) => {
@@ -438,17 +450,39 @@ export default class ProductExcelUploadService {
 						await Products.update(productData, { where: { id: oldProductData.id }, transaction });
 						await ProductAttributeOptions.destroy({ where: { product_id: oldProductData.id }, transaction });
 						await ProductOtherDetail.destroy({ where: { product_id: oldProductData.id }, transaction });
-						if (productData.catelog_master_id) {
-							await CatalogProducts.destroy({ where: { catalog_id: productData.catelog_master_id, product_id: oldProductData.id }, transaction });
-							await CatalogProducts.create(
-								{
-									catalog_id: productData.catelog_master_id,
-									product_id: oldProductData.id,
+
+						if (productData.catelog_master) {
+							const findCatalogExists = await CatalogMaster.findOne({ where: { name: productData.catelog_master }, raw: true, transaction });
+							if (findCatalogExists != null) {
+								await CatalogProducts.destroy({ where: { catalog_id: findCatalogExists.id, product_id: oldProductData.id }, transaction });
+								await CatalogProducts.create(
+									{
+										catalog_id: findCatalogExists.id,
+										product_id: oldProductData.id,
+										last_updated_by: productData.last_updated_by,
+									},
+									{ transaction }
+								);
+							} else {
+								let newCatalogData: CreateCatalogDTO = {
+									name: productData.catelog_master,
+									catalog_products: [oldProductData.id],
 									last_updated_by: productData.last_updated_by,
-								},
-								{ transaction }
-							);
+								};
+								await CatalogMaster.create(newCatalogData, { transaction }).then(async (data) => {
+									let catPro = newCatalogData.catalog_products.map((product_id) => {
+										return {
+											catalog_id: data.id,
+											product_id,
+											last_updated_by: newCatalogData.last_updated_by,
+										};
+									});
+
+									await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+								});
+							}
 						}
+
 						let productAttributeOption1 = productData.attributeOptions.map((data) => {
 							return { ...data, product_id: oldProductData.id };
 						});
