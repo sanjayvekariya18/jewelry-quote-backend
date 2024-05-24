@@ -11,5 +11,6 @@ router.get("/users", use(controller.users.controller));
 router.get("/customers", use(controller.customers.controller));
 router.get("/attributes", use(controller.attributes.controller));
 router.get("/options", use(controller.options.controller));
+router.get("/products", use(controller.products.controller));
 
 export default router;

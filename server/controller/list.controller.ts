@@ -42,4 +42,11 @@ export default class ListController {
 			return res.api.create(data);
 		},
 	};
+
+	public products = {
+		controller: async (req: Request, res: Response): Promise<void> => {
+			const data = await this.service.products();
+			return res.api.create(data);
+		},
+	};
 }

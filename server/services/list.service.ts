@@ -1,5 +1,5 @@
 import { sequelizeConnection } from "../config/database";
-import { Attributes, Category, CustomerDetails, Options, SubCategory, UserMaster } from "../models";
+import { Attributes, Category, CustomerDetails, Options, Products, SubCategory, UserMaster } from "../models";
 
 export default class ListService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -62,6 +62,17 @@ export default class ListService {
 	public options = async () => {
 		return await Options.findAll({
 			where: { is_deleted: false },
+			attributes: [
+				[this.Sequelize.col("id"), "value"],
+				[this.Sequelize.col("name"), "label"],
+			],
+			order: [["name", "ASC"]],
+		});
+	};
+
+	public products = async () => {
+		return await Products.findAll({
+			where: { is_deleted: false, is_active: true },
 			attributes: [
 				[this.Sequelize.col("id"), "value"],
 				[this.Sequelize.col("name"), "label"],
