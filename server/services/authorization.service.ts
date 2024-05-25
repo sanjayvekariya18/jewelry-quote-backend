@@ -64,6 +64,7 @@ export default class AuthorizationService {
 			} as PermissionDetails;
 		});
 
+		if (userData == null) return null;
 		return {
 			id: userId,
 			name: userData?.name || "",

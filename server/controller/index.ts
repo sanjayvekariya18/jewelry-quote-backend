@@ -15,3 +15,4 @@ export { default as AddToQuoteController } from "./addToQuote.controller";
 export { default as QuotationController } from "./quotation.controller";
 export { default as StyleMasterController } from "./styleMaster.controller";
 export { default as OtherDetailMasterController } from "./otherDetailMaster.controller";
+export { default as DashboardController } from "./dashboard.controller";

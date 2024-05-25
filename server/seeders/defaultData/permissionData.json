@@ -9,5 +9,6 @@
 	{ "permissionName": "quotation", "permissionGroup": "quotation" },
 	{ "permissionName": "attributes", "permissionGroup": "attributes" },
 	{ "permissionName": "options", "permissionGroup": "options" },
-	{ "permissionName": "style_master", "permissionGroup": "style_master" }
+	{ "permissionName": "style_master", "permissionGroup": "style_master" },
+	{ "permissionName": "dashboard", "permissionGroup": "dashboard" }
 ]

@@ -18,4 +18,5 @@ export { default as StyleMasterService } from "./styleMaster.service";
 export { default as EmailService } from "./email.service";
 export { default as OtherDetailMasterService } from "./otherDetailMaster.service";
 export { default as ProductExcelUploadService } from "./productExcelUpload.service";
+export { default as DashboardService } from "./dashboard.service";
 export { default as API } from "./axios.service";

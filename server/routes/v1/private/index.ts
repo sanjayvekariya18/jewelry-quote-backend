@@ -13,6 +13,7 @@ import optionRoutes from "./options.route";
 import quotationRoutes from "./quotation.route";
 import styleMasterRoutes from "./styleMaster.route";
 import otherDetailMasterRoutes from "./otherDetailMaster.route";
+import dashboardRoutes from "./dashboard.route";
 import { AuthorizationController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
@@ -37,6 +38,7 @@ router.use("/options", UserPermissionsCheck(PERMISSIONS.OPTIONS), optionRoutes);
 router.use("/quotation", UserPermissionsCheck(PERMISSIONS.QUOTATION), quotationRoutes);
 router.use("/style-master", UserPermissionsCheck(PERMISSIONS.STYLE_MASTER), styleMasterRoutes);
 router.use("/other-details", otherDetailMasterRoutes);
+router.use("/dashboard", UserPermissionsCheck(PERMISSIONS.DASHBOARD), dashboardRoutes);
 
 router.use("/list", listRoutes);
 
