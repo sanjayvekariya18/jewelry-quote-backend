@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import { AddToQuoteService, QuotationService } from "../services";
 import { QuotationValidations } from "../validations";
 import { QuotationDTO, SearchQuotationDTO } from "../dto";
-import { NotExistHandler } from "../errorHandler";
+import { BadResponseHandler, NotExistHandler } from "../errorHandler";
 import { QUOTATION_STATUS } from "../enum";
-import { QuotationProduct } from "../models";
+import { QuotationMaster, QuotationProduct } from "../models";
 
 export default class QuotationController {
 	private service = new QuotationService();
@@ -94,6 +94,11 @@ export default class QuotationController {
 			const quotationExist = await QuotationProduct.findOne({ where: { id: quotation_product_id } });
 			if (!quotationExist) {
 				throw new NotExistHandler("Quotation Product Not Found");
+			}
+
+			const checkPendingStatus = await QuotationMaster.findOne({ where: { id: quotationExist.quotation_id } });
+			if (checkPendingStatus?.status == QUOTATION_STATUS.COMPLETED) {
+				throw new BadResponseHandler("Quotation's status is completed.");
 			}
 
 			const data = await this.service.changeProductPrice(quotation_product_id, price);

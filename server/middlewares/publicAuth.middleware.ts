@@ -8,7 +8,7 @@ import { TokenService, CustomerDetailsService } from "../services";
 const tokenService = new TokenService();
 const customerService = new CustomerDetailsService();
 
-const PublicTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const PublicTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 	if (req.url == "/login" || req.url == "/registration") {
 		return next();
 	}
@@ -17,7 +17,7 @@ const PublicTokenMiddleware = (req: Request, res: Response, next: NextFunction) 
 	if (authorization) {
 		authorization = authorization.replace("Bearer ", "");
 		if (authorization && authorization != "null" && authorization != null) {
-			return tokenService
+			return await tokenService
 				.decode(authorization)
 				.then(async (payload: LoggedInCustomerTokenPayload) => {
 					if (!payload?.customer?.id) {
