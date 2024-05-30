@@ -85,7 +85,7 @@ export default class CustomerDetailsController {
 				password: req.body.password.toString().trim(),
 			};
 			await CustomerDetails.findOne({
-				where: { login_id: customer_credential.login_id },
+				where: { login_id: customer_credential.login_id, is_deleted: false },
 				raw: true,
 			})
 				.then(async (customerData) => {
