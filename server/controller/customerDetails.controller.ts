@@ -274,7 +274,7 @@ export default class CustomerDetailsController {
 						});
 				})
 				.catch(() => {
-					return res.api.unauthorized({ message: "Old Password Doesn't matched" });
+					return res.api.validationErrors({ message: "Old Password Doesn't matched" });
 				});
 		},
 	};
