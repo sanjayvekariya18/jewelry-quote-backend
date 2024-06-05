@@ -5,6 +5,7 @@ import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "../dto";
 import { FormErrorsHandler, UnauthorizedUserHandler } from "../errorHandler";
 import { OtherDetailMaster, ProductAttributeOptions, ProductOtherDetail, Products } from "../models";
 import { sequelizeConnection } from "../config/database";
+import ValidationHandler from "../errorHandler/validation.error.handler";
 
 export default class AddToQuoteController {
 	private service = new AddToQuoteService();
@@ -124,7 +125,7 @@ export default class AddToQuoteController {
 				const data = await this.service.edit(ATQId, ATQData);
 				return res.api.create(data);
 			} else {
-				throw new UnauthorizedUserHandler("Unauthorized request");
+				throw new ValidationHandler("Unauthorized request");
 			}
 		},
 	};
@@ -144,7 +145,7 @@ export default class AddToQuoteController {
 					});
 				});
 			} else {
-				throw new UnauthorizedUserHandler("Unauthorized request");
+				throw new ValidationHandler("Unauthorized request");
 			}
 		},
 	};
