@@ -40,7 +40,7 @@ router.use("/quotation", UserPermissionsCheck(PERMISSIONS.QUOTATION), quotationR
 router.use("/style-master", UserPermissionsCheck(PERMISSIONS.STYLE_MASTER), styleMasterRoutes);
 router.use("/other-details", otherDetailMasterRoutes);
 router.use("/dashboard", UserPermissionsCheck(PERMISSIONS.DASHBOARD), dashboardRoutes);
-router.use("/home-page-setup", homePageSetupRoutes);
+router.use("/home-page-setup", UserPermissionsCheck(PERMISSIONS.HOME_PAGE_SETUP), homePageSetupRoutes);
 
 router.use("/list", listRoutes);
 

@@ -16,6 +16,7 @@ export enum PERMISSIONS {
 	QUOTATION = "quotation",
 	STYLE_MASTER = "style_master",
 	DASHBOARD = "dashboard",
+	HOME_PAGE_SETUP = "home_page_setup",
 }
 
 export enum QUOTATION_STATUS {
