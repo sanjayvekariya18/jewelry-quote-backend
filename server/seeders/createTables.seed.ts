@@ -9,6 +9,7 @@ import {
 	CatalogProducts,
 	Category,
 	CustomerDetails,
+	HomePageSetup,
 	Options,
 	OtherDetailMaster,
 	PermissionMaster,
@@ -229,6 +230,14 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`QuotationOtherDetail Table Error : ${error}`);
+		});
+
+	await HomePageSetup.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`HomePageSetup Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`HomePageSetup Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

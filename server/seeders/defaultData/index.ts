@@ -13,6 +13,7 @@ import subcategorySeed from "./subcategory.seed";
 import styleMasterSeed from "./styleMaster.seed";
 import otherDetailMasterSeed from "./otherDetailMaster.seed";
 import subCategoryAttributesSeed from "./subCategoryAttributes.seed";
+import homePageSetupSeed from "./home_page_setup.seed";
 
 class DataSeed {
 	static async run() {
@@ -38,6 +39,7 @@ class DataSeed {
 				await subCategoryAttributesSeed(transaction, adminUser.id);
 				await styleMasterSeed(transaction, adminUser.id);
 				await otherDetailMasterSeed(transaction, adminUser.id);
+				await homePageSetupSeed(transaction, adminUser.id);
 			} catch (error) {
 				transaction.rollback();
 				logger.error(`Error occurred in seeder : ${error}`);

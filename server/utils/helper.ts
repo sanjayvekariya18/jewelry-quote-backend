@@ -188,3 +188,8 @@ export const generateRandomDigitNumber = (digits: number): string => {
 	const max = Number("9" + "9".repeat(digits - 1));
 	return (Math.floor(Math.random() * (max - min + 1)) + min)?.toString();
 };
+
+export const fileType = (files: UploadedFile, arr: any[]) => {
+	const array_of_allowed_file_types = arr;
+	return array_of_allowed_file_types.includes(files.mimetype);
+};

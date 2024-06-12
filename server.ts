@@ -75,7 +75,12 @@ app.use(xss());
 app.use(compression());
 
 // file upload
-app.use(fileUpload({ createParentPath: true }));
+app.use(
+	fileUpload({
+		createParentPath: true,
+		parseNested: true,
+	})
+);
 
 // Middleware
 setApiResponse(app);
