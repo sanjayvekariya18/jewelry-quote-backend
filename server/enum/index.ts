@@ -27,3 +27,12 @@ export enum OTHER_DETAIL_TYPES {
 	LABEL = "label",
 	TEXTBOX = "textbox",
 }
+
+export enum HOME_PAGE_SECTIONS {
+	SLIDER_SECTION = "slider_section",
+	BANNER_SECTION = "banner_section",
+	ABOUT_US_SECTION = "about_us_section",
+	OUR_CATEGORY_SECTION = "our_category_section",
+	BOTTOM_SECTION = "bottom_section",
+	SPECIAL_OFFERS = "special_offers",
+}

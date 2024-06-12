@@ -53,6 +53,16 @@ import { ATQOtherDetailAttribute, ATQOtherDetailInput, ATQOtherDetailOutput } fr
 import { OtherDetailMasterAttribute, OtherDetailMasterInput, OtherDetailMasterOutput } from "./otherDetailMaster.model";
 import { ProductOtherDetailAttribute, ProductOtherDetailInput, ProductOtherDetailOutput } from "./productOtherDetail.model";
 import { QuotationOtherDetailAttribute, QuotationOtherDetailInput, QuotationOtherDetailOutput } from "./quotationOtherDetail.model";
+import HomePageSetup, {
+	AboutUsSection,
+	BannerData,
+	BottomSection,
+	HomePageSetupAttributes,
+	HomePageSetupInput,
+	HomePageSetupOutput,
+	SliderSection,
+	SpecialOffersData,
+} from "./home_page_setup.model";
 
 export {
 	UserMasterAttributes,
@@ -131,4 +141,13 @@ export {
 	QuotationOtherDetailAttribute,
 	QuotationOtherDetailInput,
 	QuotationOtherDetailOutput,
+	HomePageSetup,
+	AboutUsSection,
+	BannerData,
+	BottomSection,
+	HomePageSetupAttributes,
+	HomePageSetupInput,
+	HomePageSetupOutput,
+	SliderSection,
+	SpecialOffersData,
 };

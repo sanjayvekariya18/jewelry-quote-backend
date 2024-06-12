@@ -20,3 +20,4 @@ export { default as OtherDetailMasterService } from "./otherDetailMaster.service
 export { default as ProductExcelUploadService } from "./productExcelUpload.service";
 export { default as DashboardService } from "./dashboard.service";
 export { default as API } from "./axios.service";
+export { default as HomePageSetupService } from "./home_page_setup.service";

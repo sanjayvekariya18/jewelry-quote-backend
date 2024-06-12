@@ -14,6 +14,7 @@ import quotationRoutes from "./quotation.route";
 import styleMasterRoutes from "./styleMaster.route";
 import otherDetailMasterRoutes from "./otherDetailMaster.route";
 import dashboardRoutes from "./dashboard.route";
+import homePageSetupRoutes from "./home_page_setup.route";
 import { AuthorizationController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
@@ -39,6 +40,7 @@ router.use("/quotation", UserPermissionsCheck(PERMISSIONS.QUOTATION), quotationR
 router.use("/style-master", UserPermissionsCheck(PERMISSIONS.STYLE_MASTER), styleMasterRoutes);
 router.use("/other-details", otherDetailMasterRoutes);
 router.use("/dashboard", UserPermissionsCheck(PERMISSIONS.DASHBOARD), dashboardRoutes);
+router.use("/home-page-setup", homePageSetupRoutes);
 
 router.use("/list", listRoutes);
 

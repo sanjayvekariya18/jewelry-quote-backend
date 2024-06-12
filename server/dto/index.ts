@@ -12,6 +12,20 @@ import { OptionsDTO, SearchOptionsDTO } from "./options.dto";
 import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "./addToQuote.dto";
 import { SearchQuotationDTO, QuotationDTO, QuotationProductsDTO } from "./quotation.dto";
 import { SearchStyleMasterDTO } from "./styleMaster.dto";
+import {
+	SliderSectionDTO,
+	AboutUsSectionDTO,
+	BannerDataDTO,
+	BottomSectionDTO,
+	UpdateAboutUsSectionDTO,
+	UpdateBannerDataDTO,
+	UpdateBottomSectionDTO,
+	UpdateOurCategorySectionDTO,
+	UpdateSliderSectionDTO,
+	SpecialOffersDataDTO,
+	UpdateSpecialOffersDataDTO,
+} from "./home_page_setup.dto";
+
 export {
 	SearchProductForCustomerDTO,
 	ToggleUserPermissionDTO,
@@ -48,4 +62,15 @@ export {
 	QuotationDTO,
 	QuotationProductsDTO,
 	SearchStyleMasterDTO,
+	SliderSectionDTO,
+	AboutUsSectionDTO,
+	BannerDataDTO,
+	BottomSectionDTO,
+	UpdateAboutUsSectionDTO,
+	UpdateBannerDataDTO,
+	UpdateBottomSectionDTO,
+	UpdateOurCategorySectionDTO,
+	UpdateSliderSectionDTO,
+	SpecialOffersDataDTO,
+	UpdateSpecialOffersDataDTO,
 };
