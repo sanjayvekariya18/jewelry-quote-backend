@@ -309,6 +309,18 @@ export default class HomePageSetupController {
 					}
 				});
 			}
+			if (file.image1) {
+				await saveFile(file.image1, "home_page").then((file_path: any) => {
+					tableData.value.our_mission_img = file_path.upload_path;
+				});
+			} else {
+				await this.service.findOne(HOME_PAGE_SECTIONS.BOTTOM_SECTION).then((data) => {
+					if (data) {
+						const old_about_us = data.value as BottomSection;
+						tableData.value.our_mission_img = old_about_us.our_mission_img;
+					}
+				});
+			}
 
 			const data = await this.service.update(tableData);
 			return res.api.create(data);

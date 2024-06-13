@@ -37,6 +37,7 @@ export interface BottomSection {
 	text_content: string;
 	our_expertise_img: string;
 	our_vision_content: string;
+	our_mission_img: string;
 	our_mission_content: string;
 }
 

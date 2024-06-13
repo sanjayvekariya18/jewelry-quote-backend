@@ -70,12 +70,14 @@ export class BottomSectionDTO implements BottomSection {
 	text_content: string;
 	our_expertise_img: string;
 	our_vision_content: string;
+	our_mission_img: string;
 	our_mission_content: string;
 
 	constructor(data: any) {
 		this.our_expertise_img = "";
 		this.text_content = data.text_content;
 		this.our_vision_content = data.our_vision_content;
+		this.our_mission_img = "";
 		this.our_mission_content = data.our_mission_content;
 	}
 }
