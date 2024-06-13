@@ -130,7 +130,12 @@ export default class HomePageSetupController {
 					if (slider.file_name) {
 						let file_to_upload = null;
 						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => row.md5 == slider.file_name);
+							const file_index = req.files.image.findIndex((row) => {
+								if (row == undefined) {
+									return false;
+								}
+								return row.md5 == slider.file_name;
+							});
 							if (file_index > -1) {
 								file_to_upload = req.files.image[file_index];
 							}
@@ -185,7 +190,12 @@ export default class HomePageSetupController {
 					if (banner.file_name) {
 						let file_to_upload = null;
 						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => row.md5 == banner.file_name);
+							const file_index = req.files.image.findIndex((row) => {
+								if (row == undefined) {
+									return false;
+								}
+								return row.md5 == banner.file_name;
+							});
 							if (file_index > -1) {
 								file_to_upload = req.files.image[file_index];
 							}
@@ -264,7 +274,12 @@ export default class HomePageSetupController {
 					if (category.file_name) {
 						let file_to_upload = null;
 						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => row.md5 == category.file_name);
+							const file_index = req.files.image.findIndex((row) => {
+								if (row == undefined) {
+									return false;
+								}
+								return row.md5 == category.file_name;
+							});
 							if (file_index > -1) {
 								file_to_upload = req.files.image[file_index];
 							}
@@ -355,7 +370,12 @@ export default class HomePageSetupController {
 					if (offers.file_name) {
 						let file_to_upload = null;
 						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => row.md5 == offers.file_name);
+							const file_index = req.files.image.findIndex((row) => {
+								if (row == undefined) {
+									return false;
+								}
+								return row.md5 == offers.file_name;
+							});
 							if (file_index > -1) {
 								file_to_upload = req.files.image[file_index];
 							}
@@ -378,8 +398,8 @@ export default class HomePageSetupController {
 				}
 			}
 
-			const data = await this.service.update(tableData);
-			return res.api.create(data);
+			// const data = await this.service.update(tableData);
+			// return res.api.create(data);
 		},
 	};
 }
