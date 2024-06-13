@@ -87,6 +87,7 @@ const bottom_section = {
 	text_content: "",
 	our_expertise_img: "",
 	our_vision_content: "Empowering Elegance, Illuminating Partnerships: Redefining Luxury for a Global Stage.",
+	our_mission_img: "",
 	our_mission_content:
 		"Our mission at Venezia Jewels is to curate and deliver the epitome of luxury through our exquisite diamond jewellery, meticulously crafted to perfection. With a steadfast dedication to quality, innovation, and integrity, we strive to exceed the expectations of our B2B partners and clients alike, fostering enduring relationships built on trust and excellence. Guided by our passion for timeless elegance and inspired by the vibrant spirit of Dubai, we aim to illuminate the world with the brilliance of our creations, setting new standards of sophistication and allure in the diamond jewellery industry.",
 };
