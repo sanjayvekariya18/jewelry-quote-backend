@@ -7,6 +7,7 @@ export default class HomePageSetupValidations {
 
 	public updateBottomSection = {
 		image: "mimes:png,jpg,jpeg,webp",
+		image1: "mimes:png,jpg,jpeg,webp",
 		text_content: "required|string",
 		our_vision_content: "required|string",
 		our_mission_content: "required|string",
