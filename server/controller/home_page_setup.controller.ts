@@ -398,8 +398,8 @@ export default class HomePageSetupController {
 				}
 			}
 
-			// const data = await this.service.update(tableData);
-			// return res.api.create(data);
+			const data = await this.service.update(tableData);
+			return res.api.create(data);
 		},
 	};
 }
