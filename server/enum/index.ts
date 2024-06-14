@@ -37,3 +37,11 @@ export enum HOME_PAGE_SECTIONS {
 	BOTTOM_SECTION = "bottom_section",
 	SPECIAL_OFFERS = "special_offers",
 }
+
+export enum DESCRIPTION_OF_BUSINESS {
+	RETAILER = "retailer",
+	WHOLESALER = "wholesaler",
+	DEALER = "dealer",
+	FINANCIER = "financier",
+	OTHER = "other",
+}
