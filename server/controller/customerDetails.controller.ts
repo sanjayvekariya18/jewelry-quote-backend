@@ -9,6 +9,7 @@ import { comparePassword, hashPassword } from "../utils/bcrypt.helper";
 import { Op } from "sequelize";
 import { generateRandomDigitNumber, removeFile, saveFile } from "../utils/helper";
 import randomstring from "randomstring";
+import ValidationHandler from "../errorHandler/validation.error.handler";
 
 export default class CustomerDetailsController {
 	private service = new CustomerDetailsService();
@@ -56,6 +57,12 @@ export default class CustomerDetailsController {
 
 			if (errorMessage.length > 0) {
 				throw new DuplicateRecord(`${errorMessage.join(", ")} already exists`);
+			}
+
+			if (customerData.address_map_link) {
+				if (!customerData.address_map_link.startsWith("https://www.google.com/maps/")) {
+					throw new ValidationHandler(`Google Address Link is Not Valid`);
+				}
 			}
 
 			const file: any = req.files;
@@ -213,6 +220,13 @@ export default class CustomerDetailsController {
 			if (errorMessage.length > 0) {
 				throw new DuplicateRecord(`${errorMessage.join(", ")} already exists`);
 			}
+
+			if (customerData.address_map_link) {
+				if (!customerData.address_map_link.startsWith("https://www.google.com/maps/")) {
+					throw new ValidationHandler(`Google Address Link is Not Valid`);
+				}
+			}
+
 			const file: any = req.files;
 			if (file) {
 				const oldImgData = await this.service.findOne({ id: customer_id });
