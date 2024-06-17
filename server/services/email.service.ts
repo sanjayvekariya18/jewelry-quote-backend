@@ -22,6 +22,7 @@ export default class EmailService {
 					user: config.sys_email_details.email,
 					pass: config.sys_email_details.password,
 				},
+				secure: true,
 			},
 			{ from: config.sys_email_details.email }
 		);
