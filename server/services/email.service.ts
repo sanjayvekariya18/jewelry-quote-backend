@@ -14,7 +14,15 @@ export default class EmailService {
 
 	constructor() {
 		this.transporter = nodemailer.createTransport(
-			{ service: "Gmail", auth: { user: config.sys_email_details.email, pass: config.sys_email_details.password } },
+			{
+				port: 587,
+				service: "Gmail",
+				host: "smtp.gmail.com",
+				auth: {
+					user: config.sys_email_details.email,
+					pass: config.sys_email_details.password,
+				},
+			},
 			{ from: config.sys_email_details.email }
 		);
 	}
