@@ -56,8 +56,6 @@ export default class HomePageSetupController {
 			}
 			for (let index = 0; index < array_data.length; index++) {
 				const slider = { ...array_data[index] } as SliderSection;
-				console.log(slider);
-
 				if (slider.title == undefined) errors.push(`Title is required at position ${index + 1}`);
 				if (slider.button_text == undefined) errors.push(`Button Text is required at position ${index + 1}`);
 				if (slider.button_link == undefined) errors.push(`Button Link is required at position ${index + 1}`);
