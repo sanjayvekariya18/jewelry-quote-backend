@@ -1,15 +1,15 @@
 export default class HomePageSetupValidations {
 	public updateAboutUsSection = {
-		title: "required|string",
-		content: "required|string",
+		title: "present|string",
+		content: "present|string",
 		image: "mimes:png,jpg,jpeg,webp",
 	};
 
 	public updateBottomSection = {
 		image: "mimes:png,jpg,jpeg,webp",
 		image1: "mimes:png,jpg,jpeg,webp",
-		text_content: "required|string",
-		our_vision_content: "required|string",
-		our_mission_content: "required|string",
+		text_content: "present|string",
+		our_vision_content: "present|string",
+		our_mission_content: "present|string",
 	};
 }
