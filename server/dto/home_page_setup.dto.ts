@@ -88,7 +88,7 @@ export class UpdateSliderSectionDTO implements HomePageSetupInput {
 	last_updated_by: string;
 
 	constructor(data: any) {
-		this.value = data.sliders.map((row: any) => new SliderSectionDTO(row));
+		this.value = data.sliders != undefined ? data.sliders.map((row: any) => new SliderSectionDTO(row)) : [];
 		this.last_updated_by = data.loggedInUserId;
 	}
 }
@@ -110,7 +110,7 @@ export class UpdateSpecialOffersDataDTO implements HomePageSetupInput {
 	last_updated_by: string;
 
 	constructor(data: any) {
-		this.value = data.offers.map((row: any) => new SpecialOffersDataDTO(row));
+		this.value = data.offers != undefined ? data.offers.map((row: any) => new SpecialOffersDataDTO(row)) : [];
 		this.last_updated_by = data.loggedInUserId;
 	}
 }
@@ -132,7 +132,7 @@ export class UpdateOurCategorySectionDTO implements HomePageSetupInput {
 	last_updated_by: string;
 
 	constructor(data: any) {
-		this.value = data.categories.map((row: any) => new BannerDataDTO(row));
+		this.value = data.categories != undefined ? data.categories.map((row: any) => new BannerDataDTO(row)) : [];
 		this.last_updated_by = data.loggedInUserId;
 	}
 }

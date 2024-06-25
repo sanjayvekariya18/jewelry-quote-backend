@@ -105,57 +105,60 @@ export default class HomePageSetupController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let errors: Array<string> = [];
 
-			errors = this.getErrorForFormData(
-				HOME_PAGE_SECTIONS.SLIDER_SECTION,
-				req.body.sliders,
-				req.files?.image != undefined ? (Array.isArray(req.files?.image) ? req.files?.image : [req.files?.image]) : []
-			);
-
-			if (errors.length > 0) {
-				throw new FormErrorsHandler(errors);
-			}
-
 			const tableData = new UpdateSliderSectionDTO(req.body);
 
-			const old_data = await this.service.findOne(HOME_PAGE_SECTIONS.SLIDER_SECTION).then((data) => {
-				if (data) {
-					return data.value as SliderSection[];
-				}
-				return undefined;
-			});
+			if (req.body.sliders) {
+				errors = this.getErrorForFormData(
+					HOME_PAGE_SECTIONS.SLIDER_SECTION,
+					req.body.sliders,
+					req.files?.image != undefined ? (Array.isArray(req.files?.image) ? req.files?.image : [req.files?.image]) : []
+				);
 
-			if (req.files) {
-				for (const slider of tableData.value) {
-					if (slider.file_name) {
-						let file_to_upload = null;
-						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => {
-								if (row == undefined) {
-									return false;
+				if (errors.length > 0) {
+					throw new FormErrorsHandler(errors);
+				}
+
+				// const tableData = new UpdateSliderSectionDTO(req.body);
+
+				const old_data = await this.service.findOne(HOME_PAGE_SECTIONS.SLIDER_SECTION).then((data) => {
+					if (data) {
+						return data.value as SliderSection[];
+					}
+					return undefined;
+				});
+
+				if (req.files) {
+					for (const slider of tableData.value) {
+						if (slider.file_name) {
+							let file_to_upload = null;
+							if (Array.isArray(req.files.image)) {
+								const file_index = req.files.image.findIndex((row) => {
+									if (row == undefined) {
+										return false;
+									}
+									return row.md5 == slider.file_name;
+								});
+								if (file_index > -1) {
+									file_to_upload = req.files.image[file_index];
 								}
-								return row.md5 == slider.file_name;
-							});
-							if (file_index > -1) {
-								file_to_upload = req.files.image[file_index];
+							} else if (req.files.image.md5 == slider.file_name) {
+								file_to_upload = req.files.image;
 							}
-						} else if (req.files.image.md5 == slider.file_name) {
-							file_to_upload = req.files.image;
-						}
-						if (file_to_upload) {
-							await saveFile(file_to_upload, "home_page").then((file_path: any) => {
-								slider.image_src = file_path.upload_path;
-							});
-						}
-						delete slider.file_name;
-					} else if (old_data) {
-						const old_slider_index = old_data.findIndex((row) => row.id == slider.id);
-						if (old_slider_index > -1) {
-							slider.image_src = old_data[old_slider_index].image_src;
+							if (file_to_upload) {
+								await saveFile(file_to_upload, "home_page").then((file_path: any) => {
+									slider.image_src = file_path.upload_path;
+								});
+							}
+							delete slider.file_name;
+						} else if (old_data) {
+							const old_slider_index = old_data.findIndex((row) => row.id == slider.id);
+							if (old_slider_index > -1) {
+								slider.image_src = old_data[old_slider_index].image_src;
+							}
 						}
 					}
 				}
 			}
-
 			const data = await this.service.update(tableData);
 			return res.api.create(data);
 		},
@@ -248,53 +251,54 @@ export default class HomePageSetupController {
 	public updateOurCategorySection = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let errors: Array<string> = [];
-
-			errors = this.getErrorForFormData(
-				HOME_PAGE_SECTIONS.OUR_CATEGORY_SECTION,
-				req.body.categories,
-				req.files?.image != undefined ? (Array.isArray(req.files?.image) ? req.files?.image : [req.files?.image]) : []
-			);
-
-			if (errors.length > 0) {
-				throw new FormErrorsHandler(errors);
-			}
-
 			const tableData = new UpdateOurCategorySectionDTO(req.body);
 
-			const old_data = await this.service.findOne(HOME_PAGE_SECTIONS.OUR_CATEGORY_SECTION).then((data) => {
-				if (data) {
-					return data.value as BannerData[];
-				}
-				return undefined;
-			});
+			if (req.body.categories) {
+				errors = this.getErrorForFormData(
+					HOME_PAGE_SECTIONS.OUR_CATEGORY_SECTION,
+					req.body.categories,
+					req.files?.image != undefined ? (Array.isArray(req.files?.image) ? req.files?.image : [req.files?.image]) : []
+				);
 
-			if (req.files) {
-				for (const category of tableData.value) {
-					if (category.file_name) {
-						let file_to_upload = null;
-						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => {
-								if (row == undefined) {
-									return false;
+				if (errors.length > 0) {
+					throw new FormErrorsHandler(errors);
+				}
+
+				const old_data = await this.service.findOne(HOME_PAGE_SECTIONS.OUR_CATEGORY_SECTION).then((data) => {
+					if (data) {
+						return data.value as BannerData[];
+					}
+					return undefined;
+				});
+
+				if (req.files) {
+					for (const category of tableData.value) {
+						if (category.file_name) {
+							let file_to_upload = null;
+							if (Array.isArray(req.files.image)) {
+								const file_index = req.files.image.findIndex((row) => {
+									if (row == undefined) {
+										return false;
+									}
+									return row.md5 == category.file_name;
+								});
+								if (file_index > -1) {
+									file_to_upload = req.files.image[file_index];
 								}
-								return row.md5 == category.file_name;
-							});
-							if (file_index > -1) {
-								file_to_upload = req.files.image[file_index];
+							} else if (req.files.image.md5 == category.file_name) {
+								file_to_upload = req.files.image;
 							}
-						} else if (req.files.image.md5 == category.file_name) {
-							file_to_upload = req.files.image;
-						}
-						if (file_to_upload) {
-							await saveFile(file_to_upload, "home_page").then((file_path: any) => {
-								category.image_src = file_path.upload_path;
-							});
-						}
-						delete category.file_name;
-					} else if (old_data) {
-						const old_slider_index = old_data.findIndex((row) => row.id == category.id);
-						if (old_slider_index > -1) {
-							category.image_src = old_data[old_slider_index].image_src;
+							if (file_to_upload) {
+								await saveFile(file_to_upload, "home_page").then((file_path: any) => {
+									category.image_src = file_path.upload_path;
+								});
+							}
+							delete category.file_name;
+						} else if (old_data) {
+							const old_slider_index = old_data.findIndex((row) => row.id == category.id);
+							if (old_slider_index > -1) {
+								category.image_src = old_data[old_slider_index].image_src;
+							}
 						}
 					}
 				}
@@ -345,53 +349,55 @@ export default class HomePageSetupController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let errors: Array<string> = [];
 
-			errors = this.getErrorForFormData(
-				HOME_PAGE_SECTIONS.SPECIAL_OFFERS,
-				req.body.offers,
-				req.files?.image != undefined ? (Array.isArray(req.files?.image) ? req.files?.image : [req.files?.image]) : []
-			);
-
-			if (errors.length > 0) {
-				throw new FormErrorsHandler(errors);
-			}
-
 			const tableData = new UpdateSpecialOffersDataDTO(req.body);
 
-			const old_data = await this.service.findOne(HOME_PAGE_SECTIONS.SPECIAL_OFFERS).then((data) => {
-				if (data) {
-					return data.value as SpecialOffersData[];
+			if (req.body.offers) {
+				errors = this.getErrorForFormData(
+					HOME_PAGE_SECTIONS.SPECIAL_OFFERS,
+					req.body.offers,
+					req.files?.image != undefined ? (Array.isArray(req.files?.image) ? req.files?.image : [req.files?.image]) : []
+				);
+
+				if (errors.length > 0) {
+					throw new FormErrorsHandler(errors);
 				}
-				return undefined;
-			});
 
-			if (req.files) {
-				for (const offers of tableData.value) {
-					if (offers.file_name) {
-						let file_to_upload = null;
-						if (Array.isArray(req.files.image)) {
-							const file_index = req.files.image.findIndex((row) => {
-								if (row == undefined) {
-									return false;
+				const old_data = await this.service.findOne(HOME_PAGE_SECTIONS.SPECIAL_OFFERS).then((data) => {
+					if (data) {
+						return data.value as SpecialOffersData[];
+					}
+					return undefined;
+				});
+
+				if (req.files) {
+					for (const offers of tableData.value) {
+						if (offers.file_name) {
+							let file_to_upload = null;
+							if (Array.isArray(req.files.image)) {
+								const file_index = req.files.image.findIndex((row) => {
+									if (row == undefined) {
+										return false;
+									}
+									return row.md5 == offers.file_name;
+								});
+								if (file_index > -1) {
+									file_to_upload = req.files.image[file_index];
 								}
-								return row.md5 == offers.file_name;
-							});
-							if (file_index > -1) {
-								file_to_upload = req.files.image[file_index];
+							} else if (req.files.image.md5 == offers.file_name) {
+								file_to_upload = req.files.image;
 							}
-						} else if (req.files.image.md5 == offers.file_name) {
-							file_to_upload = req.files.image;
-						}
-						if (file_to_upload) {
-							await saveFile(file_to_upload, "home_page").then((file_path: any) => {
-								offers.image_src = file_path.upload_path;
-							});
-						}
+							if (file_to_upload) {
+								await saveFile(file_to_upload, "home_page").then((file_path: any) => {
+									offers.image_src = file_path.upload_path;
+								});
+							}
 
-						delete offers.file_name;
-					} else if (old_data) {
-						const old_slider_index = old_data.findIndex((row) => row.id == offers.id);
-						if (old_slider_index > -1) {
-							offers.image_src = old_data[old_slider_index].image_src;
+							delete offers.file_name;
+						} else if (old_data) {
+							const old_slider_index = old_data.findIndex((row) => row.id == offers.id);
+							if (old_slider_index > -1) {
+								offers.image_src = old_data[old_slider_index].image_src;
+							}
 						}
 					}
 				}
