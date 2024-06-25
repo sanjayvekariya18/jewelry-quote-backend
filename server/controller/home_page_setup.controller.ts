@@ -57,9 +57,9 @@ export default class HomePageSetupController {
 			for (let index = 0; index < array_data.length; index++) {
 				const slider = { ...array_data[index] } as SliderSection;
 
-				if (!slider.title || slider.title == "") errors.push(`Title is required at position ${index + 1}`);
-				if (!slider.button_text || slider.button_text == "") errors.push(`Button Text is required at position ${index + 1}`);
-				if (!slider.button_link || slider.button_link == "") errors.push(`Button Link is required at position ${index + 1}`);
+				if (!slider.title) errors.push(`Title is required at position ${index + 1}`);
+				if (!slider.button_text) errors.push(`Button Text is required at position ${index + 1}`);
+				if (!slider.button_link) errors.push(`Button Link is required at position ${index + 1}`);
 				if (slider.file_name && slider.file_name != "" && !file_names.includes(slider.file_name))
 					errors.push(`Image not found in payload at position ${index + 1}`);
 			}
@@ -70,8 +70,8 @@ export default class HomePageSetupController {
 			}
 			for (let index = 0; index < array_data.length; index++) {
 				const slider = { ...array_data[index] } as BannerData;
-				if (!slider.title || slider.title == "") errors.push(`Title is required at position ${index + 1}`);
-				if (!slider.banner_link || slider.banner_link == "") errors.push(`Banner Link is required at position ${index + 1}`);
+				if (!slider.title) errors.push(`Title is required at position ${index + 1}`);
+				if (!slider.banner_link) errors.push(`Banner Link is required at position ${index + 1}`);
 				if (slider.file_name && slider.file_name != "" && !file_names.includes(slider.file_name))
 					errors.push(`Image not found in payload at position ${index + 1}`);
 			}
@@ -82,8 +82,8 @@ export default class HomePageSetupController {
 			}
 			for (let index = 0; index < array_data.length; index++) {
 				const slider = { ...array_data[index] } as BannerData;
-				if (!slider.title || slider.title == "") errors.push(`Title is required at position ${index + 1}`);
-				if (!slider.banner_link || slider.banner_link == "") errors.push(`Banner Link is required at position ${index + 1}`);
+				if (!slider.title) errors.push(`Title is required at position ${index + 1}`);
+				if (!slider.banner_link) errors.push(`Banner Link is required at position ${index + 1}`);
 				if (slider.file_name && slider.file_name != "" && !file_names.includes(slider.file_name))
 					errors.push(`Image not found in payload at position ${index + 1}`);
 			}
@@ -92,8 +92,8 @@ export default class HomePageSetupController {
 			for (let index = 0; index < array_data.length; index++) {
 				const slider = { ...array_data[index] } as SpecialOffersData;
 
-				if (!slider.title || slider.title == "") errors.push(`Title is required at position ${index + 1}`);
-				if (!slider.sub_title || slider.sub_title == "") errors.push(`Sub title is required at position ${index + 1}`);
+				if (!slider.title) errors.push(`Title is required at position ${index + 1}`);
+				if (!slider.sub_title) errors.push(`Sub title is required at position ${index + 1}`);
 				if (slider.file_name && slider.file_name != "" && !file_names.includes(slider.file_name))
 					errors.push(`Image not found in payload at position ${index + 1}`);
 			}
