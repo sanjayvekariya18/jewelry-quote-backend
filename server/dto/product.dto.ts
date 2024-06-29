@@ -92,17 +92,17 @@ export class ProductDTO {
 		this.stock_id = data.stock_id.toString().trim();
 		this.sub_category_id = data.sub_category_id;
 		this.name = data.name.toString().trim();
-		data.description != undefined ? (this.description = data.description.toString().trim()) : delete this.description;
-		data.metal_type != undefined ? (this.metal_type = data.metal_type.toString().trim()) : delete this.metal_type;
-		data.style != undefined ? (this.style = data.style.toString().trim()) : delete this.style;
-		data.setting_type != undefined ? (this.setting_type = data.setting_type.toString().trim()) : delete this.setting_type;
-		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting.toString().trim()) : delete this.sub_setting;
-		data.prong_type != undefined ? (this.prong_type = data.prong_type.toString().trim()) : delete this.prong_type;
-		data.shank_type != undefined ? (this.shank_type = data.shank_type.toString().trim()) : delete this.shank_type;
-		data.band_type != undefined ? (this.band_type = data.band_type.toString().trim()) : delete this.band_type;
-		data.fit_type != undefined ? (this.fit_type = data.fit_type.toString().trim()) : delete this.fit_type;
-		data.lock_type != undefined ? (this.lock_type = data.lock_type.toString().trim()) : delete this.lock_type;
-		data.bail_type != undefined ? (this.bail_type = data.bail_type.toString().trim()) : delete this.bail_type;
+		data.description != undefined ? (this.description = data.description.toString().trim()) : (this.description = "");
+		data.metal_type != undefined ? (this.metal_type = data.metal_type.toString().trim()) : (this.metal_type = "");
+		data.style != undefined ? (this.style = data.style.toString().trim()) : (this.style = "");
+		data.setting_type != undefined ? (this.setting_type = data.setting_type.toString().trim()) : (this.setting_type = "");
+		data.sub_setting != undefined ? (this.sub_setting = data.sub_setting.toString().trim()) : (this.sub_setting = "");
+		data.prong_type != undefined ? (this.prong_type = data.prong_type.toString().trim()) : (this.prong_type = "");
+		data.shank_type != undefined ? (this.shank_type = data.shank_type.toString().trim()) : (this.shank_type = "");
+		data.band_type != undefined ? (this.band_type = data.band_type.toString().trim()) : (this.band_type = "");
+		data.fit_type != undefined ? (this.fit_type = data.fit_type.toString().trim()) : (this.fit_type = "");
+		data.lock_type != undefined ? (this.lock_type = data.lock_type.toString().trim()) : (this.lock_type = "");
+		data.bail_type != undefined ? (this.bail_type = data.bail_type.toString().trim()) : (this.bail_type = "");
 		this.attributeOptions = data.attributeOptions.filter(notEmpty).map(
 			(row: any) =>
 				new ProductAttributesOptionsDTO({
