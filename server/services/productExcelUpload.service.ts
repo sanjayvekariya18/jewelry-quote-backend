@@ -135,6 +135,7 @@ export default class ProductExcelUploadService {
 			const allSubCategory = await SubCategory.findAll({ where: { is_deleted: false }, raw: true, transaction });
 			// const allCatalogues = await CatalogMaster.findAll({ where: { is_deleted: false }, raw: true, transaction });
 			const allOtherDetails = await OtherDetailMaster.findAll({ raw: true, transaction });
+			console.log("allOtherDetails", allOtherDetails);
 			const allAtttributeOptionData: Array<{ attribute_id: string; name: string; option_id: string; optionname: string }> =
 				await sequelizeConnection.query(
 					`SELECT
@@ -335,6 +336,11 @@ export default class ProductExcelUploadService {
 				}
 
 				let fields_to_check_other_details = [
+					"m950",
+					"m18k",
+					"m14k",
+					"m10k",
+					"m925",
 					"length",
 					"width",
 					"thickness",
