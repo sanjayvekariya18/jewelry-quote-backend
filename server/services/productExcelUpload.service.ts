@@ -344,16 +344,16 @@ export default class ProductExcelUploadService {
 					"length",
 					"width",
 					"thickness",
-					"p_mm_size",
+					// "p_mm_size",
 					"p_piece",
 					"p_carat",
-					"sd1_mm_size",
+					// "sd1_mm_size",
 					"sd1_piece",
 					"sd1_carat",
-					"sd2_mm_size",
+					// "sd2_mm_size",
 					"sd2_piece",
 					"sd2_carat",
-					"o_mm_size",
+					// "o_mm_size",
 					"o_piece",
 					"o_carat",
 				];
@@ -376,6 +376,18 @@ export default class ProductExcelUploadService {
 						otherDetailIdCheck(product[otherDetail], otherDetail);
 					}
 				});
+				if (product["p_mm_size"]) {
+					otherDetailIdCheck(product["p_mm_size"], "p_mm_size");
+				}
+				if (product["sd1_mm_size"]) {
+					otherDetailIdCheck(product["sd1_mm_size"], "sd1_mm_size");
+				}
+				if (product["sd2_mm_size"]) {
+					otherDetailIdCheck(product["sd2_mm_size"], "sd2_mm_size");
+				}
+				if (product["o_mm_size"]) {
+					otherDetailIdCheck(product["o_mm_size"], "o_mm_size");
+				}
 
 				let newProduct = new ProductDTO({
 					stock_id: product.stock_id,
