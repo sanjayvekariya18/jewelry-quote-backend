@@ -93,9 +93,9 @@ Products.init(
 			allowNull: false,
 		},
 		description: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			defaultValue: "",
+			type: DataTypes.TEXT,
+			allowNull: true,
+			defaultValue: null,
 		},
 		metal_type: {
 			type: DataTypes.STRING,
