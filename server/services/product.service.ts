@@ -16,17 +16,18 @@ export default class ProductService {
 	private Sequelize = sequelizeConnection.Sequelize;
 
 	public getAll = async (searchParams: SearchProductDTO) => {
+		console.log("searchParams", searchParams);
 		return await Products.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
-					[Op.or]: {
-						name: {
-							[Op.like]: "%" + searchParams.searchTxt + "%",
+					[Op.or]: [
+						{
+							name: { [Op.like]: "%" + searchParams.searchTxt + "%" },
 						},
-						stock_id: {
-							[Op.like]: "%" + searchParams.searchTxt + "%",
+						{
+							stock_id: { [Op.like]: "%" + searchParams.searchTxt + "%" },
 						},
-					},
+					],
 				}),
 				...(searchParams.sub_category_id && {
 					sub_category_id: searchParams.sub_category_id,
@@ -50,9 +51,9 @@ export default class ProductService {
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [
-								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
-							],
+							// include: [
+							// 	{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+							// ],
 						},
 						{
 							model: Options,
@@ -67,12 +68,13 @@ export default class ProductService {
 				},
 			],
 			order: [
-				["name", "ASC"],
-				[ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
+				["position", "ASC"],
+				// [ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
 			],
 			attributes: [
 				"id",
 				"stock_id",
+				"position",
 				"sub_category_id",
 				"name",
 				"description",
@@ -99,7 +101,16 @@ export default class ProductService {
 	public getAllForCustomer = async (searchParams: SearchProductForCustomerDTO, customer_id: string) => {
 		return await Products.findAndCountAll({
 			where: {
-				...(searchParams.searchTxt && { name: { [Op.like]: "%" + searchParams.searchTxt + "%" } }),
+				...(searchParams.searchTxt && {
+					[Op.or]: [
+						{
+							name: { [Op.like]: "%" + searchParams.searchTxt + "%" },
+						},
+						{
+							stock_id: { [Op.like]: "%" + searchParams.searchTxt + "%" },
+						},
+					],
+				}),
 				...(searchParams.sub_category_id && { sub_category_id: searchParams.sub_category_id }),
 				...(searchParams.catalog_master_id && {
 					id: {
@@ -123,9 +134,9 @@ export default class ProductService {
 						{
 							model: Attributes,
 							attributes: ["id", "name", "details"],
-							include: [
-								{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
-							],
+							// include: [
+							// 	{ model: AttributesOptions, attributes: ["id", "position"], include: [{ model: Options, attributes: ["id", "name", "details"] }] },
+							// ],
 						},
 						{
 							model: Options,
@@ -140,12 +151,13 @@ export default class ProductService {
 				},
 			],
 			order: [
-				["name", "ASC"],
-				[ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
+				["position", "ASC"],
+				// [ProductAttributeOptions, Attributes, AttributesOptions, "position", "ASC"],
 			],
 			attributes: [
 				"id",
 				"stock_id",
+				"position",
 				"sub_category_id",
 				"name",
 				"description",
