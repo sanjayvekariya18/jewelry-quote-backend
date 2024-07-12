@@ -23,6 +23,7 @@ export { default as ATQOtherDetail } from "./atqOtherDetail.model";
 export { default as OtherDetailMaster } from "./otherDetailMaster.model";
 export { default as ProductOtherDetail } from "./productOtherDetail.model";
 export { default as QuotationOtherDetail } from "./quotationOtherDetail.model";
+export { default as EmailSubscribed } from "./emailSubscribed.model";
 
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
@@ -63,8 +64,12 @@ import HomePageSetup, {
 	SliderSection,
 	SpecialOffersData,
 } from "./home_page_setup.model";
+import { EmailSubscribedAttributes, EmailSubscribedInput, EmailSubscribedOutput } from "./emailSubscribed.model";
 
 export {
+	EmailSubscribedAttributes,
+	EmailSubscribedInput,
+	EmailSubscribedOutput,
 	UserMasterAttributes,
 	UserMasterInput,
 	UserMasterOutput,

@@ -9,6 +9,7 @@ import {
 	CatalogProducts,
 	Category,
 	CustomerDetails,
+	EmailSubscribed,
 	HomePageSetup,
 	Options,
 	OtherDetailMaster,
@@ -238,6 +239,14 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`HomePageSetup Table Error : ${error}`);
+		});
+
+	await EmailSubscribed.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`EmailSubscribed Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`EmailSubscribed Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

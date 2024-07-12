@@ -19,8 +19,13 @@ export default class ProductService {
 		return await Products.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
-					name: {
-						[Op.like]: "%" + searchParams.searchTxt + "%",
+					[Op.or]: {
+						name: {
+							[Op.like]: "%" + searchParams.searchTxt + "%",
+						},
+						stock_id: {
+							[Op.like]: "%" + searchParams.searchTxt + "%",
+						},
 					},
 				}),
 				...(searchParams.sub_category_id && {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CatalogService } from "../services";
 import { CatalogValidations } from "../validations";
-import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
+import { CreateCatalogDTO, emailSubscribedDTO, SearchCatalogDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { removeFile, saveFile } from "../utils/helper";
 import { Op } from "sequelize";

@@ -15,6 +15,7 @@ import styleMasterRoutes from "./styleMaster.route";
 import otherDetailMasterRoutes from "./otherDetailMaster.route";
 import dashboardRoutes from "./dashboard.route";
 import homePageSetupRoutes from "./home_page_setup.route";
+import emailSubscribedRoutes from "./emailSubscribed.route";
 import { AuthorizationController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
@@ -41,6 +42,7 @@ router.use("/style-master", UserPermissionsCheck(PERMISSIONS.STYLE_MASTER), styl
 router.use("/other-details", otherDetailMasterRoutes);
 router.use("/dashboard", UserPermissionsCheck(PERMISSIONS.DASHBOARD), dashboardRoutes);
 router.use("/home-page-setup", UserPermissionsCheck(PERMISSIONS.HOME_PAGE_SETUP), homePageSetupRoutes);
+router.use("/email-subscribed", UserPermissionsCheck(PERMISSIONS.EMAIL_SUBSCRIBED), emailSubscribedRoutes);
 
 router.use("/list", listRoutes);
 

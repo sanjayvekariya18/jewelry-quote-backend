@@ -12,3 +12,4 @@ export { default as AddToQuoteValidations } from "./addToQuote.validations";
 export { default as QuotationValidations } from "./quotation.validation";
 export { default as StyleMasterValidation } from "./styleMaster.validation";
 export { default as HomePageSetupValidations } from "./home_page_setup.validations";
+export { default as EmailSubscribedValidation } from "./emailSubscribed.validation";
