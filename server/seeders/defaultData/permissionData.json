@@ -11,5 +11,6 @@
 	{ "permissionName": "options", "permissionGroup": "options" },
 	{ "permissionName": "style_master", "permissionGroup": "style_master" },
 	{ "permissionName": "dashboard", "permissionGroup": "dashboard" },
-	{ "permissionName": "home_page_setup", "permissionGroup": "home_page_setup" }
+	{ "permissionName": "home_page_setup", "permissionGroup": "home_page_setup" },
+	{ "permissionName": "email_subscribed", "permissionGroup": "email_subscribed" }
 ]

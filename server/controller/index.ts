@@ -17,3 +17,4 @@ export { default as StyleMasterController } from "./styleMaster.controller";
 export { default as OtherDetailMasterController } from "./otherDetailMaster.controller";
 export { default as DashboardController } from "./dashboard.controller";
 export { default as HomePageSetupController } from "./home_page_setup.controller";
+export { default as EmailSubscribedController } from "./emailSubscribed.controller";

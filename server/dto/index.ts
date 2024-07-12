@@ -25,6 +25,7 @@ import {
 	SpecialOffersDataDTO,
 	UpdateSpecialOffersDataDTO,
 } from "./home_page_setup.dto";
+export * as emailSubscribedDTO from "./emailSubscribed.dto";
 
 export {
 	SearchProductForCustomerDTO,
