@@ -4,6 +4,7 @@ import { sequelizeConnection } from "../config/database";
 export interface ProductsAttributes {
 	id: string;
 	stock_id: string;
+	position: number;
 	sub_category_id: string;
 	name: string;
 	description: string;
@@ -26,6 +27,7 @@ export interface ProductsInput
 	extends Optional<
 		ProductsAttributes,
 		| "id"
+		| "position"
 		| "description"
 		| "metal_type"
 		| "style"
@@ -46,6 +48,7 @@ export interface ProductsOutput extends Required<ProductsAttributes> {}
 class Products extends Model<ProductsAttributes, ProductsInput> implements ProductsAttributes {
 	public id!: string;
 	public stock_id!: string;
+	public position!: number;
 	public sub_category_id!: string;
 	public name!: string;
 	public description!: string;
@@ -74,6 +77,10 @@ Products.init(
 		},
 		stock_id: {
 			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		position: {
+			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: false,
 		},
 		sub_category_id: {

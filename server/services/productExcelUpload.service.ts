@@ -135,7 +135,6 @@ export default class ProductExcelUploadService {
 			const allSubCategory = await SubCategory.findAll({ where: { is_deleted: false }, raw: true, transaction });
 			// const allCatalogues = await CatalogMaster.findAll({ where: { is_deleted: false }, raw: true, transaction });
 			const allOtherDetails = await OtherDetailMaster.findAll({ raw: true, transaction });
-			console.log("allOtherDetails", allOtherDetails);
 			const allAtttributeOptionData: Array<{ attribute_id: string; name: string; option_id: string; optionname: string }> =
 				await sequelizeConnection.query(
 					`SELECT
@@ -417,12 +416,15 @@ export default class ProductExcelUploadService {
 				}
 				i++;
 			}
+
 			if (Object.keys(error.product).length === 0) {
+				let findLastPosition: number = await Products.max("position").then((data) => (data != null ? +data : 0));
 				for await (const productData of newProductData) {
 					const oldProductData = allProducts.find((row) => row.stock_id.toLowerCase() == productData.stock_id.toLowerCase());
 
 					if (oldProductData == null) {
-						await Products.create(productData, { transaction }).then(async (newProductData) => {
+						findLastPosition++;
+						await Products.create({ ...productData, position: findLastPosition }, { transaction }).then(async (newProductData) => {
 							if (productData.catelog_master) {
 								const findCatalogExists = await CatalogMaster.findOne({ where: { name: productData.catelog_master }, raw: true, transaction });
 								if (findCatalogExists != null) {
@@ -465,7 +467,12 @@ export default class ProductExcelUploadService {
 							await ProductOtherDetail.bulkCreate(productOtherDetails, { ignoreDuplicates: true, transaction });
 						});
 					} else {
-						await Products.update(productData, { where: { id: oldProductData.id }, transaction });
+						if (oldProductData.position == 0) findLastPosition++;
+
+						await Products.update(
+							{ ...productData, ...(oldProductData.position == 0 && { position: findLastPosition }) },
+							{ where: { id: oldProductData.id }, transaction }
+						);
 						await ProductAttributeOptions.destroy({ where: { product_id: oldProductData.id }, transaction });
 						await ProductOtherDetail.destroy({ where: { product_id: oldProductData.id }, transaction });
 
