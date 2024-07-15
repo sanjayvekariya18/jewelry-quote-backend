@@ -2,7 +2,7 @@ import { DESCRIPTION_OF_BUSINESS } from "../enum";
 
 export default class CustomerDetailsValidations {
 	public login = {
-		login_id: "required|numeric",
+		email: "required|email",
 		password: "required|string",
 	};
 
@@ -40,7 +40,7 @@ export default class CustomerDetailsValidations {
 	public edit = {
 		company_name: "required|string|regex:/^[a-zA-Z0-9 .]*$/",
 		customer_name: "required|string|regex:/^[a-zA-Z ]*$/",
-		customer_email: "required|string|email",
+		// customer_email: "required|string|email",
 		country_code: "required|numeric",
 		mobile_number: "required|min:10|max:15",
 		wp_country_code: "required|numeric",

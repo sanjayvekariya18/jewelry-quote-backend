@@ -88,16 +88,16 @@ export default class CustomerDetailsController {
 		validation: this.validations.login,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let customer_credential = {
-				login_id: req.body.login_id.toString().trim(),
+				email: req.body.email.toString().trim(),
 				password: req.body.password.toString().trim(),
 			};
 			await CustomerDetails.findOne({
-				where: { login_id: customer_credential.login_id, is_deleted: false },
+				where: { customer_email: customer_credential.email, is_deleted: false },
 				raw: true,
 			})
 				.then(async (customerData) => {
 					if (customerData && customerData != null) {
-						if (customerData.login_id != null && customerData.password != null) {
+						if (customerData.customer_email != null && customerData.password != null) {
 							if (customerData.is_active == false) {
 								throw new UnauthorizedUserHandler("You are deactivated. Contact admin");
 							}
@@ -108,7 +108,6 @@ export default class CustomerDetailsController {
 										customer_name: customerData.customer_name,
 										customer_email: customerData.customer_email,
 										mobile_number: customerData.mobile_number,
-										login_id: customerData.login_id,
 									};
 									await this.tokenServices
 										.generateCustomerAccessToken(tokenPayload)
@@ -126,7 +125,7 @@ export default class CustomerDetailsController {
 									throw new UnauthorizedUserHandler("Invalid credential");
 								});
 						} else {
-							throw new UnauthorizedUserHandler("Contact admin for Login id and password");
+							throw new UnauthorizedUserHandler("Contact admin for Email and password");
 						}
 					} else {
 						throw new UnauthorizedUserHandler("Invalid credential");
@@ -145,19 +144,19 @@ export default class CustomerDetailsController {
 			if (customerCheck == null) {
 				throw new NotExistHandler("Customer Not Found");
 			}
-			const login_id = await this.generateRandomUniqueNumber(customerCheck.country_code);
-			if (!login_id) {
-				throw new DuplicateRecord("Login Id already exists");
-			}
+			// const login_id = await this.generateRandomUniqueNumber(customerCheck.country_code);
+			// if (!login_id) {
+			// 	throw new DuplicateRecord("Login Id already exists");
+			// }
 
 			const password = randomstring.generate(8);
 			const hashedPassword = await hashPassword(password);
 
-			await CustomerDetails.update({ login_id, password: hashedPassword, is_active: true }, { where: { id: customer_id } });
+			await CustomerDetails.update({ password: hashedPassword, is_active: true }, { where: { id: customer_id } });
 			await this.emailService
-				.sendLoginIdPassword({ login_id, password }, customerCheck.customer_email)
+				.sendLoginIdPassword({ password }, customerCheck.customer_email)
 				.then(() => {
-					return res.api.create({ message: `Login id and password is sent to customer's mail id` });
+					return res.api.create({ message: `Password is sent to customer's mail id` });
 				})
 				.catch((error) => {
 					throw new BadResponseHandler(error);
@@ -199,15 +198,15 @@ export default class CustomerDetailsController {
 			const customerData = new EditCustomerDetailsDTO(req.body);
 
 			const errorMessage = [];
-			if (customerData.customer_email) {
-				const checkEmail = await this.service.findOne({
-					id: { [Op.not]: customer_id },
-					customer_email: customerData.customer_email,
-				});
-				if (checkEmail) {
-					errorMessage.push("Email");
-				}
-			}
+			// if (customerData.customer_email) {
+			// 	const checkEmail = await this.service.findOne({
+			// 		id: { [Op.not]: customer_id },
+			// 		customer_email: customerData.customer_email,
+			// 	});
+			// 	if (checkEmail) {
+			// 		errorMessage.push("Email");
+			// 	}
+			// }
 			if (customerData.mobile_number) {
 				const checkMobilenumber = await this.service.findOne({
 					id: { [Op.not]: customer_id },

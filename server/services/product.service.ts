@@ -16,7 +16,6 @@ export default class ProductService {
 	private Sequelize = sequelizeConnection.Sequelize;
 
 	public getAll = async (searchParams: SearchProductDTO) => {
-		console.log("searchParams", searchParams);
 		return await Products.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
