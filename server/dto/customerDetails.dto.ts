@@ -62,7 +62,7 @@ export class CreateCustomerDetailsDTO {
 export class EditCustomerDetailsDTO {
 	company_name?: string;
 	customer_name?: string;
-	customer_email?: string;
+	// customer_email?: string;
 	country_code?: string;
 	mobile_number?: string;
 	wp_country_code?: string;
@@ -83,7 +83,7 @@ export class EditCustomerDetailsDTO {
 	constructor(data: any) {
 		data.company_name != undefined ? (this.company_name = data.company_name) : delete this.company_name;
 		data.customer_name != undefined ? (this.customer_name = data.customer_name) : delete this.customer_name;
-		data.customer_email != undefined ? (this.customer_email = data.customer_email) : delete this.customer_email;
+		// data.customer_email != undefined ? (this.customer_email = data.customer_email) : delete this.customer_email;
 		data.country_code != undefined ? (this.country_code = data.country_code) : delete this.country_code;
 		data.mobile_number != undefined ? (this.mobile_number = data.mobile_number) : delete this.mobile_number;
 
