@@ -26,6 +26,7 @@
 	{ "name": "hidden", "parent_name": "halo", "sub_category": "engagement ring" },
 	{ "name": "hugging", "parent_name": "halo", "sub_category": "engagement ring" },
 	{ "name": "traditional", "parent_name": "halo", "sub_category": "engagement ring" },
+	{ "name": "bezel", "parent_name": "halo", "sub_category": "engagement ring" },
 
 	{ "name": "vintage", "parent_name": "", "sub_category": "engagement ring" },
 	{ "name": "cocktail", "parent_name": "vintage", "sub_category": "engagement ring" },
@@ -94,6 +95,7 @@
 	{ "name": "hidden", "parent_name": "halo", "sub_category": "earring" },
 	{ "name": "hugging", "parent_name": "halo", "sub_category": "earring" },
 	{ "name": "traditional", "parent_name": "halo", "sub_category": "earring" },
+	{ "name": "bezel", "parent_name": "halo", "sub_category": "earring" },
 
 	{ "name": "hoop", "parent_name": "", "sub_category": "earring" },
 	{ "name": "huggie", "parent_name": "hoop", "sub_category": "earring" },
@@ -140,6 +142,7 @@
 	{ "name": "hidden", "parent_name": "halo", "sub_category": "pendant" },
 	{ "name": "hugging", "parent_name": "halo", "sub_category": "pendant" },
 	{ "name": "traditional", "parent_name": "halo", "sub_category": "pendant" },
+	{ "name": "bezel", "parent_name": "halo", "sub_category": "pendant" },
 
 	{ "name": "slide", "parent_name": "", "sub_category": "pendant" },
 	{ "name": "roundel", "parent_name": "", "sub_category": "pendant" },
