@@ -75,8 +75,12 @@ export default class CustomerDetailsController {
 
 			return await this.service
 				.create(customerData)
-				.then(() => {
-					return res.api.create({ message: "Your are registered with us. Your Id and password will be sent to your mail id as Admin approves it." });
+				.then(async (d1) => {
+					const data = await this.service.findOne({ id: d1.id });
+					return res.api.create({
+						data,
+						message: "Your are registered with us. Your Id and password will be sent to your mail id as Admin approves it.",
+					});
 				})
 				.catch((error) => {
 					throw new BadResponseHandler(error);

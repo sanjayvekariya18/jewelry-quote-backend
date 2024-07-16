@@ -29,17 +29,17 @@ class DataSeed {
 		await executeTransaction(async (transaction: Transaction) => {
 			initSchemaRelationship();
 			try {
+				await permissionMasterSeed(transaction);
 				const adminUser = await adminUserSeed(transaction);
-				await permissionMasterSeed(transaction, adminUser.id);
-				await attributeSeed(transaction, adminUser.id);
-				await optionSeed(transaction, adminUser.id);
-				await attributeOptionsSeed(transaction, adminUser.id);
-				await categorySeed(transaction, adminUser.id);
-				await subcategorySeed(transaction, adminUser.id);
-				await subCategoryAttributesSeed(transaction, adminUser.id);
-				await styleMasterSeed(transaction, adminUser.id);
-				await otherDetailMasterSeed(transaction, adminUser.id);
-				await homePageSetupSeed(transaction, adminUser.id);
+				await attributeSeed(transaction, adminUser?.id || "");
+				await optionSeed(transaction, adminUser?.id || "");
+				await attributeOptionsSeed(transaction, adminUser?.id || "");
+				await categorySeed(transaction, adminUser?.id || "");
+				await subcategorySeed(transaction, adminUser?.id || "");
+				await subCategoryAttributesSeed(transaction, adminUser?.id || "");
+				await styleMasterSeed(transaction, adminUser?.id || "");
+				await otherDetailMasterSeed(transaction, adminUser?.id || "");
+				await homePageSetupSeed(transaction, adminUser?.id || "");
 			} catch (error) {
 				transaction.rollback();
 				logger.error(`Error occurred in seeder : ${error}`);

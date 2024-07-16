@@ -3,17 +3,19 @@ import { QueryTypes, Transaction } from "sequelize";
 import { uuidv4 } from "../../utils/helper";
 import logger from "../../config/logger";
 import { sequelizeConnection } from "../../config/database";
-import { UserMaster, UserMasterInput } from "../../models";
+import { PermissionMaster, UserMaster, UserMasterInput, UserPermissions, UserPermissionsInput } from "../../models";
 import { USER_TYPES } from "../../enum";
 
 const adminUserSeed = async (transaction: Transaction) => {
-	const adminEmail = "admin@gmail.com";
-	const userExist = await UserMaster.findOne({ where: { email: adminEmail }, raw: true, transaction });
-	if (!userExist) {
-		const hashedPassword: any = await bcrypt.hash("admin@123", 8);
+	const adminEmail = "montypatel1990@gmail.com";
+	let adminUser = await UserMaster.findOne({ where: { email: adminEmail }, raw: true, transaction });
+	const dbPermissionsData = await PermissionMaster.findAll({ transaction, raw: true });
+
+	if (!adminUser) {
+		const hashedPassword: any = await bcrypt.hash("!T@ly105", 8);
 		const dummyUserID = uuidv4();
 
-		const adminUser: UserMasterInput = {
+		const newAdminUser: UserMasterInput = {
 			name: "Admin",
 			email: adminEmail,
 			password: hashedPassword,
@@ -21,28 +23,36 @@ const adminUserSeed = async (transaction: Transaction) => {
 			last_updated_by: dummyUserID,
 		};
 
-		await sequelizeConnection.query(
-			`
-			SET FOREIGN_KEY_CHECKS=0;
-		`,
-			{ type: QueryTypes.UPDATE, transaction }
-		);
+		// Remove foreign key check
+		await sequelizeConnection.query(`SET FOREIGN_KEY_CHECKS=0;`, { type: QueryTypes.UPDATE, transaction });
 
-		return await UserMaster.create(adminUser, { transaction, raw: true }).then(async (newUser: any) => {
-			await sequelizeConnection.query(
-				`
-				SET FOREIGN_KEY_CHECKS=1;
-			`,
-				{ type: QueryTypes.UPDATE, transaction }
-			);
-
-			logger.info(`Admin user created with email '${adminEmail}'.`);
-			return newUser;
+		await UserMaster.create(newAdminUser, { transaction, raw: true }).then(async (newUser) => {
+			// Added foreign key check
+			await sequelizeConnection.query(`SET FOREIGN_KEY_CHECKS=1;`, { type: QueryTypes.UPDATE, transaction });
+			adminUser = newUser;
 		});
-	} else {
-		logger.warn(`Admin user already exists. Try '${adminEmail}' as email.`);
-		return userExist;
 	}
+
+	const getAllUserPermissions = await UserPermissions.findAll({ where: { user_id: adminUser?.id } });
+	const perNotFoundInAdmin = dbPermissionsData
+		.filter((data) => getAllUserPermissions.findIndex((row) => row.permission_master_id == data.id) < 0)
+		.map((permission) => {
+			return {
+				user_id: adminUser?.id || "",
+				permission_master_id: permission.id,
+				view: true,
+				create: true,
+				edit: true,
+				delete: true,
+				last_updated_by: adminUser?.id,
+			};
+		});
+	if (perNotFoundInAdmin.length > 0) {
+		await UserPermissions.bulkCreate(perNotFoundInAdmin, { ignoreDuplicates: true, transaction });
+	}
+	logger.info(`Admin user email - '${adminEmail}'.`);
+
+	return adminUser;
 };
 
 export default adminUserSeed;
