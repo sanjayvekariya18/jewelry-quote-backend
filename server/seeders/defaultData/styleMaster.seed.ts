@@ -33,7 +33,7 @@ const styleMasterSeed = async (transaction: Transaction, adminUserId: string | u
 				newStyle.id != styleDB.id &&
 				styleDB.name == newStyle.name &&
 				styleDB.sub_category_id == newStyle.sub_category_id &&
-				(isEmpty(styleDB.parent_name) == isEmpty(newStyle.parent_name) || styleDB.parent_name == newStyle.parent_name)
+				((isEmpty(styleDB.parent_name) == true && isEmpty(newStyle.parent_name) == true) || styleDB.parent_name == newStyle.parent_name)
 		);
 		if (!isRepeat) {
 			newArray.push({ ...newStyle, last_updated_by: adminUserId });
