@@ -197,7 +197,7 @@ export default class CustomerDetailsController {
 			const customer_id: string = req.customer.id;
 			const customerData = new EditCustomerDetailsDTO(req.body);
 
-			const errorMessage = [];
+			// const errorMessage = [];
 			// if (customerData.customer_email) {
 			// 	const checkEmail = await this.service.findOne({
 			// 		id: { [Op.not]: customer_id },
@@ -207,24 +207,24 @@ export default class CustomerDetailsController {
 			// 		errorMessage.push("Email");
 			// 	}
 			// }
-			if (customerData.mobile_number) {
-				const checkMobilenumber = await this.service.findOne({
-					id: { [Op.not]: customer_id },
-					mobile_number: customerData.mobile_number,
-				});
-				if (checkMobilenumber) {
-					errorMessage.push("MobileNumber");
-				}
-			}
-			if (errorMessage.length > 0) {
-				throw new DuplicateRecord(`${errorMessage.join(", ")} already exists`);
-			}
+			// if (customerData.mobile_number) {
+			// 	const checkMobilenumber = await this.service.findOne({
+			// 		id: { [Op.not]: customer_id },
+			// 		mobile_number: customerData.mobile_number,
+			// 	});
+			// 	if (checkMobilenumber) {
+			// 		errorMessage.push("MobileNumber");
+			// 	}
+			// }
+			// if (errorMessage.length > 0) {
+			// 	throw new DuplicateRecord(`${errorMessage.join(", ")} already exists`);
+			// }
 
-			if (customerData.address_map_link) {
-				if (!customerData.address_map_link.startsWith("https://www.google.com/maps/")) {
-					throw new ValidationHandler(`Google Address Link is Not Valid`);
-				}
-			}
+			// if (customerData.address_map_link) {
+			// 	if (!customerData.address_map_link.startsWith("https://www.google.com/maps/")) {
+			// 		throw new ValidationHandler(`Google Address Link is Not Valid`);
+			// 	}
+			// }
 
 			const file: any = req.files;
 			if (file) {
