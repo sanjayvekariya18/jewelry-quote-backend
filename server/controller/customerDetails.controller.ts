@@ -158,7 +158,7 @@ export default class CustomerDetailsController {
 
 			await CustomerDetails.update({ password: hashedPassword, is_active: true }, { where: { id: customer_id } });
 			await this.emailService
-				.sendLoginIdPassword({ password }, customerCheck.customer_email)
+				.sendLoginIdPassword({ password, customer_name: customerCheck.customer_name }, customerCheck.customer_email)
 				.then(() => {
 					return res.api.create({ message: `Password is sent to customer's mail id` });
 				})
