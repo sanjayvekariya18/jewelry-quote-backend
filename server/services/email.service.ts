@@ -43,7 +43,7 @@ export default class EmailService {
         <body>
             <div style="background-color:#0D3C45; padding: 0px 50px; border-radius: 30px;max-width: 800px;margin: 0 auto;">
                 <div style="background-color: #fefbf5;margin: 0 auto; ">
-                    <div style="width: 100%;text-align: center;padding-top: 4px">
+                    <div style="width: 100%;text-align: center;padding-top: 40px">
                         <img src="${backend_url}/venezia-logo.png" alt="" height="120" />
                     </div>
                     <div style="background-color:#0D3C45; padding: 12px 45px; border-radius: 50px;max-width: 450px;margin: 20px auto;text-align: center;">
