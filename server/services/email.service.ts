@@ -40,53 +40,55 @@ export default class EmailService {
 		const backend_url = config.backend_url;
 
 		const emailHtml = `
-        <body bgcolor="#0D3C45" style="margin-top:20px;margin-bottom:20px">
-            <!-- Main table -->
-            <table border="0" align="center" cellspacing="0" cellpadding="0" bgcolor="white" width="650" style="background: #f0f8ffa3;border: 1px solid #0f346236;">
-                <tr>
-                    <td>
-                        <!-- Child table -->
-                        <table border="0" cellspacing="0" cellpadding="0"
-                            style="color:#0f3462; font-family: sans-serif;display: flex;justify-content: center;align-items: center">
-                            <tr>
-                                <td>
-                                    <img src="${backend_url}/venezia-logo.png" height="60px"
-                                        style="display:block; margin:auto;padding-bottom: 25px;padding-top: 30px; ">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center;">
-                                    <span
-                                        style="margin: 0px;padding-bottom: 25px; text-transform: uppercase;font-size: 30px;font-weight: 500;font-family: system-ui;color:#0F3462;">Email
-                                        and
-                                        password
-                                    </span>
-                                    <p
-                                        style=" margin: 0px 32px;padding-bottom: 25px;line-height: 33px; font-size: 18px;padding-top: 20px;font-family: system-ui;color:#0F3462;">
-                                        Please use the following email and password to access the system. If you encounter any
-                                        issues during the login process,
-                                        feel free to reach out for assistance. Thank you for your cooperation.
-
-                                    </p>
-                                    <h2
-                                        style="margin: 0px; padding-bottom: 20px;font-family: system-ui;font-weight: 500;font-size: 21px;color:#0F3462;">
-                                        Email: <span style="text-decoration: underline;">${to}</span></h2>
-                                    <h2
-                                        style="margin: 0px; padding-bottom: 30px;font-family: system-ui;font-weight: 500;font-size: 21px;color:#0F3462;">
-                                        Password:
-                                        <span>${data.password}</span>
-                                    </h2>
-                                </td>
-                            </tr>
-
-                        </table>
-                        <!-- /Child table -->
-                    </td>
-                </tr>
-            </table>
-            <!-- / Main table -->
+        <body>
+            <div style="background-color:#0D3C45; padding: 0px 50px; border-radius: 30px;max-width: 800px;margin: 0 auto;">
+                <div style="background-color: #fefbf5;margin: 0 auto; ">
+                    <div style="width: 100%;text-align: center;padding-top: 4px">
+                        <img src="${backend_url}/venezia-logo.png" alt="" height="120" />
+                    </div>
+                    <div style="background-color:#0D3C45; padding: 12px 45px; border-radius: 50px;max-width: 450px;margin: 20px auto;text-align: center;">
+                        <span style="color: white; font-size: 28px; font-family:monospace, sans-serif; font-weight: 700;">Welcome Dashboard</span>
+                    </div>
+                    <div style="margin-top: 20px; padding: 0 35px 30px 35px; font-size: 17px; line-height: 28px; letter-spacing: 0.3px; font-family: sans-serif; font-weight: 400; color:black;">
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">Dear ${data.customer_name},</p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">On behalf of Venezia Jewels DMCC, I extend you a warm
+                            welcome! We are thrilled
+                            to have you join our esteemed clientele and look forward to a fruitful partnership
+                            ahead. Below are your log in details to access your account
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">
+                            User name: ${to}
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">
+                            Password: ${data.password}
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">
+                            Please use the provided credentials to log in at <a style="color: blue;"
+                                href="https://www.veneziajewels.com/login" target="_blank">www.veneziajewels.com/login.</a> We
+                            recommend changing yourr password after your first login for security reasons.
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">
+                            At Venezia Jewels DMCC, We are committed to delivering exceptional quality and
+                            service that exceeds your expectations. Your trust in us is greatly appreciated, and
+                            we are dedicated to ensuring your experience with us is nothing short of excellent.
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">
+                            Please take moment to explore our collections on www.veneziajewels.com. and let
+                            us know how we can assist you further. Should you have any questions or require
+                            assistance, do not hesitate to contact us. We are here to serve you. feel free to
+                            reach out to us at veneziajewelsdmcc@gmail.com or +971 52 134 8277.
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">
+                            Thank you once again for choosing Venezia Jewels DMCC. We are excited to embark
+                            on this journey with you and create beautiful memorable experiences together.
+                        </p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">Best regards,</p>
+                        <p style="color:black; margin-bottom: 0; padding-bottom: 2px;">Venezia Jewels DMCC</p>
+                        
+                    </div>
+                </div>
+            </div>
         </body>`;
-
 		const emailData: EmailData = {
 			html: emailHtml,
 			subject: "Email and password",
