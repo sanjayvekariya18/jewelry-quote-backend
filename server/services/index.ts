@@ -22,3 +22,4 @@ export { default as DashboardService } from "./dashboard.service";
 export { default as API } from "./axios.service";
 export { default as HomePageSetupService } from "./home_page_setup.service";
 export { default as EmailSubscribedService } from "./emailSubscribed.service";
+export { default as ForgotPasswordService } from "./forgotPassword.service";

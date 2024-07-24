@@ -10,7 +10,7 @@ import routes from "./server/routes/v1";
 import session from "express-session";
 import { config, logger } from "./server/config";
 import { RootErrorHandler } from "./server/errorHandler";
-import { setApiResponse } from "./server/middlewares";
+import { APILogger, setApiResponse } from "./server/middlewares";
 import { testDBConnections } from "./server/InitialDBSetup";
 import http from "http";
 import https from "https";
@@ -108,19 +108,11 @@ app.use("*", (req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 
+// API call logging && Data Trim
+APILogger(app);
+
 // v1 api routes
-app.use(express.static("./public"));
-app.use(
-	"/api/v1",
-	(req: Request, res: Response, next: NextFunction) => {
-		if (config.env == "development")
-			logger.info(
-				`${req.protocol}://${req.get("host")}${req.originalUrl} --- METHOD -> ${req.method} --- Time -> ${moment().format("YYYY-MM-DD HH:mm:ss")}`
-			);
-		next();
-	},
-	routes
-);
+app.use("/api/v1", routes);
 
 // Error Handling & Not Found Page
 app.use(RootErrorHandler);

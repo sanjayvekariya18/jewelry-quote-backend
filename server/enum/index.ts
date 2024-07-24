@@ -46,3 +46,8 @@ export enum DESCRIPTION_OF_BUSINESS {
 	FINANCIER = "financier",
 	OTHER = "other",
 }
+
+export enum FORGOT_PASSWORD_USER_TYPE {
+	ADMIN = "admin",
+	CUSTOMER = "customer",
+}

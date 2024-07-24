@@ -9,9 +9,11 @@ const tokenService = new TokenService();
 const customerService = new CustomerDetailsService();
 
 const PublicTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-	if (req.url == "/login" || req.url == "/registration") {
+	const excluded_urls = ["/login", "/registration", "/forgot-password", "/verify-url", "/reset-password"];
+	if (excluded_urls.includes(req.path)) {
 		return next();
 	}
+
 	let authorization = req.header("Authorization");
 
 	if (authorization) {

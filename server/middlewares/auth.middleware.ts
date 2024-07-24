@@ -9,9 +9,11 @@ const tokenService = new TokenService();
 const authorizationService = new AuthorizationService();
 
 const TokenVerifyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-	if (req.url == "/login") {
+	const excluded_urls = ["/login", "/forgot-password", "/verify-url", "/reset-password"];
+	if (excluded_urls.includes(req.path)) {
 		return next();
 	}
+
 	let authorization = req.header("Authorization");
 	if (authorization) {
 		authorization = authorization.replace("Bearer ", "");

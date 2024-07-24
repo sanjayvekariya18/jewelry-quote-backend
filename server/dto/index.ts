@@ -25,9 +25,11 @@ import {
 	SpecialOffersDataDTO,
 	UpdateSpecialOffersDataDTO,
 } from "./home_page_setup.dto";
+import { ForgotPasswordDTO } from "./forgotPassword.dto";
 export * as emailSubscribedDTO from "./emailSubscribed.dto";
 
 export {
+	ForgotPasswordDTO,
 	SearchProductForCustomerDTO,
 	ToggleUserPermissionDTO,
 	UserPermissionsDTO,

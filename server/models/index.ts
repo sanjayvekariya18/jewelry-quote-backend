@@ -65,8 +65,13 @@ import HomePageSetup, {
 	SpecialOffersData,
 } from "./home_page_setup.model";
 import { EmailSubscribedAttributes, EmailSubscribedInput, EmailSubscribedOutput } from "./emailSubscribed.model";
+import ForgotPassword, { ForgotPasswordAttribute, ForgotPasswordInput, ForgotPasswordOutput } from "./forgotPassword.model";
 
 export {
+	ForgotPassword,
+	ForgotPasswordAttribute,
+	ForgotPasswordInput,
+	ForgotPasswordOutput,
 	EmailSubscribedAttributes,
 	EmailSubscribedInput,
 	EmailSubscribedOutput,

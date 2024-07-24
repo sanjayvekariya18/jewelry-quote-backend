@@ -96,4 +96,46 @@ export default class EmailService {
 		};
 		await this.sendEmail(emailData);
 	};
+
+	public sendForgotPasswordEmail = async (data: any, to: string) => {
+		const frontend_url = config.frontend_url;
+		const backend_url = config.backend_url;
+
+		const logo = `${backend_url}/venezia-logo.png`;
+		const emailHtml = `
+            <body>
+                <div style="background-color:#0D3C45; padding: 0px 50px; border-radius: 30px;max-width: 800px;margin: 0 auto;">
+                    <div style="background-color: #fefbf5;margin: 0 auto; ">
+                        <div style="width: 100%;text-align: center;padding-top: 40px">
+                            <img src="${logo}" alt="" height="120" />
+                        </div>
+                        <div
+                            style="background-color:#0D3C45; padding: 13px 45px; border-radius: 50px;max-width: 620px;margin: 20px auto;text-align: center;">
+                            <span style="color: white; font-size: 23px; font-family:monospace, sans-serif; font-weight: 700;">
+                                You have requested to reset your password.
+                            </span>
+                        </div>
+                        <div style="  border-radius: 50px;max-width: 650px;margin: 0 auto;text-align: center;">
+                            <span style="color: #0D3C45; font-size: 17px; font-family:monospace, sans-serif; font-weight: 700;">
+                                Click on below button to reset your password.
+                            </span>
+                        </div>
+                        <div style="padding-bottom: 50px;text-align: center;padding-top: 60px;">
+                            <a href="${frontend_url}/reset-password?code=${data}" target="_blank"
+                                style="text-decoration: none ;cursor: pointer;text-transform: uppercase;padding: 14px 21px;color: white;background: green;outline: none;border: none;border-radius: 5px;font-size: 16px;font-weight: 600;font-family: monospace;">
+                                Reset Password
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </body>
+        `;
+
+		const emailData: EmailData = {
+			html: emailHtml,
+			subject: "Forget Password",
+			to,
+		};
+		await this.sendEmail(emailData);
+	};
 }
