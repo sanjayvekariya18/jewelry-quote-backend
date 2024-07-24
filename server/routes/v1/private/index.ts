@@ -3,7 +3,6 @@ import categoryRoutes from "./category.route";
 import subCategoryRoutes from "./subCategory.route";
 import userMasterRoutes from "./userMaster.route";
 import userPermissionRoutes from "./userPermissions.route";
-import permissionMasterRoutes from "./permissionMaster.route";
 import customerDetailsRoutes from "./customerDetails.route";
 import productsRoutes from "./products.route";
 import catalogRoutes from "./catalog.route";
@@ -16,20 +15,28 @@ import otherDetailMasterRoutes from "./otherDetailMaster.route";
 import dashboardRoutes from "./dashboard.route";
 import homePageSetupRoutes from "./home_page_setup.route";
 import emailSubscribedRoutes from "./emailSubscribed.route";
-import { AuthorizationController } from "../../../controller";
+import { AuthorizationController, ForgotPasswordController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
-import { UserPermissionsCheck } from "../../../middlewares";
-import { PERMISSIONS } from "../../../enum";
+import { forgotPasswordUserType, UserPermissionsCheck } from "../../../middlewares";
+import { FORGOT_PASSWORD_USER_TYPE, PERMISSIONS } from "../../../enum";
 
 const router = Router();
 const authorizationController = new AuthorizationController();
 const basicValidatorHandler = new BasicValidatorHandler();
+const forgotPasswordController = new ForgotPasswordController();
 
 router.post("/login", basicValidatorHandler.handler(authorizationController.login.validation), use(authorizationController.login.controller));
+router.post(
+	"/forgot-password",
+	forgotPasswordUserType(FORGOT_PASSWORD_USER_TYPE.ADMIN),
+	basicValidatorHandler.handler(forgotPasswordController.forgotPassword.validation),
+	use(forgotPasswordController.forgotPassword.controller)
+);
+
 router.use("/category", UserPermissionsCheck(PERMISSIONS.CATEGORY), categoryRoutes);
 router.use("/sub-category", UserPermissionsCheck(PERMISSIONS.SUB_CATEGORY), subCategoryRoutes);
-router.use("/user-master", UserPermissionsCheck(PERMISSIONS.USERS), userMasterRoutes);
+router.use("/user-master", userMasterRoutes);
 router.use("/user-permission", UserPermissionsCheck(PERMISSIONS.USER_PERMISSIONS), userPermissionRoutes);
 // router.use("/permissions", UserPermissionsCheck(PERMISSIONS.USER_PERMISSIONS), permissionMasterRoutes);
 router.use("/customer-details", UserPermissionsCheck(PERMISSIONS.CUSTOMER), customerDetailsRoutes);

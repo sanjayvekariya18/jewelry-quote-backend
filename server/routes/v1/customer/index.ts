@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CustomerDetailsController } from "../../../controller";
+import { CustomerDetailsController, ForgotPasswordController } from "../../../controller";
 import BasicValidatorHandler from "../../../validations/handlers/BasicValidatorHandler";
 import { use } from "../../../errorHandler";
 import customerDetailsRoutes from "./customerDetails.route";
@@ -10,10 +10,13 @@ import addToQuoteRoutes from "./add_to_quote.route";
 import quotationRoutes from "./quotation.route";
 import styleMasterRoutes from "./styleMaster.route";
 import listRoutes from "./../list.route";
+import { forgotPasswordUserType } from "../../../middlewares";
+import { FORGOT_PASSWORD_USER_TYPE } from "../../../enum";
 
 const router = Router();
 const customerDetailsController = new CustomerDetailsController();
 const basicValidatorHandler = new BasicValidatorHandler();
+const forgotPasswordController = new ForgotPasswordController();
 
 router.post(
 	"/registration",
@@ -21,6 +24,13 @@ router.post(
 	use(customerDetailsController.create.controller)
 );
 router.post("/login", basicValidatorHandler.handler(customerDetailsController.login.validation), use(customerDetailsController.login.controller));
+router.post(
+	"/forgot-password",
+	forgotPasswordUserType(FORGOT_PASSWORD_USER_TYPE.CUSTOMER),
+	basicValidatorHandler.handler(forgotPasswordController.forgotPassword.validation),
+	use(forgotPasswordController.forgotPassword.controller)
+);
+
 router.use("/customer-details", customerDetailsRoutes);
 router.use("/wishlist", wishlistRoutes);
 router.use("/products", productsRoutes);

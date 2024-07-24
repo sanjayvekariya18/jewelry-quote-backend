@@ -10,6 +10,7 @@ import {
 	Category,
 	CustomerDetails,
 	EmailSubscribed,
+	ForgotPassword,
 	HomePageSetup,
 	Options,
 	OtherDetailMaster,
@@ -247,6 +248,14 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`EmailSubscribed Table Error : ${error}`);
+		});
+
+	await ForgotPassword.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`ForgotPassword Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`ForgotPassword Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;
