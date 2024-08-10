@@ -1,8 +1,9 @@
-import { Transaction } from "sequelize";
+import { QueryTypes, Transaction } from "sequelize";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { Attributes, CatalogMaster, CatalogProducts, Options, ProductAttributeOptions, Products, SubCategory } from "../models";
 import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
 import { Op } from "sequelize";
+import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
 
 export default class CatalogService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -27,23 +28,69 @@ export default class CatalogService {
 	};
 
 	public getAllForCustomer = async (searchParams: SearchCatalogDTO) => {
-		return await CatalogMaster.findAndCountAll({
-			where: {
-				...(searchParams.searchTxt && {
-					[Op.or]: [{ name: { [Op.like]: `%${searchParams.searchTxt}%` } }],
-				}),
-				is_deleted: false,
-				is_active: true,
-			},
-			distinct: true,
-			order: [["name", "ASC"]],
-			attributes: ["id", "name", "description", "img_url", "pdf_url"],
-			...(searchParams.page != undefined &&
-				searchParams.rowsPerPage != undefined && {
-					offset: searchParams.page * searchParams.rowsPerPage,
-					limit: searchParams.rowsPerPage,
-				}),
+		let query = `
+        SELECT
+            cm.id,
+            cm.name,
+            cm.description ,
+            cm.img_url ,
+            cm.pdf_url ,
+            (IF (COUNT(cp.id) > 0,true,false)) AS has_any_product
+        FROM
+            catalog_master cm
+        LEFT JOIN catalog_products cp ON
+            cp.catalog_id = cm.id
+        WHERE
+            (:searchTxt is null or cm.name like '%:searchTxt%') AND 
+            cm.is_deleted = false AND 
+            cm.is_active = true
+        GROUP BY
+            cm.id,
+            cm.name,
+            cm.description ,
+            cm.img_url ,
+            cm.pdf_url
+        HAVING has_any_product = ${searchParams.show_live_products}
+        `;
+
+		const countData: any[] = await sequelizeConnection.query(
+			`SELECT
+                cm.id,
+                cm.name,
+                cm.description ,
+                cm.img_url ,
+                cm.pdf_url ,
+                (IF (COUNT(cp.id) > 0,true,false)) AS has_any_product
+            FROM catalog_master cm
+            LEFT JOIN catalog_products cp ON
+                cp.catalog_id = cm.id
+            WHERE
+                (:searchTxt IS NULL OR cm.name LIKE '%:searchTxt%') AND 
+                cm.is_deleted = false AND 
+                cm.is_active = true
+            GROUP BY
+                cm.id,
+                cm.name,
+                cm.description ,
+                cm.img_url ,
+                cm.pdf_url
+            HAVING has_any_product = ${searchParams.show_live_products};`,
+			{
+				replacements: { searchTxt: searchParams.searchTxt || null },
+				type: QueryTypes.SELECT,
+			}
+		);
+
+		if (searchParams.page != undefined && searchParams.rowsPerPage != undefined) {
+			query += `limit ${searchParams.page * searchParams.rowsPerPage},${searchParams.rowsPerPage};`;
+		}
+
+		const data = await sequelizeConnection.query(query, {
+			replacements: { searchTxt: searchParams.searchTxt || null },
+			type: QueryTypes.SELECT,
 		});
+
+		return { count: countData.length, rows: data };
 	};
 
 	public findOne = async (searchObject: any) => {
@@ -126,15 +173,17 @@ export default class CatalogService {
 	public create = async (categoryData: CreateCatalogDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await CatalogMaster.create(categoryData, { transaction }).then(async (data) => {
-				let catPro = categoryData.catalog_products.map((product_id) => {
-					return {
-						catalog_id: data.id,
-						product_id,
-						last_updated_by: categoryData.last_updated_by,
-					};
-				});
+				if (categoryData.catalog_products && categoryData.catalog_products.length > 0) {
+					let catPro = categoryData.catalog_products.map((product_id) => {
+						return {
+							catalog_id: data.id,
+							product_id,
+							last_updated_by: categoryData.last_updated_by,
+						};
+					});
 
-				await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+					await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+				}
 				return "Catalog Master created successfully";
 			});
 		});
@@ -142,17 +191,19 @@ export default class CatalogService {
 
 	public edit = async (catalog_id: string, categoryData: CreateCatalogDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			await CatalogProducts.destroy({ where: { catalog_id }, transaction });
 			return await CatalogMaster.update(categoryData, { where: { id: catalog_id }, transaction }).then(async () => {
-				let catPro = categoryData.catalog_products.map((product_id) => {
-					return {
-						catalog_id,
-						product_id,
-						last_updated_by: categoryData.last_updated_by,
-					};
-				});
+				await CatalogProducts.destroy({ where: { catalog_id }, transaction });
+				if (categoryData.catalog_products && categoryData.catalog_products.length > 0) {
+					let catPro = categoryData.catalog_products.map((product_id) => {
+						return {
+							catalog_id,
+							product_id,
+							last_updated_by: categoryData.last_updated_by,
+						};
+					});
 
-				await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+					await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+				}
 				return "Catalog Master updated successfully";
 			});
 		});

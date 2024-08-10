@@ -26,6 +26,8 @@ const envVarsSchema = Joi.object()
 		SYS_EMAIL: Joi.string().required().description("company email for email send"),
 		SYS_EMAIL_PASSWORD: Joi.string().required().description("app password for email send"),
 
+		SEND_NOTIFICATION_EMAIL: Joi.string().required().description("Email for Notification send"),
+
 		CAPTCHA_SITE_KEY: Joi.string().required().description("paypal CAPTCHA_SITE_KEY is required"),
 		CAPTCHA_SECRET_KEY: Joi.string().required().description("paypal CAPTCHA_SECRET_KEY is required"),
 
@@ -65,6 +67,7 @@ export = {
 		email: envVars.SYS_EMAIL,
 		password: envVars.SYS_EMAIL_PASSWORD,
 	},
+	send_notification_email: envVars.SEND_NOTIFICATION_EMAIL,
 	file_path: envVars.FILEPATH,
 	frontend_url: envVars.FRONTEND_URL,
 	backend_url: envVars.BACKEND_URL,

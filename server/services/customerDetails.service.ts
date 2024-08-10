@@ -98,6 +98,7 @@ export default class CustomerDetailsService {
 				"description_of_business",
 				"customer_social_media",
 				"is_active",
+				"createdAt",
 				...(includePassword == true ? ["password"] : []),
 			],
 			raw: true,

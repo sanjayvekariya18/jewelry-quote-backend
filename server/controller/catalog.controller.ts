@@ -5,7 +5,10 @@ import { CreateCatalogDTO, emailSubscribedDTO, SearchCatalogDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { removeFile, saveFile } from "../utils/helper";
 import { Op } from "sequelize";
-import { Products } from "../models";
+import { CatalogMaster, Products } from "../models";
+import { config } from "../config";
+import ValidationHandler from "../errorHandler/validation.error.handler";
+const fs = require("fs");
 
 export default class CatalogController {
 	private service = new CatalogService();
@@ -38,6 +41,32 @@ export default class CatalogController {
 		},
 	};
 
+	public pdfDownload = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const categoryId: string = req.params["id"] as string;
+			const categoryExist = await CatalogMaster.findByPk(categoryId);
+			if (!categoryExist) {
+				throw new NotExistHandler("Catalog Not Found");
+			}
+
+			if (!categoryExist.pdf_url) {
+				throw new NotExistHandler("Pdf Not Found");
+			}
+
+			let pdfPath = config.file_path + categoryExist.pdf_url;
+
+			let existFile = fs.existsSync(pdfPath);
+			if (!existFile) {
+				throw new ValidationHandler("Pdf not found");
+			}
+
+			const fileContent = fs.readFileSync(pdfPath);
+			res.setHeader("Content-Disposition", `attachment; filename=${categoryExist?.name}.pdf`);
+			res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			res.send(fileContent);
+		},
+	};
+
 	public findOneForCustomer = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const catalogId: string = req.params["id"] as string;
@@ -59,12 +88,14 @@ export default class CatalogController {
 				throw new DuplicateRecord("Catalog Master already exists");
 			}
 
-			const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
-				product.map((row) => row.id)
-			);
-			const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
-			if (isExists == false) {
-				return res.api.validationErrors({ message: "One or more product is not available" });
+			if (catalogData.catalog_products && catalogData.catalog_products?.length > 0) {
+				const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
+					product.map((row) => row.id)
+				);
+				const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
+				if (isExists == false) {
+					return res.api.validationErrors({ message: "One or more product is not available" });
+				}
 			}
 
 			const file: any = req.files;
@@ -102,12 +133,14 @@ export default class CatalogController {
 				throw new DuplicateRecord("Catalog master already exists");
 			}
 
-			const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
-				product.map((row) => row.id)
-			);
-			const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
-			if (isExists == false) {
-				return res.api.validationErrors({ message: "One or more product is not available" });
+			if (catalogData.catalog_products && catalogData.catalog_products?.length > 0) {
+				const getAllProducts = await Products.findAll({ where: { is_deleted: false }, attributes: ["id"], raw: true }).then((product) =>
+					product.map((row) => row.id)
+				);
+				const isExists = catalogData.catalog_products.every((data) => getAllProducts.includes(data));
+				if (isExists == false) {
+					return res.api.validationErrors({ message: "One or more product is not available" });
+				}
 			}
 
 			const file: any = req.files;

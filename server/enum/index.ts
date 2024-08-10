@@ -18,6 +18,7 @@ export enum PERMISSIONS {
 	DASHBOARD = "dashboard",
 	HOME_PAGE_SETUP = "home_page_setup",
 	EMAIL_SUBSCRIBED = "email_subscribed",
+	ENQUIRY_NOW = "enquiry_now",
 }
 
 export enum QUOTATION_STATUS {

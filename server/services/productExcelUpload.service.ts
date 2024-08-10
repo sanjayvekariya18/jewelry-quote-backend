@@ -443,15 +443,17 @@ export default class ProductExcelUploadService {
 										last_updated_by: productData.last_updated_by,
 									};
 									await CatalogMaster.create(newCatalogData, { transaction }).then(async (data) => {
-										let catPro = newCatalogData.catalog_products.map((product_id) => {
-											return {
-												catalog_id: data.id,
-												product_id,
-												last_updated_by: newCatalogData.last_updated_by,
-											};
-										});
+										if (newCatalogData.catalog_products && newCatalogData.catalog_products.length > 0) {
+											let catPro = newCatalogData.catalog_products.map((product_id) => {
+												return {
+													catalog_id: data.id,
+													product_id,
+													last_updated_by: newCatalogData.last_updated_by,
+												};
+											});
 
-										await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+											await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+										}
 									});
 								}
 							}
@@ -495,15 +497,16 @@ export default class ProductExcelUploadService {
 									last_updated_by: productData.last_updated_by,
 								};
 								await CatalogMaster.create(newCatalogData, { transaction }).then(async (data) => {
-									let catPro = newCatalogData.catalog_products.map((product_id) => {
-										return {
-											catalog_id: data.id,
-											product_id,
-											last_updated_by: newCatalogData.last_updated_by,
-										};
-									});
-
-									await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+									if (newCatalogData.catalog_products && newCatalogData.catalog_products.length > 0) {
+										let catPro = newCatalogData.catalog_products.map((product_id) => {
+											return {
+												catalog_id: data.id,
+												product_id,
+												last_updated_by: newCatalogData.last_updated_by,
+											};
+										});
+										await CatalogProducts.bulkCreate(catPro, { ignoreDuplicates: true, transaction });
+									}
 								});
 							}
 						}
