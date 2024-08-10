@@ -9,5 +9,6 @@ const basicValidatorHandler = new BasicValidatorHandler();
 
 router.get("/", basicValidatorHandler.handler(controller.getAllForCustomer.validation), use(controller.getAllForCustomer.controller));
 router.get("/:id", use(controller.findOneForCustomer.controller));
+router.get("/:id/pdf-download", use(controller.pdfDownload.controller));
 
 export default router;

@@ -4,7 +4,7 @@ import { sequelizeConnection } from "../config/database";
 export interface CatalogMasterAttribute {
 	id: string;
 	name: string;
-	description: String;
+	description: string;
 	img_url: string;
 	pdf_url: string;
 	is_active: boolean;
@@ -19,7 +19,7 @@ export interface CatalogMasterOutput extends Required<CatalogMasterAttribute> {}
 class CatalogMaster extends Model<CatalogMasterAttribute, CatalogMasterInput> implements CatalogMasterAttribute {
 	public id!: string;
 	public name!: string;
-	public description!: String;
+	public description!: string;
 	public img_url!: string;
 	public pdf_url!: string;
 	public is_active!: boolean;

@@ -9,6 +9,7 @@ import catalogRoutes from "./catalog.route";
 import addToQuoteRoutes from "./add_to_quote.route";
 import quotationRoutes from "./quotation.route";
 import styleMasterRoutes from "./styleMaster.route";
+import enquiryNowRoutes from "./enquiry.route";
 import listRoutes from "./../list.route";
 import { forgotPasswordUserType } from "../../../middlewares";
 import { FORGOT_PASSWORD_USER_TYPE } from "../../../enum";
@@ -38,6 +39,7 @@ router.use("/catalog", catalogRoutes);
 router.use("/add-to-quote", addToQuoteRoutes);
 router.use("/quotation", quotationRoutes);
 router.use("/style-master", styleMasterRoutes);
+router.use("/enquiry-now", enquiryNowRoutes);
 router.use("/list", listRoutes);
 
 export default router;

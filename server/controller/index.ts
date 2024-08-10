@@ -19,3 +19,4 @@ export { default as DashboardController } from "./dashboard.controller";
 export { default as HomePageSetupController } from "./home_page_setup.controller";
 export { default as EmailSubscribedController } from "./emailSubscribed.controller";
 export { default as ForgotPasswordController } from "./forgotPassword.controller";
+export { default as EnquiryNowController } from "./enquiryNow.controller";

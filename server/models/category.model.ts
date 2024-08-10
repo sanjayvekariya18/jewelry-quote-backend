@@ -4,7 +4,7 @@ import { sequelizeConnection } from "../config/database";
 export interface CategoryAttribute {
 	id: string;
 	name: string;
-	details: String;
+	details: string;
 	img_url: string;
 	logo_url: string;
 	is_deleted: boolean;
@@ -17,7 +17,7 @@ export interface CategoryOutput extends Required<CategoryAttribute> {}
 class Category extends Model<CategoryAttribute, CategoryInput> implements CategoryAttribute {
 	public id!: string;
 	public name!: string;
-	public details!: String;
+	public details!: string;
 	public img_url!: string;
 	public logo_url!: string;
 	public is_deleted!: boolean;

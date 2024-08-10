@@ -76,7 +76,20 @@ export default class CustomerDetailsController {
 			return await this.service
 				.create(customerData)
 				.then(async (d1) => {
-					const data = await this.service.findOne({ id: d1.id });
+					const data: any = await this.service.findOne({ id: d1.id });
+
+					this.emailService.sendThankYouForRegistration({}, d1.customer_email);
+					this.emailService.sendRegistrationUpdateToAdmin(
+						{
+							company_name: customerData.company_name,
+							customer_name: customerData.customer_name,
+							customer_email: customerData.customer_email,
+							country_code: customerData.country_code,
+							mobile_number: customerData.mobile_number,
+							createdAt: data?.createdAt,
+						},
+						d1.customer_email
+					);
 					return res.api.create({
 						data,
 						message: "Your are registered with us. Your Id and password will be sent to your mail id as Admin approves it.",

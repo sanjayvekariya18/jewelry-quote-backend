@@ -8,6 +8,7 @@ import {
 	CatalogProducts,
 	Category,
 	CustomerDetails,
+	EnquiryNow,
 	Options,
 	OtherDetailMaster,
 	PermissionMaster,
@@ -137,6 +138,9 @@ const initSchemaRelationship = () => {
 
 	// QuotationOtherDetail
 	QuotationOtherDetail.hasOne(QuotationProduct, { sourceKey: "quotation_product_id", foreignKey: "id" });
+
+	// EnquiryNow
+	EnquiryNow.hasOne(CustomerDetails, { sourceKey: "customer_id", foreignKey: "id" });
 };
 
 export default initSchemaRelationship;

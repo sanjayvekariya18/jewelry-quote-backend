@@ -16,7 +16,7 @@ export class SearchCategoryDTO {
 
 export class CategoryDTO {
 	name: string;
-	details?: String;
+	details?: string;
 	img_url?: string;
 	logo_url?: string;
 	last_updated_by: string;

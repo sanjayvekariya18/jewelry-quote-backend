@@ -10,6 +10,7 @@ import {
 	Category,
 	CustomerDetails,
 	EmailSubscribed,
+	EnquiryNow,
 	ForgotPassword,
 	HomePageSetup,
 	Options,
@@ -256,6 +257,14 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`ForgotPassword Table Error : ${error}`);
+		});
+
+	await EnquiryNow.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`EnquiryNow Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`EnquiryNow Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

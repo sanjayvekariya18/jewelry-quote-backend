@@ -24,6 +24,7 @@ export { default as OtherDetailMaster } from "./otherDetailMaster.model";
 export { default as ProductOtherDetail } from "./productOtherDetail.model";
 export { default as QuotationOtherDetail } from "./quotationOtherDetail.model";
 export { default as EmailSubscribed } from "./emailSubscribed.model";
+export { default as EnquiryNow } from "./enquiryNow.model";
 
 import { UserMasterAttributes, UserMasterInput, UserMasterOutput } from "./userMaster.model";
 import { CategoryAttribute, CategoryInput, CategoryOutput } from "./category.model";
@@ -66,8 +67,12 @@ import HomePageSetup, {
 } from "./home_page_setup.model";
 import { EmailSubscribedAttributes, EmailSubscribedInput, EmailSubscribedOutput } from "./emailSubscribed.model";
 import ForgotPassword, { ForgotPasswordAttribute, ForgotPasswordInput, ForgotPasswordOutput } from "./forgotPassword.model";
+import { EnquiryNowAttribute, EnquiryNowInput, EnquiryNowOutput } from "./enquiryNow.model";
 
 export {
+	EnquiryNowAttribute,
+	EnquiryNowInput,
+	EnquiryNowOutput,
 	ForgotPassword,
 	ForgotPasswordAttribute,
 	ForgotPasswordInput,

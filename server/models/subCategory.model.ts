@@ -5,7 +5,7 @@ export interface SubcategoryAttribute {
 	id: string;
 	category_id: string;
 	name: string;
-	details: String;
+	details: string;
 	img_url: string;
 	logo_url: string;
 	is_deleted: boolean;
@@ -20,7 +20,7 @@ class SubCategory extends Model<SubcategoryAttribute, SubcategoryInput> implemen
 	public id!: string;
 	public category_id!: string;
 	public name!: string;
-	public details!: String;
+	public details!: string;
 	public img_url!: string;
 	public logo_url!: string;
 	public is_deleted!: boolean;

@@ -12,15 +12,16 @@ export default (app: Application) => {
 				}`
 			);
 		}
-		if (req.body) {
-			req.body = trimStrings({ ...req.body });
-		}
-		if (req.query) {
-			req.query = trimStrings(req.query);
-		}
-		if (req.params) {
-			req.params = trimStrings(req.params);
-		}
+
+		// if (req.body) {
+		// 	req.body = trimStrings({ ...req.body });
+		// }
+		// if (req.query) {
+		// 	req.query = trimStrings(req.query);
+		// }
+		// if (req.params) {
+		// 	req.params = trimStrings(req.params);
+		// }
 		next();
 	});
 };
