@@ -1,6 +1,12 @@
 export default class CatalogValidations {
 	public getAll = {
 		searchTxt: "string",
+		page: "integer|min:0",
+		rowsPerPage: "integer|min:1",
+	};
+
+	public getAllForCustomer = {
+		searchTxt: "string",
 		show_live_products: "required|boolean",
 		page: "integer|min:0",
 		rowsPerPage: "integer|min:1",

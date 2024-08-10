@@ -6,7 +6,7 @@ import { CreatePermissionDTO, SearchPermissionDTO } from "./permissionMaster.dto
 import { CreateCustomerDetailsDTO, CustomerChangePasswordDTO, EditCustomerDetailsDTO, SearchCustomerDetailsDTO } from "./customerDetails.dto";
 import { CreateWishlistDTO, BulkCreateWishlistDTO } from "./wishlist.dto";
 import { ProductDTO, ProductAttributesOptionsDTO, SearchProductDTO, SearchProductForCustomerDTO } from "./product.dto";
-import { CreateCatalogDTO, SearchCatalogDTO } from "./catalog.dto";
+import { CreateCatalogDTO, SearchCatalogDTO, SearchCustomerCatalogDTO } from "./catalog.dto";
 import { AttributesDTO, SearchAttributesDTO } from "./attributes.dto";
 import { OptionsDTO, SearchOptionsDTO } from "./options.dto";
 import { CreateAddToQuoteDTO, EditAddToQuoteDTO } from "./addToQuote.dto";
@@ -30,6 +30,7 @@ export * as emailSubscribedDTO from "./emailSubscribed.dto";
 export * as enquiryNowDTO from "./enquiryNow.dto";
 
 export {
+	SearchCustomerCatalogDTO,
 	ForgotPasswordDTO,
 	SearchProductForCustomerDTO,
 	ToggleUserPermissionDTO,
