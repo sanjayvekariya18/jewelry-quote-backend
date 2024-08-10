@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { CatalogService } from "../services";
 import { CatalogValidations } from "../validations";
-import { CreateCatalogDTO, emailSubscribedDTO, SearchCatalogDTO } from "../dto";
+import { CreateCatalogDTO, emailSubscribedDTO, SearchCatalogDTO, SearchCustomerCatalogDTO } from "../dto";
 import { DuplicateRecord, NotExistHandler } from "../errorHandler";
 import { removeFile, saveFile } from "../utils/helper";
 import { Op } from "sequelize";
@@ -23,9 +23,9 @@ export default class CatalogController {
 	};
 
 	public getAllForCustomer = {
-		validation: this.validations.getAll,
+		validation: this.validations.getAllForCustomer,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.service.getAllForCustomer(new SearchCatalogDTO(req.query));
+			const data = await this.service.getAllForCustomer(new SearchCustomerCatalogDTO(req.query));
 			return res.api.create(data);
 		},
 	};

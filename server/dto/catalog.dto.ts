@@ -4,6 +4,18 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
 
 export class SearchCatalogDTO {
 	searchTxt?: string;
+	page?: number;
+	rowsPerPage?: number;
+
+	constructor(data: any) {
+		data.searchTxt ? (this.searchTxt = data.searchTxt.trim()) : delete this.searchTxt;
+		data.page != undefined && data.page != "" ? (this.page = Number(data.page)) : delete this.page;
+		data.rowsPerPage != undefined && data.rowsPerPage != "" ? (this.rowsPerPage = Number(data.rowsPerPage)) : delete this.rowsPerPage;
+	}
+}
+
+export class SearchCustomerCatalogDTO {
+	searchTxt?: string;
 	show_live_products: boolean;
 	page?: number;
 	rowsPerPage?: number;

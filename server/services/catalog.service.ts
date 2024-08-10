@@ -1,7 +1,7 @@
 import { QueryTypes, Transaction } from "sequelize";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { Attributes, CatalogMaster, CatalogProducts, Options, ProductAttributeOptions, Products, SubCategory } from "../models";
-import { CreateCatalogDTO, SearchCatalogDTO } from "../dto";
+import { CreateCatalogDTO, SearchCatalogDTO, SearchCustomerCatalogDTO } from "../dto";
 import { Op } from "sequelize";
 import { Query } from "mysql2/typings/mysql/lib/protocol/sequences/Query";
 
@@ -27,7 +27,7 @@ export default class CatalogService {
 		});
 	};
 
-	public getAllForCustomer = async (searchParams: SearchCatalogDTO) => {
+	public getAllForCustomer = async (searchParams: SearchCustomerCatalogDTO) => {
 		let query = `
         SELECT
             cm.id,
