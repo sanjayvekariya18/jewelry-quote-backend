@@ -3,7 +3,7 @@ import { ProductExcelUploadService, ProductService, SubcategoryService } from ".
 import { ProductValidation } from "../validations";
 import { SearchProductDTO, ProductDTO, SearchProductForCustomerDTO } from "../dto";
 import { BadResponseHandler, DuplicateRecord, NotExistHandler } from "../errorHandler";
-import { OtherDetailMaster, StyleMaster, SubCategoryAttributes } from "../models";
+import { CatalogMaster, CatalogProducts, OtherDetailMaster, Products, StyleMaster, SubCategoryAttributes } from "../models";
 import fs from "fs";
 import path from "path";
 import { Op } from "sequelize";
@@ -242,6 +242,17 @@ export default class ProductController {
 			if (!productExist) {
 				throw new NotExistHandler("Product Not Found");
 			}
+
+			const findProductInCatalog: any = await CatalogProducts.findAll({ where: { product_id: productId }, include: [{ model: CatalogMaster }] });
+			if (findProductInCatalog.length > 0) {
+				throw new NotExistHandler(
+					`The product already exists in the following catalogs: ${findProductInCatalog
+						.map((data: any) => data?.CatalogMaster?.name)
+						.join(", ")
+						.replace(/, ([^,]*)$/, " and $1")}.`
+				);
+			}
+
 			await this.service
 				.delete(productId, req.authUser.id)
 				.then(async () => {
