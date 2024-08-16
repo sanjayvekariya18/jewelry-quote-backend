@@ -95,7 +95,7 @@ export default class ProductExcelUploadService {
 			const productSheetData: Array<any> = XLSX.utils.sheet_to_json(productSheet, {
 				header: 3,
 				rawNumbers: true,
-				range: "A3:DZ2000",
+				range: "A3:DZ5000",
 				blankrows: false,
 			});
 
