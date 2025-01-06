@@ -15,7 +15,7 @@ export default class CustomerDetailsValidations {
 
 	public create = {
 		token: "required|string",
-		company_name: "required|string|regex:/^[a-zA-Z0-9 .]*$/",
+		company_name: "required|string|regex:/^[a-zA-Z0-9 .&]*$/",
 		customer_name: "required|string|regex:/^[a-zA-Z ]*$/",
 		customer_email: "required|string|email",
 		country_code: "required|numeric",
