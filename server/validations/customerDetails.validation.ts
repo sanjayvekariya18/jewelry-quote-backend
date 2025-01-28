@@ -25,7 +25,7 @@ export default class CustomerDetailsValidations {
 		customer_address: "required|string|regex:/^[a-zA-Z0-9 ,.-]*$/",
 		city: "required|string",
 		country: "required|string",
-		zip_code: "required|regex:/^[a-zA-Z0-9 ,-]*$/",
+		zip_code: "required|regex:/^[a-zA-Z0-9 ]*$/",
 		website: "string|regex:/^https?://[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)+([/?].*)?$/",
 		business_registration: "string|regex:/^[a-zA-Z0-9 /-]*$/",
 		company_tax_number: "string|regex:/^[a-zA-Z0-9 /-]*$/",
